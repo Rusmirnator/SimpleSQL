@@ -1,0 +1,24 @@
+<div class="layout-root">
+    <table class="table-bordered" *ngIf="!isWaitIndicatorVisible">
+        <thead>
+            <tr>
+                <th *ngFor="let header of columnsSource">{{header}}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of itemsSource | async" 
+                (click)="onSelectedItemsChanged($event, item, item.Index)"
+                (mouseover)="onSelectionPending($event, item, item.Index)"
+                [className]="item.IsSelected === true ? 'selected' : 'unselected'">
+                <td *ngFor="let f of fieldNameSource">
+                    <span clss="normalizedCell">
+                        {{item.getCellData(f)}}
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+        <tfoot>
+            Ostatnio odświeżono: {{elapsedTime | async}}
+        </tfoot>
+    </table>
+</div>

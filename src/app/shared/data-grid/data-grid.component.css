@@ -1,0 +1,70 @@
+.layout-root {
+    max-height: 100%;
+    overflow-y: scroll;
+    user-select: none;
+}
+
+table {
+    white-space: nowrap;
+    width: 100%;
+}
+
+thead {
+    background-color: rgb(179, 174, 174);
+    max-height: fit-content;
+    position: sticky;
+    top: 0;
+    overflow-x: hidden;
+}
+
+thead th {
+    align-content: flex-start;
+    color: white;
+    align-items: flex-start;
+}
+
+thead th:hover {
+    cursor: default;
+    background-color: lightblue;
+    color: lightyellow;
+}
+
+tbody tr {
+    margin: 0;
+    border: none;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: aliceblue;
+}
+
+tbody tr:hover {
+    background-color: lightcyan;
+    cursor: default;
+}
+
+tbody tr.selected {
+    background-color: yellow;
+}
+
+.normalizedCell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: none;
+}
+
+tbody {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: calc(100% - 17px);
+    max-width: calc(100% - 17px);
+}
+
+tfoot {
+    max-height: fit-content;
+    background-color: rgb(179, 174, 174);
+    position: sticky;
+    bottom: 0;
+    column-span: all;
+}

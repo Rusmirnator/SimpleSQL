@@ -1,0 +1,23 @@
+.layout-root {
+    display: flex;
+    border: 1px;
+    border-color: black;
+    user-select: none;
+}
+
+fieldset {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    align-content: stretch;
+    gap: 10px;
+    width: 100%;
+    margin-top: 3px;
+    margin-bottom: 3px;
+    background-color:whitesmoke;
+}
+
+.radio:hover {
+    background-color: lightgray;
+    color:lightgray;
+}

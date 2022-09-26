@@ -1,0 +1,187 @@
+<div class="content" role="main">
+  <div class="subContent">
+    <div [className]="isMenuExpanded ? 'menu-container' : 'collapsed'">
+      <div class="menu-button">
+        <input id="menu-toggle" type="checkbox" (change)="onToggleMenu()" checked />
+        <label class="menu-btn" for="menu-toggle">
+          <span></span>
+        </label>
+      </div>
+      <div class="main-menu" *ngIf="isMenuExpanded" enabled="false">
+        <nav class="navigation">
+          <ul class="mainmenu">
+            <li>
+              <a>Procesy</a>
+              <ul class="submenu">
+                <li>
+                  <a>Wejście</a>
+                  <ul class="auxmenu">
+                    <li>
+                      <a routerLink="/shipments">Obsługa dostaw</a>
+                    </li>
+                    <li>
+                      <a>Wprowadzanie jednostek do magazynu</a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a>Wyjście</a>
+                  <ul class="auxmenu">
+                    <li>
+                      <a>Obsługa zleceń wydania</a>
+                    </li>
+                    <li>
+                      <a>Zarządzanie wyjazdami</a>
+                    </li>
+                    <li>
+                      <a>Zarządzanie kompletacją</a>
+                    </li>
+                    <li>
+                      <a>Wycofanie wysyłki</a>
+                    </li>
+                    <li>
+                      <a>Obsługa kurierska</a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a>Wewnątrzmagazynowe</a>
+                  <ul class="auxmenu">
+                    <li>
+                      <a>Kontrola jakości</a>
+                    </li>
+                    <li>
+                      <a>Kontrola reklamacji</a>
+                    </li>
+                    <li>
+                      <a>Inwentaryzacja wyrywkowa</a>
+                    </li>
+                    <li>
+                      <a>Nadzorowanie procesów przepływu</a>
+                    </li>
+                    <li>
+                      <a>Edytor jednostek magazynowych</a>
+                    </li>
+                    <li>
+                      <a>Rozliczanie braków i nadwyżek</a>
+                    </li>
+                    <li>
+                      <a>Konfekcjonowanie</a>
+                    </li>
+                    <li>
+                      <a>Obrót opakowaniami zwrotnymi</a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a>Dokumenty</a>
+                  <ul class="auxmenu">
+                    <li>
+                      <a>Przyjęcia zewnętrzne</a>
+                    </li>
+                    <li>
+                      <a>Wydania zewnętrzne</a>
+                    </li>
+                    <li>
+                      <a>Wyniki kontroli dostawy</a>
+                    </li>
+                    <li>
+                      <a>Listy załadunkowe</a>
+                    </li>
+                    <li>
+                      <a>Inwentaryzacja</a>
+                    </li>
+                    <li>
+                      <a>Braki i nadwyżki</a>
+                    </li>
+                    <li>
+                      <a>Wycofanie z wysyłki</a>
+                    </li>
+                    <li>
+                      <a>Dokumenty PTO</a>
+                    </li>
+                    <li>
+                      <a>Raporty z inwentaryzacji</a>
+                    </li>
+                  </ul>
+                </li>
+                <li>
+                  <a>Raporty</a>
+                  <ul class="auxmenu">
+                    <li>
+                      <a>Stany produktów</a>
+                    </li>
+                    <li>
+                      <a>Wyszukiwarka produktów</a>
+                    </li>
+                    <li>
+                      <a>System raportowy</a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a>Konfiguracja</a>
+              <ul class="submenu">
+                <li>
+                  <a>Magazyn</a>
+                </li>
+                <li>
+                  <a>Organizacja pracy</a>
+                </li>
+                <li>
+                  <a>Kompletacja</a>
+                </li>
+                <li>
+                  <a>Firmy</a>
+                </li>
+                <li>
+                  <a>Produkty</a>
+                </li>
+                <li>
+                  <a>Definicje</a>
+                </li>
+                <li>
+                  <a>Użytkownicy</a>
+                </li>
+              </ul>
+            </li>
+            <li>
+              <a>Pozostałe</a>
+              <ul class="submenu">
+                <li>
+                  <a>Interfejsy</a>
+                </li>
+                <li>
+                  <a>Etykiety</a>
+                </li>
+                <li>
+                  <a>Pomoc</a>
+                </li>
+                <li>
+                  <a>Logowanie działań</a>
+                </li>
+                <li>
+                  <a>Ustawienia</a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+    <div [className]="isMenuExpanded ? 'module-container' : 'expanded'">
+      <app-modal [show]="dlgTrigger === 'dlgLogin'" title="Logowanie" (closed)="dlgTrigger = ''">
+        <div style="display: flex; flex-direction: column">
+        <input role="textbox" type="text" [textContent]="login" placeholder="Login"/>
+        <input role="textbox" type="text" [textContent]="password" placeholder="Hasło"/>
+      </div>
+      </app-modal>
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+  <div class="footer-container">
+    <app-footer></app-footer>
+  </div>
+</div>

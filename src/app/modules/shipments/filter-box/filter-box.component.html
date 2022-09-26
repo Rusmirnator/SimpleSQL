@@ -1,0 +1,21 @@
+<div class="layout-root">
+    <fieldset>
+        <legend>Filtry</legend>
+        <div>
+            <label>Pokaż niezatwierdzone</label>
+            <input formControlName="whereFilter" type="radio" name="radio-filter" value=" ISNULL(wpstatus, 101) != 107" (change)="onInputValueChanged($event)">
+        </div>
+        <div>
+            <label>Pokaż zatwierdzone</label>
+            <input formControlName="whereFilter" type="radio" name="radio-filter" value=" wpId is not Null and wpstatus = 107" (change)="onInputValueChanged($event)">
+        </div>
+        <div>
+            <label>Pokaż kontrolowane</label>
+            <input formControlName="whereFilter" type="radio" name="radio-filter" value=" ISNULL(wpstatus,0) in (101,102)" (change)="onInputValueChanged($event)">
+        </div>
+        <div>
+            <label>Pokaż wszystkie</label>
+            <input formControlName="whereFilter" type="radio" name="radio-filter" value="" (change)="onInputValueChanged($event)" checked>
+        </div>
+    </fieldset>
+</div>

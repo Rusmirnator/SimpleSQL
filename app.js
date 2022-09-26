@@ -2,7 +2,8 @@ const { app, BrowserWindow } = require('electron')
 const url = require("url");
 const path = require("path");
 const { ipcMain } = require('electron/main');
-const { sqlQueryAsync } = require('./base/mssqlClient.js');
+const { loadSettings: msLoadSettings, executeQueryAsync: msExecuteQueryAsync } = require('./base/mssqlClient.js');
+const { loadSettings: pgLoadSettings, executeQueryAsync: pgExecuteQueryAsync } = require('./base/pgsqlClient.js');
 const { registerMenuCategory, registerMenuItem, finalizeMenuConfiguration } = require('./base/mainWindowRepository.js');
 
 let mainWindow;
@@ -25,7 +26,7 @@ function createWindow() {
   })
 
   devToolsWindow = new BrowserWindow({
-    
+
   });
 
   mainWindow.loadURL(
@@ -42,6 +43,8 @@ function createWindow() {
   mainWindow.on('closed', function () {
     mainWindow = null
   })
+
+  
 }
 
 registerMenuCategory('action', 'Actions');
@@ -70,5 +73,5 @@ app.on('activate', function () {
 })
 
 ipcMain.on('sqlQuery', async (event, query) => {
-  event.reply('sqlResponse', await sqlQueryAsync(query));
+  event.reply('sqlResponse', await msExecuteQueryAsync(query));
 });

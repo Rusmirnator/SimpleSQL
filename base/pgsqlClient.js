@@ -1,22 +1,20 @@
-const sqlClient = require('pg');
-const sqlConfig = {
-    user: "user",
-    password: "password",
-    database: "database_name",
-    server: "server",
-    pool: {
-        max: 10,
-        min: 0
-    },
-    options: {
-        trustServerCertificate: true,
-    }
-}
+const { Client } = require('pg');
+const { app } = require('electron')
 
-async function sqlQueryAsync(query) {
+const credentials = {
+    user: "postgres",
+    host: "localhost",
+    database: "nodedemo",
+    password: "yourpassword",
+    port: 5432,
+};
+
+async function executeQueryAsync(query) {
+    const sqlClient = new Client(credentials);
+
     try {
 
-        await sqlClient.connect(sqlConfig);
+        await sqlClient.connect();
 
         console.log(query);
 
@@ -28,6 +26,15 @@ async function sqlQueryAsync(query) {
 
         return await err;
     }
+    finally {
+        await sqlClient.end();
+    }
 }
 
-module.exports = { sqlClient, sqlQueryAsync };
+function loadSettings() {
+    let rootPath = app.getPath('exe');
+
+    console.log(rootPath);
+}
+
+module.exports = { loadSettings, executeQueryAsync };

@@ -1,4 +1,4 @@
-const sqlClient = require('mssql');
+const mssqlClient = require('mssql');
 const sqlConfig = {
     user: "user",
     password: "password",
@@ -13,14 +13,14 @@ const sqlConfig = {
     }
 }
 
-async function sqlQueryAsync(query) {
+async function executeQueryAsync(query) {
     try {
 
-        await sqlClient.connect(sqlConfig);
+        await mssqlClient.connect(sqlConfig);
 
         console.log(query);
 
-        return await sqlClient.query(query);
+        return await mssqlClient.query(query);
 
     } catch (err) {
 
@@ -30,4 +30,8 @@ async function sqlQueryAsync(query) {
     }
 }
 
-module.exports = { sqlClient, sqlQueryAsync };
+function loadSettings(){
+    console.log('mssqlSettingsLoaded');
+}
+
+module.exports = { loadSettings, executeQueryAsync };

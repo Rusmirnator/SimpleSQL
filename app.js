@@ -2,7 +2,7 @@ const { app, BrowserWindow } = require('electron')
 const url = require("url");
 const path = require("path");
 const { ipcMain } = require('electron/main');
-const { sqlQueryAsync } = require('./base/sqlClient.js');
+const { sqlQueryAsync } = require('./base/mssqlClient.js');
 const { registerMenuCategory, registerMenuItem, finalizeMenuConfiguration } = require('./base/mainWindowRepository.js');
 
 let mainWindow;
@@ -30,7 +30,7 @@ function createWindow() {
 
   mainWindow.loadURL(
     url.format({
-      pathname: path.join(__dirname, `/dist/curiosity/index.html`),
+      pathname: path.join(__dirname, `/dist/simplesql/index.html`),
       protocol: "file:",
       slashes: true
     })

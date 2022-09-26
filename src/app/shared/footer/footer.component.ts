@@ -14,11 +14,16 @@ export class FooterComponent implements OnInit {
   constructor(private _sqlService: SQLClientService, private _notifyDataUpdated: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    if (!this._sqlService.tryConnect()) {
+      console.log("Could not establish connection with SQL server");
+      return;
+    }
+    
     this._sqlService.sqlQuery("SELECT DB_NAME() AS databaseName", (response: IResponseObject) => this.setDatabaseName(response));
   }
 
-  setDatabaseName(response: IResponseObject){
-    if(response !== undefined){
+  setDatabaseName(response: IResponseObject) {
+    if (response !== undefined) {
       this.databaseName.next(response.recordset[0].databaseName);
     }
     this._notifyDataUpdated.detectChanges();

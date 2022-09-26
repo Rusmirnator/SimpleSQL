@@ -16,6 +16,23 @@ export class SQLClientService {
 
     this._ipcService.send('sqlQuery', query);
   }
+
+  tryConnect(): boolean {
+    let canConnect: boolean = false;
+
+    try {
+      
+      this.sqlQuery('SELECT 1', (response: IResponseObject) => {
+        canConnect = response !== null;
+      })
+    } catch (exception) {
+
+      console.log(exception);
+    } finally {
+
+      return canConnect;
+    }
+  }
 }
 
 export interface IResponseObject {

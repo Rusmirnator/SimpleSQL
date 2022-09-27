@@ -26,7 +26,6 @@ function createWindow() {
   })
 
   devToolsWindow = new BrowserWindow({
-
   });
 
   mainWindow.loadURL(
@@ -42,9 +41,7 @@ function createWindow() {
 
   mainWindow.on('closed', function () {
     mainWindow = null
-  })
-
-  
+  });
 }
 
 registerMenuCategory('action', 'Actions');

@@ -9,7 +9,7 @@ export class GeneralPurposeRepository {
         this.homeDirectory = app.getAppPath();
     }
 
-    loadSettings(section: string): void {
-        
+    public loadSettings(section: string): void {
+        console.log(this.homeDirectory);
     }
 }

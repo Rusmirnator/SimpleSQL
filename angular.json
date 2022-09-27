@@ -102,5 +102,8 @@
       }
     }
   },
-  "defaultProject": "Curiosity"
+  "defaultProject": "Curiosity",
+  "cli": {
+    "analytics": "c84747c6-4c8d-4a9f-b699-f2e14234185a"
+  }
 }

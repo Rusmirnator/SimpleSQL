@@ -1,6 +1,6 @@
 import { Menu, MenuItem, BrowserWindow } from 'electron';
 
-export class MainWindowRepository{
+export default class MainWindowRepository{
      menu : Menu = new Menu();
 
     constructor() {}

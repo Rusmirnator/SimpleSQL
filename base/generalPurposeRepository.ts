@@ -1,7 +1,7 @@
 import { app } from 'electron';
-import { URL } from 'url';
+import * as path from 'path';
 
-export class GeneralPurposeRepository {
+export default class GeneralPurposeRepository {
     private settings: string | undefined;
     private homeDirectory: string | undefined;
 

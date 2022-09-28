@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/curiosity",
+            "outputPath": "dist/simplesql",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -68,10 +68,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "Curiosity:build:production"
+              "browserTarget": "SimpleSQL:build:production"
             },
             "development": {
-              "browserTarget": "Curiosity:build:development"
+              "browserTarget": "SimpleSQL:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -79,7 +79,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "Curiosity:build"
+            "browserTarget": "SimpleSQL:build"
           }
         },
         "test": {
@@ -102,7 +102,7 @@
       }
     }
   },
-  "defaultProject": "Curiosity",
+  "defaultProject": "SimpleSQL",
   "cli": {
     "analytics": "c84747c6-4c8d-4a9f-b699-f2e14234185a"
   }

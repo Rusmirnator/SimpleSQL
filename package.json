@@ -1,7 +1,7 @@
 {
   "name": "simplesql",
   "version": "0.0.0",
-  "main": "app.js",
+  "main": "app.ts",
   "scripts": {
     "ng": "ng",
     "start": "ng build --base-href ./ && electron .",

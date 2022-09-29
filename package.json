@@ -4,11 +4,12 @@
   "main": "app.ts",
   "scripts": {
     "ng": "ng",
-    "start": "ng build --base-href ./ && electron .",
+    "start": "tsc -p . && ng build --base-href ./ && electron ./dist/app.js",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
-  },
+    "test": "ng test",
+    "build:ts": "tsc -p ."
+  }, 
   "private": true,
   "dependencies": {
     "@angular/animations": "~13.3.0",

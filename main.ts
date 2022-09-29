@@ -1,4 +1,4 @@
-import MainWindowRepository from "base/mainWindowRepository";
+import MainWindowRepository from './base/mainWindowRepository';
 import { BrowserWindow } from "electron";
 import * as url from 'url';
 import * as path from 'path';
@@ -7,27 +7,12 @@ export default class Main {
     static devToolsWindow: Electron.BrowserWindow | undefined;
     static mainWindow: Electron.BrowserWindow | undefined;
     static application: Electron.App;
-    static mainRepository : MainWindowRepository;
+    static mainRepository: MainWindowRepository = new MainWindowRepository();
 
     constructor() {
-        Main.mainRepository = new MainWindowRepository();
 
-        Main.mainRepository.registerMenuCategory('action', 'Actions');
-        Main.mainRepository.registerMenuItem('action', 'F1', 'F1');
-        Main.mainRepository.registerMenuItem('action', 'F2', 'F2');
-        Main.mainRepository.registerMenuItem('action', 'F3', 'F3');
-        Main.mainRepository.registerMenuItem('action', 'F4', 'F4');
-        Main.mainRepository.registerMenuItem('action', 'F5', 'F5');
-        Main.mainRepository.registerMenuItem('action', 'F6', 'F6');
-        Main.mainRepository.registerMenuItem('action', 'F7', 'F7');
-        Main.mainRepository.registerMenuItem('action', 'F8', 'F8');
-        Main.mainRepository.registerMenuItem('action', 'F9', 'F9');
-        Main.mainRepository.registerMenuItem('action', 'F10', 'F10');
-        Main.mainRepository.registerMenuItem('action', 'F11', 'F11');
-        Main.mainRepository.registerMenuItem('action', 'F12', 'F12');
-        Main.mainRepository.finalizeMenuConfiguration();
     }
-    
+
     static main(app: Electron.App, browserWindow: typeof BrowserWindow) {
 
         app.on('ready', () => Main.createWindow());
@@ -64,9 +49,11 @@ export default class Main {
         Main.devToolsWindow = new BrowserWindow({
         });
 
+        this.configureMenu();
+
         Main.mainWindow!.loadURL(
             url.format({
-                pathname: path.join(__dirname, `/dist/simplesql/index.html`),
+                pathname: path.join(__dirname, `/simplesql/index.html`),
                 protocol: "file:",
                 slashes: true
             })
@@ -79,38 +66,21 @@ export default class Main {
             Main.mainWindow = undefined;
         });
     }
+
+    static configureMenu() : void {
+        Main.mainRepository.registerMenuCategory('action', 'Actions');
+        Main.mainRepository.registerMenuItem('action', 'F1', 'F1');
+        Main.mainRepository.registerMenuItem('action', 'F2', 'F2');
+        Main.mainRepository.registerMenuItem('action', 'F3', 'F3');
+        Main.mainRepository.registerMenuItem('action', 'F4', 'F4');
+        Main.mainRepository.registerMenuItem('action', 'F5', 'F5');
+        Main.mainRepository.registerMenuItem('action', 'F6', 'F6');
+        Main.mainRepository.registerMenuItem('action', 'F7', 'F7');
+        Main.mainRepository.registerMenuItem('action', 'F8', 'F8');
+        Main.mainRepository.registerMenuItem('action', 'F9', 'F9');
+        Main.mainRepository.registerMenuItem('action', 'F10', 'F10');
+        Main.mainRepository.registerMenuItem('action', 'F11', 'F11');
+        Main.mainRepository.registerMenuItem('action', 'F12', 'F12');
+        Main.mainRepository.finalizeMenuConfiguration();
+    }
 }
-
-
-// import { BrowserWindow } from 'electron';
-
-// export default class Main {
-//     static mainWindow: Electron.BrowserWindow;
-//     static application: Electron.App;
-//     static BrowserWindow : any;
-
-//     private static onWindowAllClosed() {
-//         if (process.platform !== 'darwin') {
-//             Main.application.quit();
-//         }
-//     }
-
-//     private static onClose() {
-//         // Dereference the window object. 
-//         // Main.mainWindow = null;
-//     }
-
-//     private static onReady() {
-//         Main.mainWindow = new Main.BrowserWindow({ width: 800, height: 600 });
-//         Main.mainWindow
-//             .loadURL('file://' + __dirname + '/index.html');
-//         Main.mainWindow.on('closed', Main.onClose);
-//     }
-
-//     static main(app: Electron.App, browserWindow: typeof BrowserWindow) {
-//         Main.BrowserWindow = browserWindow;
-//         Main.application = app;
-//         Main.application.on('window-all-closed', Main.onWindowAllClosed);
-//         Main.application.on('ready', Main.onReady);
-//     }
-// }

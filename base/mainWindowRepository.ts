@@ -3,8 +3,6 @@ import { Menu, MenuItem, BrowserWindow } from 'electron';
 export default class MainWindowRepository{
      menu : Menu = new Menu();
 
-    constructor() {}
-
     registerMenuCategory(id : string, label : string) {
 
         if (this.menu.items.every((menuItem) => menuItem.id !== id)) {

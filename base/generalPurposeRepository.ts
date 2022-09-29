@@ -1,5 +1,6 @@
 import { app } from 'electron';
 import * as path from 'path';
+import { URL } from 'whatwg-url'
 
 export default class GeneralPurposeRepository {
     private settings: string | undefined;

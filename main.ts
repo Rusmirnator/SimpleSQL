@@ -1,33 +1,38 @@
 import MainWindowRepository from './base/mainWindowRepository';
 import { BrowserWindow } from "electron";
-import * as url from 'url';
+import { URL } from 'whatwg-url'
 import * as path from 'path';
 
 export default class Main {
-    static devToolsWindow: Electron.BrowserWindow | undefined;
-    static mainWindow: Electron.BrowserWindow | undefined;
+    static devToolsWindow: Electron.BrowserWindow | null;
+    static mainWindow: Electron.BrowserWindow | null;
     static application: Electron.App;
     static mainRepository: MainWindowRepository = new MainWindowRepository();
+    static BrowserWindow: typeof BrowserWindow;
 
-    constructor() {
+    private static onAppReady() {
+        Main.createWindow();
+        Main.mainWindow!.on('closed', Main.onAppClosed);
+        Main.devToolsWindow!.on('closed', Main.onAppClosed)
+    }
 
+    private static onAllWindowClosed() {
+        if (process.platform !== 'darwin') {
+            Main.application.quit();
+        }
+    }
+
+    private static onAppClosed() {
+        Main.mainWindow = null;
+        Main.devToolsWindow = null;
     }
 
     static main(app: Electron.App, browserWindow: typeof BrowserWindow) {
+        Main.BrowserWindow = browserWindow;
+        Main.application = app;
 
-        app.on('ready', () => Main.createWindow());
-
-        app.on('window-all-closed', () => {
-            if (process.platform !== 'darwin') {
-                app.quit();
-            }
-        });
-
-        app.on('activate', () => {
-            if (this.mainWindow === null) {
-                Main.createWindow();
-            }
-        });
+        Main.application.on('ready', Main.onAppReady);
+        Main.application.on('window-all-closed', Main.onAllWindowClosed)
     }
 
     static createWindow(): void {
@@ -46,28 +51,15 @@ export default class Main {
             }
         })
 
-        Main.devToolsWindow = new BrowserWindow({
-        });
+        Main.devToolsWindow = new BrowserWindow();
 
-        this.configureMenu();
-
-        Main.mainWindow!.loadURL(
-            url.format({
-                pathname: path.join(__dirname, `/simplesql/index.html`),
-                protocol: "file:",
-                slashes: true
-            })
-        );
-
+        Main.configureMenu();
+        Main.mainWindow!.loadURL(new URL(path.join(__dirname, `/simplesql/index.html`)).href);
         Main.mainWindow!.webContents.setDevToolsWebContents(Main.devToolsWindow!.webContents);
         Main.mainWindow!.webContents.openDevTools({ mode: 'detach' });
-
-        Main.mainWindow!.on('closed', () => {
-            Main.mainWindow = undefined;
-        });
     }
 
-    static configureMenu() : void {
+    static configureMenu(): void {
         Main.mainRepository.registerMenuCategory('action', 'Actions');
         Main.mainRepository.registerMenuItem('action', 'F1', 'F1');
         Main.mainRepository.registerMenuItem('action', 'F2', 'F2');

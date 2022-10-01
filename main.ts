@@ -2,7 +2,6 @@ import MainWindowRepository from './base/mainWindowRepository';
 import { BrowserWindow } from "electron";
 import { URL } from 'whatwg-url'
 import * as path from 'path';
-import GeneralPurposeRepository from './base/generalPurposeRepository'
 
 export default class Main {
     static devToolsWindow: Electron.BrowserWindow | null;
@@ -33,7 +32,7 @@ export default class Main {
         Main.application = app;
 
         Main.application.on('ready', Main.onAppReady);
-        Main.application.on('window-all-closed', Main.onAllWindowClosed)
+        Main.application.on('window-all-closed', Main.onAllWindowClosed);
     }
 
     static createWindow(): void {
@@ -81,6 +80,7 @@ export default class Main {
     static initializeSettings(): void {
         try {
             Main.mainRepository.initializeSettings();
+
         } catch (error) {
             console.log(error);
         }

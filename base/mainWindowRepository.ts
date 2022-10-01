@@ -3,12 +3,13 @@ import { existsSync } from 'fs';
 import { join } from 'path';
 import GeneralPurposeRepository from './generalPurposeRepository';
 import AppSettings from './shared/AppSettings';
+import SqlClient from './sqlClient';
 
 export default class MainWindowRepository {
     private settings: AppSettings;
     private homeDirectory: string | undefined;
     private generalRepository = new GeneralPurposeRepository();
-
+    private client : SqlClient = new SqlClient();
     menu: Menu = new Menu();
 
     constructor() {
@@ -63,6 +64,8 @@ export default class MainWindowRepository {
             } catch (error) {
                 console.log(error);
             }
+
+            this.client.configureConnection(this.settings.getSection("Connection:PGSQL").getValue<string>("DatabaseURL"))
         }
     }
 

@@ -26,7 +26,6 @@
     "@fortawesome/free-regular-svg-icons": "^6.1.0",
     "@fortawesome/free-solid-svg-icons": "^6.1.0",
     "mssql": "^8.1.0",
-    "pg": "^8.8.0",
     "rxjs": "~7.5.0"
   },
   "devDependencies": {
@@ -43,6 +42,7 @@
     "karma-coverage": "~2.1.0",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "~1.7.0",
+    "ts-postgres": "^1.3.0",
     "typescript": "~4.6.2",
     "whatwg-url": "^11.0.0"
   }

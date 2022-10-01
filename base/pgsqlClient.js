@@ -31,10 +31,5 @@ async function executeQueryAsync(query) {
     }
 }
 
-function loadSettings() {
-    let rootPath = app.getPath('exe');
-
-    console.log(rootPath);
-}
 
 module.exports = { loadSettings, executeQueryAsync };

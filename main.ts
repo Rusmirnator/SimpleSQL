@@ -2,6 +2,7 @@ import MainWindowRepository from './base/mainWindowRepository';
 import { BrowserWindow } from "electron";
 import { URL } from 'whatwg-url'
 import * as path from 'path';
+import GeneralPurposeRepository from './base/generalPurposeRepository'
 
 export default class Main {
     static devToolsWindow: Electron.BrowserWindow | null;
@@ -54,6 +55,7 @@ export default class Main {
         Main.devToolsWindow = new BrowserWindow();
 
         Main.configureMenu();
+        Main.initializeSettings();
         Main.mainWindow!.loadURL(new URL(path.join(__dirname, `/simplesql/index.html`)).href);
         Main.mainWindow!.webContents.setDevToolsWebContents(Main.devToolsWindow!.webContents);
         Main.mainWindow!.webContents.openDevTools({ mode: 'detach' });
@@ -74,5 +76,13 @@ export default class Main {
         Main.mainRepository.registerMenuItem('action', 'F11', 'F11');
         Main.mainRepository.registerMenuItem('action', 'F12', 'F12');
         Main.mainRepository.finalizeMenuConfiguration();
+    }
+
+    static initializeSettings(): void {
+        try {
+            Main.mainRepository.initializeSettings();
+        } catch (error) {
+            console.log(error);
+        }
     }
 }

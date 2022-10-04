@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { LoggerService } from './base/services/logger.service';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +14,7 @@ export class AppComponent implements OnInit {
   login: string | undefined;
   password: string | undefined;
 
-  constructor() { }
+  constructor(private _logger: LoggerService) { }
 
   ngOnInit(): void {
     setTimeout(() => {
@@ -23,6 +24,6 @@ export class AppComponent implements OnInit {
 
   onToggleMenu(): void {
     this.isMenuExpanded = !this.isMenuExpanded;
-    console.log(`Menu expanded: ${this.isMenuExpanded}`);
+    this._logger.log(`Sidemenu expanded: ${this.isMenuExpanded.toString()}`);
   }
 }

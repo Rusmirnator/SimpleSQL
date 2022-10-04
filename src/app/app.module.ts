@@ -8,6 +8,7 @@ import { IpcService } from './base/services/ipc.service';
 import { ModalComponent } from './shared/modal/modal.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { BackdropComponent } from './shared/backdrop/backdrop.component';
+import { LoggerService } from './base/services/logger.service';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { BackdropComponent } from './shared/backdrop/backdrop.component';
     AppRoutingModule,
     FormsModule
   ],
-  providers: [SQLClientService, IpcService],
+  providers: [SQLClientService, IpcService, LoggerService],
   bootstrap: [AppComponent]
 })
 

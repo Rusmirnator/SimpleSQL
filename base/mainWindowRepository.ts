@@ -78,6 +78,14 @@ export default class MainWindowRepository {
                 }
             });
         }
+
+        ipcMain.on('log', (event: IpcMainEvent, content) => {
+            try {
+                event.reply('log', Logger.log(content));
+            } catch (error) {
+                Logger.log(error as string, LogLevel.Error);
+            }
+        });
     }
 
     emitKeyPressedEvent(keyGesture: string) {

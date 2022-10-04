@@ -1,7 +1,7 @@
 import { IConnectionParameters } from "./interfaces/IConnectionParameters";
 import { IProvideSqlConnection } from "./interfaces/IProvideSqlConnection";
 import ConnectionParameters from "./shared/ConnectionParameters";
-import { Client } from 'ts-postgres'
+import { Client, Query, SSLMode } from 'ts-postgres'
 import { URL } from "whatwg-url";
 
 export default class SqlClient implements IProvideSqlConnection {
@@ -20,28 +20,31 @@ export default class SqlClient implements IProvideSqlConnection {
             return;
         }
 
-        this.parameters.initialize(url.username, url.password, url.pathname, url.pathname, parseInt(url.port));
+        this.parameters.initialize(url.username, url.password, url.pathname, url.host, parseInt(url.port), SSLMode.Disable);
 
         this.client = new Client(this.parameters);
     }
 
     public async executeQueryAsync(query: string): Promise<any>;
     public async executeQueryAsync(query: string, queryParameters?: any[]): Promise<any> {
+        let response;
+        let statement = new Query(query, queryParameters);
+
         try {
+            
             await this.client.connect();
 
-            console.log(query);
+            console.log(statement);
 
-            return await this.client.query(query);
+            response = await this.client.execute(statement);
 
         } catch (err) {
 
             console.log(err);
-
-            return await err;
         }
         finally {
             await this.client.end();
+            return response;
         }
     }
 }

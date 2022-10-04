@@ -1,4 +1,4 @@
-import { Menu, MenuItem, BrowserWindow, app } from 'electron';
+import { Menu, MenuItem, BrowserWindow, app, ipcMain, IpcMainEvent } from 'electron';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import GeneralPurposeRepository from './generalPurposeRepository';
@@ -9,7 +9,7 @@ export default class MainWindowRepository {
     private settings: AppSettings;
     private homeDirectory: string | undefined;
     private generalRepository = new GeneralPurposeRepository();
-    private client : SqlClient = new SqlClient();
+    private client: SqlClient = new SqlClient();
     menu: Menu = new Menu();
 
     constructor() {
@@ -65,7 +65,15 @@ export default class MainWindowRepository {
                 console.log(error);
             }
 
-            this.client.configureConnection(this.settings.getSection("Connection:PGSQL").getValue<string>("DatabaseURL"))
+            this.client.configureConnection(this.settings.getSection("Connection:PGSQL").getValue<string>("DatabaseURL"));
+
+            ipcMain.on('sqlQuery', async (event: IpcMainEvent, query: string, args: any[]) => {
+                try {
+                    event.reply('sqlResponse', await this.client.executeQueryAsync(query));
+                } catch (error) {
+                    console.log(error);
+                }
+            });
         }
     }
 

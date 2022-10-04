@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IpcService } from './ipc.service';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -17,27 +18,26 @@ export class SQLClientService {
     this._ipcService.send('sqlQuery', query);
   }
 
-  tryConnect(): boolean {
+  async tryConnectAsync(): Promise<boolean> {
     let canConnect: boolean = false;
 
     try {
-      
-      this.sqlQuery('SELECT 1', (response: IResponseObject) => {
-        canConnect = response !== null;
-      })
+
+      this.sqlQuery('SELECT NOW()', (response: IResponseObject) => {
+        console.log(response);
+        canConnect = true;
+      });
     } catch (exception) {
 
       console.log(exception);
     } finally {
-
       return canConnect;
     }
   }
 }
 
 export interface IResponseObject {
-  recordsets: any[],
-  recordset: any[],
-  output: any,
-  rowsAffected: number
+  names: string[],
+  rows: any[],
+  status: string
 }

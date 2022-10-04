@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { IResponseObject, SQLClientService } from 'services/sqlclient.service';
+import { IResponseObject, SQLClientService } from '../../base/services/sqlclient.service'
 
 @Component({
   selector: 'app-footer',
@@ -10,23 +10,25 @@ import { IResponseObject, SQLClientService } from 'services/sqlclient.service';
 export class FooterComponent implements OnInit {
 
   databaseName = new BehaviorSubject<string>('');
+  connectionEstablished: boolean = false;
 
   constructor(private _sqlService: SQLClientService, private _notifyDataUpdated: ChangeDetectorRef) { }
 
-  ngOnInit(): void {
-    if (!this._sqlService.tryConnect()) {
-      console.log("Could not establish connection with SQL server");
-      return;
-    }
-    
-    this._sqlService.sqlQuery("SELECT DB_NAME() AS databaseName", (response: IResponseObject) => this.setDatabaseName(response));
+  async ngOnInit(): Promise<void> {
+    await this._sqlService.tryConnectAsync().then((success) => {
+      if (success) {
+        this._sqlService.sqlQuery("SELECT CURRENT_DATABASE() AS databaseName", (response: IResponseObject) => this.setDatabaseName(response));
+      }
+    }, (failure: string = "Could not connect to SQL server.") => {
+      console.log(failure);
+    });
   }
 
-  setDatabaseName(response: IResponseObject) {
+  setDatabaseName(response: IResponseObject): void {
     if (response !== undefined) {
-      this.databaseName.next(response.recordset[0].databaseName);
+      console.log(response);
+      this.databaseName.next(response.rows[0]);
     }
     this._notifyDataUpdated.detectChanges();
   }
-
 }

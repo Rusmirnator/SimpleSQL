@@ -3,6 +3,8 @@ import { IProvideSqlConnection } from "./interfaces/IProvideSqlConnection";
 import ConnectionParameters from "./shared/ConnectionParameters";
 import { Client, Query, SSLMode } from 'ts-postgres'
 import { URL } from "whatwg-url";
+import Logger from "./logger";
+import { LogLevel } from "./enumerations";
 
 export default class SqlClient implements IProvideSqlConnection {
     parameters: IConnectionParameters;
@@ -16,7 +18,7 @@ export default class SqlClient implements IProvideSqlConnection {
         let url = new URL(connectionString);
 
         if (connectionString === null) {
-            console.log('ERROR: Connection could not be configured - connectionString is empty!');
+            Logger.log('ERROR: Connection could not be configured - connectionString is empty!', LogLevel.Error);
             return;
         }
 
@@ -34,13 +36,13 @@ export default class SqlClient implements IProvideSqlConnection {
             
             await this.client.connect();
 
-            console.log(statement);
+            Logger.log(statement.text, LogLevel.Debug);
 
             response = await this.client.execute(statement);
 
         } catch (err) {
 
-            console.log(err);
+            Logger.log(err as string, LogLevel.Error);
         }
         finally {
             await this.client.end();

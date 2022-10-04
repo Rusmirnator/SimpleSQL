@@ -1,4 +1,4 @@
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 
 export default class GeneralPurposeRepository {
 
@@ -13,5 +13,13 @@ export default class GeneralPurposeRepository {
         }
 
         return "";
+    }
+
+    public safelyWriteToFile(filePath: string, content: string, encoding?: string) : void {
+        try {
+            writeFileSync(filePath, content, encoding);
+        } catch (error) {
+            console.log(error);
+        }
     }
 }

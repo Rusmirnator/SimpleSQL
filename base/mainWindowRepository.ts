@@ -1,7 +1,9 @@
 import { Menu, MenuItem, BrowserWindow, app, ipcMain, IpcMainEvent } from 'electron';
 import { existsSync } from 'fs';
 import { join } from 'path';
+import { LogLevel } from './enumerations';
 import GeneralPurposeRepository from './generalPurposeRepository';
+import Logger from './logger';
 import AppSettings from './shared/AppSettings';
 import SqlClient from './sqlClient';
 
@@ -28,7 +30,7 @@ export default class MainWindowRepository {
                     }));
             return;
         }
-        console.log(`Cannot add ${id}, ${label} - MenuItem ${id} already exists!`);
+        Logger.log(`Cannot add ${id}, ${label} - MenuItem ${id} already exists!`, LogLevel.Warning);
     }
 
     registerMenuItem(id: string, label: string, keyGesture: string) {
@@ -45,7 +47,7 @@ export default class MainWindowRepository {
                     }));
             return;
         }
-        console.log(`Cannot add to ${id} - MenuItem ${id} does not exist!`);
+        Logger.log(`Cannot add to ${id} - MenuItem ${id} does not exist!`, LogLevel.Warning);
     }
 
     finalizeMenuConfiguration() {
@@ -62,7 +64,7 @@ export default class MainWindowRepository {
             try {
                 this.settings.consume(JSON.parse(configFile!));
             } catch (error) {
-                console.log(error);
+                Logger.log(error as string, LogLevel.Error);
             }
 
             this.client.configureConnection(this.settings.getSection("Connection:PGSQL").getValue<string>("DatabaseURL"));
@@ -71,7 +73,7 @@ export default class MainWindowRepository {
                 try {
                     event.reply('sqlResponse', await this.client.executeQueryAsync(query));
                 } catch (error) {
-                    console.log(error);
+                    Logger.log(error as string, LogLevel.Error);
                 }
             });
         }

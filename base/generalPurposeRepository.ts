@@ -15,7 +15,7 @@ export default class GeneralPurposeRepository {
         return "";
     }
 
-    public safelyWriteToFile(filePath: string, content: string, encoding?: string) : void {
+    public safelyWriteToFile(filePath: string, content: string, encoding?: string): void {
         try {
             writeFileSync(filePath, content, encoding);
         } catch (error) {

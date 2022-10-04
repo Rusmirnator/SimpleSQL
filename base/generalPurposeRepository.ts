@@ -16,8 +16,12 @@ export default class GeneralPurposeRepository {
     }
 
     public safelyWriteToFile(filePath: string, content: string, encoding?: string): void {
+        let options = {
+            encoding: encoding,
+            flag: "a"
+        };
         try {
-            writeFileSync(filePath, content, encoding);
+            writeFileSync(filePath, content, options);
         } catch (error) {
             console.log(error);
         }

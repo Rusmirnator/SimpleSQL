@@ -9,7 +9,7 @@ export class SQLClientService {
   private responseCallback!: Function;
 
   constructor(private _ipcService: IpcService) {
-    _ipcService.on('sqlResponse', (_event: any, arg: IResponseObject) => this.responseCallback(arg));
+    _ipcService.on('sqlQuery', (_event: any, arg: IResponseObject) => this.responseCallback(arg));
   }
 
   sqlQuery(query: string, callback: Function): void {

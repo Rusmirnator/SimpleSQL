@@ -27,7 +27,6 @@ export default class SqlClient implements IProvideSqlConnection {
         this.client = new Client(this.parameters);
     }
 
-    public async executeQueryAsync(query: string): Promise<any>;
     public async executeQueryAsync(query: string, queryParameters?: any[]): Promise<any> {
         let response;
         let statement = new Query(query, queryParameters);

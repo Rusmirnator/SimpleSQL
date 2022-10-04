@@ -12,6 +12,7 @@ export default class MainWindowRepository {
     private homeDirectory: string | undefined;
     private generalRepository = new GeneralPurposeRepository();
     private client: SqlClient = new SqlClient();
+
     menu: Menu = new Menu();
 
     constructor() {
@@ -69,9 +70,9 @@ export default class MainWindowRepository {
 
             this.client.configureConnection(this.settings.getSection("Connection:PGSQL").getValue<string>("DatabaseURL"));
 
-            ipcMain.on('sqlQuery', async (event: IpcMainEvent, query: string, args: any[]) => {
+            ipcMain.on('sqlQuery', async (event: IpcMainEvent, query: string) => {
                 try {
-                    event.reply('sqlResponse', await this.client.executeQueryAsync(query));
+                    event.reply('sqlQuery', await this.client.executeQueryAsync(query));
                 } catch (error) {
                     Logger.log(error as string, LogLevel.Error);
                 }

@@ -9,7 +9,7 @@ import { LoggerService } from 'src/app/base/services/logger.service';
 export class EditorComponent implements OnInit {
   
   text?: string;
-  
+
   @Output() editValue = new EventEmitter<string>();
 
   constructor(private _logger: LoggerService) { }
@@ -21,5 +21,9 @@ export class EditorComponent implements OnInit {
     if (event.key === 'F5') {
       this._logger.logInfo("Command executed");
     }
+  }
+
+  onTextInput(event: any){
+    console.log(event.target.value);
   }
 }

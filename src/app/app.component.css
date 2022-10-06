@@ -10,7 +10,7 @@
   width: 100vw;
   height: 100vh;
   user-select: none;
-  background-color: rgb(16, 46, 19);
+  background-color: #39326e;
 }
 
 .main-content-container {
@@ -23,9 +23,10 @@
 
 .footer-container,
 .titleBar-container {
-  background: rgb(152, 163, 153);
+  background: #17134e;
   text-align: justify;
   height: min-content;
+  padding-left: 3px;
 }
 
 .footer-container {
@@ -39,8 +40,8 @@
 }
 
 .module-container {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: 1fr 4fr 5fr;
   height: auto;
   flex: 1 1 auto;
   margin: 3px;
@@ -89,13 +90,18 @@
 
 app-ribbon {
   margin-bottom: 3px;
+  grid-row: 1;
 }
 
 app-editor {
   flex: 1 1 auto;
   margin-bottom: 3px;
+  display: flex;
+  grid-row: 2;
 }
 
 app-data-grid {
   flex: 1 1 auto;
+  display:flex;
+  grid-row: 3;
 }

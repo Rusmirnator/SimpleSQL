@@ -1,14 +1,15 @@
 .layout-root {
-    overflow-y: scroll;
     user-select: none;
     display: flex;
     flex: 1 1 auto;
-    background: lightsteelblue;
+    flex-direction: column;
 }
 
 table {
     white-space: nowrap;
-    width: 100%;
+    background: lightsteelblue;
+    flex: 1 1 auto;
+    padding: 3px;
 }
 
 thead {
@@ -69,4 +70,17 @@ tfoot {
     position: sticky;
     bottom: 0;
     column-span: all;
+}
+
+.label {
+    background: lightsteelblue;
+    font-weight: bolder;
+    padding: 3px;
+    width: fit-content;
+}
+
+.label:hover {
+    background: lightgray;
+    cursor: pointer;
+    user-select: none;
 }

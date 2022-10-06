@@ -1,7 +1,7 @@
 .container {
-    background: white;
     flex: 1 1 auto;
     display: flex;
+    flex-direction: column;
 }
 
 .editor {
@@ -9,9 +9,24 @@
     background: white;
     color: black;
     flex: 1 1 auto;
+    outline: none;
+    padding: 3px;
 }
 
 [contentEditable='true'] {
     caret-color: red;
     flex: 1 1 auto;
+}
+
+.label {
+    background: lightsteelblue;
+    font-weight: bolder;
+    padding: 3px;
+    width: fit-content;
+}
+
+.label:hover {
+    background: lightgray;
+    cursor: pointer;
+    user-select: none;
 }

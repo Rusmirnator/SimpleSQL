@@ -1,12 +1,26 @@
 .container {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+}
+
+.label {
     background: lightsteelblue;
+    font-weight: bolder;
+    padding: 3px;
+    width: fit-content;
+}
+
+.label:hover {
+    background: lightgray;
+    cursor: pointer;
+    user-select: none;
 }
 
 .page {
     display: flex;
     flex-direction: row;
+    background: lightsteelblue;
+    padding: 3px;
 }
 
 .group {
@@ -19,6 +33,7 @@ button {
     border: none;
     border-radius: 3px;
     margin: 1px;
+    user-select: none;
 }
 
 button:hover{

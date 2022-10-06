@@ -1,0 +1,26 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    background: lightsteelblue;
+}
+
+.page {
+    display: flex;
+    flex-direction: row;
+}
+
+.group {
+    display: flex;
+    flex-direction: column;
+}
+
+button {
+    display: block;
+    border: none;
+    border-radius: 3px;
+    margin: 1px;
+}
+
+button:hover{
+    background: lightgray;
+}

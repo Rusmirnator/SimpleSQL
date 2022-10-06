@@ -19,6 +19,7 @@ export class DataGridComponent implements OnInit {
   @Input() columnsSource?: string[];
   @Input() fieldNameSource?: string[];
   @Input() itemsSource: Observable<DataRow[]> = new Observable<DataRow[]>();
+  @Input() showTimeStamp?: boolean = false;
 
   constructor(private _notifyDataUpdated: ChangeDetectorRef) {
   }
@@ -42,6 +43,10 @@ export class DataGridComponent implements OnInit {
           this.fieldNameSource.push(f);
         }
         break;
+      }
+
+      for (let property of Object.keys(data[0].Instance)) {
+        console.log(property);
       }
 
       console.log(this.fieldNameSource);

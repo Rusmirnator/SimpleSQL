@@ -10,23 +10,22 @@ import { IResponseObject, SQLClientService } from '../../base/services/sqlclient
 export class FooterComponent implements OnInit {
 
   databaseName = new BehaviorSubject<string>('');
-  connectionEstablished: boolean = false;
+  connectionEstablished: boolean | undefined;
 
   constructor(private _sqlService: SQLClientService, private _notifyDataUpdated: ChangeDetectorRef) { }
 
-  async ngOnInit(): Promise<void> {
-    await this._sqlService.tryConnectAsync().then((success) => {
-      if (success) {
-        this._sqlService.sqlQuery("SELECT CURRENT_DATABASE() AS databaseName", (response: IResponseObject) => this.setDatabaseName(response));
-      }
-    }, (failure: string = "Could not connect to SQL server.") => {
-      console.log(failure);
-    });
+  ngOnInit(): void {
+    this._sqlService.tryConnectAsync((response: boolean) => this.setConnectionestablished(response));
+  }
+
+  setConnectionestablished(connected: boolean): void {
+    if (connected) {
+      this._sqlService.sqlQuery("SELECT CURRENT_DATABASE() AS databaseName", (response: IResponseObject) => this.setDatabaseName(response));
+    }
   }
 
   setDatabaseName(response: IResponseObject): void {
     if (response !== undefined) {
-      console.log(response);
       this.databaseName.next(response.rows[0]);
     }
     this._notifyDataUpdated.detectChanges();

@@ -86,10 +86,29 @@ export default class MainWindowRepository {
                 Logger.log(error as string, LogLevel.Error);
             }
         });
+
+        ipcMain.on('log:error', (event: IpcMainEvent, content) => {
+            try {
+                event.reply('log', Logger.log(content, LogLevel.Error));
+            } catch (error) {
+                Logger.log(error as string, LogLevel.Error);
+            }
+        });
     }
 
     emitKeyPressedEvent(keyGesture: string) {
         let win = BrowserWindow.getFocusedWindow();
         win!.webContents.send('keyPressed', keyGesture);
+
+        if (keyGesture === 'CmdOrCtrl+Shift+R') {
+            console.log("Window reloaded");
+            this.reloadWindow();
+        }
+    }
+
+    reloadWindow(): void {
+        let win = BrowserWindow.getFocusedWindow();
+
+        win?.reload();
     }
 }

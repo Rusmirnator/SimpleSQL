@@ -9,13 +9,21 @@ import { ModalComponent } from './shared/modal/modal.component';
 import { FooterComponent } from './shared/footer/footer.component';
 import { BackdropComponent } from './shared/backdrop/backdrop.component';
 import { LoggerService } from './base/services/logger.service';
+import { EditorComponent } from './shared/editor/editor.component';
+import { DataGridComponent } from './shared/data-grid/data-grid.component';
+import { RibbonComponent } from './shared/ribbon/ribbon.component';
+import { TreeViewComponent } from './shared/tree-view/tree-view.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ModalComponent,
     FooterComponent,
-    BackdropComponent
+    BackdropComponent,
+    EditorComponent,
+    DataGridComponent,
+    RibbonComponent,
+    TreeViewComponent
   ],
   imports: [
     BrowserModule,

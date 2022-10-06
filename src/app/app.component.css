@@ -1,4 +1,4 @@
-.content {
+.window {
   font-family: Arial, Helvetica, sans-serif;
   top: 0;
   left: 0;
@@ -6,166 +6,96 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
+  justify-items: center;
+  width: 100vw;
+  height: 100vh;
   user-select: none;
+  background-color: rgb(16, 46, 19);
 }
 
-.subContent {
+.main-content-container {
+  vertical-align: middle;
   display: flex;
   flex-direction: row;
-  height: calc(100% - 17px);
-  width: 100%;
+  flex: 1 1 auto;
+  margin: 3px;
 }
 
-.menu-container {
-  background-color: rgb(105, 4, 4);
-  height: 100%;
-  width: 200px;
-}
-
-.module-container {
-  width: calc(100% - 200px);
+.footer-container,
+.titleBar-container {
+  background: rgb(152, 163, 153);
+  text-align: justify;
+  height: min-content;
 }
 
 .footer-container {
-  background-color: rgb(161, 82, 99);
-  vertical-align: bottom;
-  text-align: justify;
+  position: sticky;
+  bottom: 0;
 }
 
-.collapsed {
-  width: 64px;
-  background-color: rgb(105, 4, 4);
-  height: 100%;
+.explorer-container {
+  display: flex;
+  margin: 3px;
 }
 
-.expanded {
-  width: calc(100% - 64px);
+.module-container {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  flex: 1 1 auto;
+  margin: 3px;
 }
 
-#menu-toggle {
-  opacity: 0;
-  min-width: 32px;
+.titleBar-container {
+  vertical-align: top;
+  display: flex;
+  flex-direction: row;
 }
 
-#menu-toggle:checked+.menu-btn>span {
-  transform: rotate(45deg);
-}
-
-#menu-toggle:checked+.menu-btn>span::before {
-  top: 0;
-  transform: rotate(0deg);
-}
-
-#menu-toggle:checked+.menu-btn>span::after {
-  top: 0;
-  transform: rotate(90deg);
-}
-
-.menu-btn {
-  position: fixed;
-  top: 30px;
-  left: 15px;
-  width: 26px;
-  height: 26px;
-  cursor: pointer;
-  z-index: 1;
-}
-
-.menu-btn>span,
-.menu-btn>span::before,
-.menu-btn>span::after {
-  display: block;
-  position: absolute;
+.titleBar-container .title {
+  -webkit-app-region: drag;
+  color: white;
+  font-weight: bolder;
+  align-self: stretch;
+  margin: 3px;
   width: 100%;
-  height: 2px;
-  background-color: white;
-  transition-duration: .25s;
 }
 
-.menu-btn>span::before {
-  content: '';
-  top: -8px;
-}
-
-.menu-btn>span::after {
-  content: '';
-  top: 8px;
-}
-
-.navigation {
-  max-width: 100%;
-  width: fit-content;
-  max-height: 100%;
-  overflow: hidden;
-  margin-top: 64px;
-  margin-right: 3px;
-}
-
-.mainmenu,
-.submenu,
-.auxmenu {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.mainmenu a {
-  display: block;
-  background-color: rgb(105, 4, 4);
-  text-decoration: none;
-  padding: 10px;
-  color: rgb(255, 255, 255);
-}
-
-.submenu a {
-  background-color: rgb(161, 82, 99);
-}
-
-.auxmenu a {
-  background-color: rgb(161, 82, 99);
-}
-
-.mainmenu a:hover {
-  background-color: rgb(179, 174, 174);
+.titleBar-container button {
+  color: white;
   font-weight: bolder;
-  transition-duration: .25s;
-
+  border: none;
+  min-width: fit-content;
 }
 
-.submenu a:hover {
-  background-color: rgb(179, 174, 174);
-  font-weight: bolder;
-  transition-duration: .25s;
+.titleBar-container button:not(.closeBtn) {
+  background: inherit;
 }
 
-.auxmenu a:hover {
-  background-color: rgb(179, 174, 174);
-  font-weight: bolder;
-  transition-duration: .25s;
+.closeBtn {
+  background: red;
 }
 
-.mainmenu li:hover .submenu {
-  display: block;
-  max-height: fit-content;
+.titleBar-container .buttons {
+  width: min-content;
+  display: flex;
+  flex-direction: row;
 }
 
-.submenu li:hover .auxmenu {
-  display: block;
-  max-height: fit-content;
+.titleBar-container button:hover {
+  background: lightgrey;
+  cursor: pointer;
 }
 
-.submenu {
-  overflow: hidden;
-  max-height: 0;
-  transition: all;
-  transition: 0.5s ease-out;
+app-ribbon {
+  margin-bottom: 3px;
 }
 
-.auxmenu {
-  overflow: hidden;
-  max-height: 0;
-  transition: all;
-  transition: 0.5s ease-out;
+app-editor {
+  flex: 1 1 auto;
+  margin-bottom: 3px;
+}
+
+app-data-grid {
+  flex: 1 1 auto;
 }

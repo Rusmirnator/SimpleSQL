@@ -1,0 +1,17 @@
+.container {
+    background: white;
+    flex: 1 1 auto;
+    display: flex;
+}
+
+.editor {
+    border: none;
+    background: white;
+    color: black;
+    flex: 1 1 auto;
+}
+
+[contentEditable='true'] {
+    caret-color: red;
+    flex: 1 1 auto;
+}

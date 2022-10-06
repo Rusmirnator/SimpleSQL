@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { LoggerService } from './base/services/logger.service';
+import { IDataRow } from './shared/interfaces/idata-row';
 
 @Component({
   selector: 'app-root',
@@ -8,22 +10,18 @@ import { LoggerService } from './base/services/logger.service';
 })
 export class AppComponent implements OnInit {
 
-  title: string = 'WMS Curiosity'
-  isMenuExpanded: boolean = true;
+  title: string = 'SimpleSQL'
   dlgTrigger: string | undefined;
   login: string | undefined;
   password: string | undefined;
+  commands: string | undefined;
+  
+  resultSet: Observable<IDataRow[]> = new Observable<IDataRow[]>();
+
 
   constructor(private _logger: LoggerService) { }
 
   ngOnInit(): void {
-    setTimeout(() => {
-      this.dlgTrigger = "dlgLogin";
-    }, 1500);
-  }
-
-  onToggleMenu(): void {
-    this.isMenuExpanded = !this.isMenuExpanded;
-    this._logger.log(`Sidemenu expanded: ${this.isMenuExpanded.toString()}`);
+    this._logger.logInfo(`[Modal] ${this.dlgTrigger}`);
   }
 }

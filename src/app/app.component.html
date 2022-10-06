@@ -1,35 +1,32 @@
-<div class="content" role="main">
-  <div class="subContent">
-    <div [className]="isMenuExpanded ? 'menu-container' : 'collapsed'">
-      <div class="menu-button">
-        <input id="menu-toggle" type="checkbox" (change)="onToggleMenu()" checked />
-        <label class="menu-btn" for="menu-toggle">
-          <span></span>
-        </label>
-      </div>
-      <div class="main-menu" *ngIf="isMenuExpanded" enabled="false">
-        <nav class="navigation">
-          <ul class="mainmenu">
-            <li>
-              <a>Procesy</a>
-            </li>
-            <li>
-              <a>Konfiguracja</a>
-            </li>
-            <li>
-              <a>Pozostałe</a>
-            </li>
-          </ul>
-        </nav>
-      </div>
+<div class="window" role="main">
+  <app-modal [show]="dlgTrigger === 'dlgLogin'" title="Logowanie" (closed)="dlgTrigger = ''">
+    <div style="display: flex; flex-direction: column">
+      <input role="textbox" type="text" [textContent]="login" placeholder="Login" />
+      <input role="textbox" type="text" [textContent]="password" placeholder="Hasło" />
     </div>
-    <div [className]="isMenuExpanded ? 'module-container' : 'expanded'">
-      <app-modal [show]="dlgTrigger === 'dlgLogin'" title="Logowanie" (closed)="dlgTrigger = ''">
-        <div style="display: flex; flex-direction: column">
-        <input role="textbox" type="text" [textContent]="login" placeholder="Login"/>
-        <input role="textbox" type="text" [textContent]="password" placeholder="Hasło"/>
-      </div>
-      </app-modal>
+  </app-modal>
+  <div class="titleBar-container">
+    <div class="title">
+      SimpleSQL
+    </div>
+    <div class="buttons">
+      <button>Minimize</button>
+      <button>Resize</button>
+      <button class="closeBtn">Close</button>
+    </div>
+  </div>
+  <div class="main-content-container">
+    <div class="explorer-container">
+      <app-tree-view>
+      </app-tree-view>
+    </div>
+    <div class="module-container">
+      <app-ribbon>
+      </app-ribbon>
+      <app-editor>
+      </app-editor>
+      <app-data-grid [itemsSource]="resultSet">
+      </app-data-grid>
       <router-outlet></router-outlet>
     </div>
   </div>

@@ -8,7 +8,6 @@ import { LogLevel } from "./enumerations";
 
 export default class SqlClient implements IProvideSqlConnection {
     parameters: IConnectionParameters;
-    client!: Client;
 
     constructor() {
         this.parameters = new ConnectionParameters();
@@ -18,33 +17,30 @@ export default class SqlClient implements IProvideSqlConnection {
         let url = new URL(connectionString);
 
         if (connectionString === null) {
-            Logger.log('ERROR: Connection could not be configured - connectionString is empty!', LogLevel.Error);
+            Logger.log('Connection could not be configured - connectionString is empty!', LogLevel.Error);
             return;
         }
 
         this.parameters.initialize(url.username, url.password, url.pathname, url.host, parseInt(url.port), SSLMode.Disable);
-
-        this.client = new Client(this.parameters);
     }
 
     public async executeQueryAsync(query: string, queryParameters?: any[]): Promise<any> {
         let response;
         let statement = new Query(query, queryParameters);
+        const client = new Client(this.parameters);
 
         try {
-            
-            await this.client.connect();
+            await client.connect();
 
             Logger.log(statement.text, LogLevel.Debug);
 
-            response = await this.client.execute(statement);
+            response = await client.execute(statement);
 
         } catch (err) {
-
             Logger.log(err as string, LogLevel.Error);
         }
         finally {
-            await this.client.end();
+            await client.end();
             return response;
         }
     }

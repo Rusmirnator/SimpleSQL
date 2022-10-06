@@ -1,0 +1,14 @@
+.layout-root {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    height: 100%;
+}
+
+.label {
+    background: lightsteelblue;
+    font-weight: bold;
+    margin-bottom: 5px;
+    padding: 3px;
+}

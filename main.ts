@@ -13,7 +13,7 @@ export default class Main {
     private static onAppReady() {
         Main.createWindow();
         Main.mainWindow!.on('closed', Main.onAppClosed);
-        Main.devToolsWindow!.on('closed', Main.onAppClosed)
+        Main.devToolsWindow!.on('closed', Main.onAppClosed);
     }
 
     private static onAllWindowClosed() {
@@ -41,7 +41,8 @@ export default class Main {
             minHeight: 768,
             x: 100,
             y: 100,
-            frame: true,
+            frame: false,
+            focusable: true,
             useContentSize: true,
             autoHideMenuBar: true,
             movable: true,
@@ -66,7 +67,7 @@ export default class Main {
         Main.mainRepository.registerMenuItem('action', 'F2', 'F2');
         Main.mainRepository.registerMenuItem('action', 'F3', 'F3');
         Main.mainRepository.registerMenuItem('action', 'F4', 'F4');
-        Main.mainRepository.registerMenuItem('action', 'F5', 'F5');
+        Main.mainRepository.registerMenuItem('action', 'Execute', 'F5');
         Main.mainRepository.registerMenuItem('action', 'F6', 'F6');
         Main.mainRepository.registerMenuItem('action', 'F7', 'F7');
         Main.mainRepository.registerMenuItem('action', 'F8', 'F8');
@@ -74,6 +75,9 @@ export default class Main {
         Main.mainRepository.registerMenuItem('action', 'F10', 'F10');
         Main.mainRepository.registerMenuItem('action', 'F11', 'F11');
         Main.mainRepository.registerMenuItem('action', 'F12', 'F12');
+        Main.mainRepository.registerMenuItem('action', 'Show/Hide grid', 'CmdOrCtrl+R');
+        Main.mainRepository.registerMenuCategory('dev', 'Development');
+        Main.mainRepository.registerMenuItem('dev', 'Reload', 'CmdOrCtrl+Shift+R');
         Main.mainRepository.finalizeMenuConfiguration();
     }
 

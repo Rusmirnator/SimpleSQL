@@ -18,7 +18,7 @@ export class SQLClientService {
     this._ipcService.send('sqlQuery', query);
   }
 
-  async tryConnectAsync(): Promise<boolean> {
+  tryConnectAsync(callback: Function): void {
     let canConnect: boolean = false;
 
     try {
@@ -26,12 +26,11 @@ export class SQLClientService {
       this.sqlQuery('SELECT NOW()', (response: IResponseObject) => {
         console.log(response);
         canConnect = true;
+
+        callback(canConnect);
       });
     } catch (exception) {
-
       console.log(exception);
-    } finally {
-      return canConnect;
     }
   }
 }

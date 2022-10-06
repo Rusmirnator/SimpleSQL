@@ -8,7 +8,11 @@ export class LoggerService {
 
   constructor(private _ipcService: IpcService) { }
 
-  log(content: string): void {
+  logInfo(content: string): void {
     this._ipcService.send('log', content);
+  }
+
+  logError(content: string): void {
+    this._ipcService.send('log:error', content);
   }
 }

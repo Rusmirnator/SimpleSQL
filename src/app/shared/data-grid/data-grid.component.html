@@ -17,7 +17,7 @@
                 </td>
             </tr>
         </tbody>
-        <tfoot>
+        <tfoot *ngIf="showTimeStamp == true">
             Ostatnio odświeżono: {{elapsedTime | async}}
         </tfoot>
     </table>

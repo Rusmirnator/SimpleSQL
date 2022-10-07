@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { KeyGestureService } from 'src/app/base/services/key-gesture.service';
+import { KeyGestureService } from 'src/app/core/services/key-gesture.service';
 
 @Component({
   selector: 'app-ribbon',

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { DataRow } from '../data-grid/classes/data-row';
+import { DataRow } from '../classes/data-row';
 
 @Pipe({
   name: 'dataRow'

@@ -1,12 +1,13 @@
-<div *ngIf="show" class="modal">
+<div *ngIf="isVisible" class="modal">
     <header class="header">
         <h2>{{title}}</h2>
-        <button class="close-btn" (click)="close()">X</button>
     </header>
     <div class="modal-body">
         <ng-content></ng-content>
     </div>
     <div class="modal-footer">
+        <button class="button-result" (click)="cancel()">Cancel</button>
+        <button class="button-result" (click)="apply($event)">Ok</button>
     </div>
 </div>
-<app-backdrop [show]="show" (clicked)="close()"></app-backdrop>
+<app-backdrop [isVisible]="isVisible" (clicked)="close()"></app-backdrop>

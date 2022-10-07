@@ -1,16 +1,17 @@
 <div class="window" role="main">
-  <app-modal [show]="dlgTrigger === 'dlgConnectionSettings'" title="Connection settings" (closed)="dlgTrigger = ''">
+  <app-modal [isVisible]="dlgTrigger === 'dlgConnectionSettings'" title="Connection settings"
+    (modalResult)="onModalResultResolved($event)">
     <div style="display:flex; flex-direction:column;gap:3px;margin-top:5px">
       <label for="host">Server address:</label>
-      <input id="host" role="textbox" type="text" [textContent]="host" placeholder="host" />
+      <input id="host" role="textbox" type="text" class="editable" placeholder="host" />
       <label for="host">Database name:</label>
-      <input id="database" role="textbox" type="text" [textContent]="database" placeholder="database" />
+      <input id="database" role="textbox" type="text" class="editable" placeholder="database" />
       <label for="host">Login:</label>
-      <input id="user" role="textbox" type="text" [textContent]="user" placeholder="user" />
+      <input id="user" role="textbox" type="text" class="editable" placeholder="user" />
       <label for="host">Password:</label>
-      <input id="password" role="textbox" type="password" [textContent]="password" placeholder="password" />
+      <input id="password" role="textbox" type="password" class="editable" placeholder="password" />
       <label for="host">SSL mode:</label>
-      <select id="ssl" (change)="onSSLModeSelected($event)">
+      <select id="ssl" (change)="onSSLModeSelected($event)" class="editable" [selectedIndex]="selectedIndex">
         <option value="disable">Disable</option>
         <option value="prefer">Prefer</option>
         <option value="require">Require</option>

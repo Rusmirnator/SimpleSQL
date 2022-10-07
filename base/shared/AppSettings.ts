@@ -1,6 +1,6 @@
 import { IAppSettings } from "base/interfaces/IAppSettings";
 
-export default class AppSettings implements IAppSettings {
+export class AppSettings implements IAppSettings {
 
     cachedValue: Object | undefined;
     loadedSettings: Object | undefined;

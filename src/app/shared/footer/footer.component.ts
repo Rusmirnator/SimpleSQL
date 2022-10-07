@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { IResponseObject, SQLClientService } from '../../base/services/sqlclient.service'
+import { SQLClientService, IResponseObject } from 'src/app/core/services/sqlclient.service';
 
 @Component({
   selector: 'app-footer',

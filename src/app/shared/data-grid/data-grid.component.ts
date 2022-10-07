@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { nextTick } from 'process';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { DataRow } from './classes/data-row';
+import { DataRow } from 'src/app/core/classes/data-row';
 
 @Component({
   selector: 'app-data-grid',

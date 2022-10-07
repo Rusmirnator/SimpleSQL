@@ -21,11 +21,18 @@
     align-items: center;
 }
 
-.close-btn {
+.button-result {
     color: #b3b3b3ee;
     background: none;
     border: none;
-    outline:none;
+    outline: none;
     cursor: pointer;
     font-size: 22px;
+}
+
+.modal-footer {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: flex-end;
+    padding: 10px;
 }

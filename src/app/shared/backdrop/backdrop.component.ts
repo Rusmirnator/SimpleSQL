@@ -1,15 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-backdrop',
   templateUrl: './backdrop.component.html',
-  styleUrls: ['./backdrop.component.css']
+  styleUrls: ['./backdrop.component.css'],
+  imports: [CommonModule],
+  standalone: true
 })
 export class BackdropComponent implements OnInit {
 
-  @Input() show: boolean | undefined;
+  @Input() isVisible: boolean | undefined;
   @Output() clicked = new EventEmitter<boolean>();
-  
+
   constructor() { }
 
   ngOnInit(): void {
@@ -18,5 +21,4 @@ export class BackdropComponent implements OnInit {
   backDropClick() {
     this.clicked.emit();
   }
-
 }

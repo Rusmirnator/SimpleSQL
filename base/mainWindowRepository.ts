@@ -1,10 +1,11 @@
-import { Menu, MenuItem, BrowserWindow, app, ipcMain, IpcMainEvent, ipcRenderer } from 'electron';
+import { Menu, MenuItem, BrowserWindow, app, ipcMain, IpcMainEvent } from 'electron';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { LogLevel } from './enumerations';
 import GeneralPurposeRepository from './generalPurposeRepository';
+import { IAppSettings } from './interfaces/IAppSettings';
 import Logger from './logger';
-import AppSettings from './shared/AppSettings';
+import { AppSettings } from './shared/AppSettings';
 import SqlClient from './sqlClient';
 
 export default class MainWindowRepository {
@@ -62,8 +63,9 @@ export default class MainWindowRepository {
             ipcMain.on("startup", (event: IpcMainEvent) => {
                 event.reply("configurationRequired", (filePath));
             });
-            ipcMain.on("configurationProvided", (event: IpcMainEvent, newFilePath: string) => {
-                this.loadConfigFile(newFilePath);
+            ipcMain.on("configurationProvided", (event: IpcMainEvent, createdSettings: IAppSettings) => {
+                this.generalRepository.safelyWriteToFile(filePath, JSON.stringify(createdSettings, null, 4));
+                this.loadConfigFile(filePath);
             });
             Logger.log(`Couldn't locate application settings file at: [${filePath}]`, LogLevel.Warning);
         }

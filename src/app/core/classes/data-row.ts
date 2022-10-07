@@ -1,4 +1,4 @@
-import { IDataRow } from "../../interfaces/idata-row";
+import { IDataRow } from "../interfaces/idata-row";
 
 export class DataRow implements IDataRow {
     Index: number = 0;

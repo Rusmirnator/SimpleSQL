@@ -19,7 +19,8 @@ export default class Logger {
     constructor() { }
 
     static log(message: string, level: LogLevel = LogLevel.Info) {
-        Logger.repository.safelyWriteToFile(Logger.path, `${this.newLine}${new Date().toTimeString()}|${level}|${message}`, "utf-8");
+        let currentTime = new Date();
+        Logger.repository.safelyWriteToFile(Logger.path, `${this.newLine}${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}:${currentTime.getMilliseconds()}|${level}|${message}`, "utf-8");
 
         if (Logger.newLine === "") {
             Logger.newLine = "\n";

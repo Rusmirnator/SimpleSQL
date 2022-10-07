@@ -13,12 +13,12 @@ export class TreeViewComponent implements OnInit {
   @Output() selectedItem: EventEmitter<DataRow> = new EventEmitter<DataRow>();
   @Input() itemsSource: Observable<DataRow[]> = new Observable<DataRow[]>();
 
-  constructor(private _notifyDataUpdated: ChangeDetectorRef) { }
+  constructor(private _ref: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.itemsSource.subscribe(() => {
       nextTick(() => {
-        this._notifyDataUpdated.detectChanges();
+        this._ref.detectChanges();
       });
     });
   }

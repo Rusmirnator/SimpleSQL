@@ -12,7 +12,7 @@ export class FooterComponent implements OnInit {
   databaseName = new BehaviorSubject<string>('');
   connectionEstablished: boolean | undefined;
 
-  constructor(private _sqlService: SQLClientService, private _notifyDataUpdated: ChangeDetectorRef) { }
+  constructor(private _sqlService: SQLClientService, private _ref: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this._sqlService.tryConnectAsync((response: boolean) => this.setConnectionestablished(response));
@@ -28,6 +28,6 @@ export class FooterComponent implements OnInit {
     if (response !== undefined) {
       this.databaseName.next(response.rows[0]);
     }
-    this._notifyDataUpdated.detectChanges();
+    this._ref.detectChanges();
   }
 }

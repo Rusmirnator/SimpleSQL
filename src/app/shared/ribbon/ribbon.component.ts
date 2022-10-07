@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { KeyGestureService } from 'src/app/base/services/key-gesture.service';
 
 @Component({
   selector: 'app-ribbon',
@@ -7,7 +8,7 @@ import { Component, OnInit } from '@angular/core';
 })
 export class RibbonComponent implements OnInit {
 
-  constructor() { }
+  constructor(private _keyGestureService: KeyGestureService) { }
 
   ngOnInit(): void {
   }

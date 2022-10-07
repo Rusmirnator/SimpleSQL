@@ -1,5 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { LoggerService } from 'src/app/base/services/logger.service';
+import { ChangeDetectorRef, Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-editor',
@@ -7,23 +6,15 @@ import { LoggerService } from 'src/app/base/services/logger.service';
   styleUrls: ['./editor.component.css']
 })
 export class EditorComponent implements OnInit {
-  
-  text?: string;
 
   @Output() editValue = new EventEmitter<string>();
 
-  constructor(private _logger: LoggerService) { }
+  constructor() { }
 
   ngOnInit(): void {
   }
 
-  onF5KeyUp(event: KeyboardEvent) {
-    if (event.key === 'F5') {
-      this._logger.logInfo("Command executed");
-    }
-  }
-
-  onTextInput(event: any){
-    console.log(event.target.value);
+  onTextInput(event: Event){
+    this.editValue.emit((event.target as HTMLElement).innerText);
   }
 }

@@ -1,8 +1,21 @@
 <div class="window" role="main">
-  <app-modal [show]="dlgTrigger === 'dlgLogin'" title="Logowanie" (closed)="dlgTrigger = ''">
-    <div style="display: flex; flex-direction: column">
-      <input role="textbox" type="text" [textContent]="login" placeholder="Login" />
-      <input role="textbox" type="text" [textContent]="password" placeholder="Hasło" />
+  <app-modal [show]="dlgTrigger === 'dlgConnectionSettings'" title="Connection settings" (closed)="dlgTrigger = ''">
+    <div style="display:flex; flex-direction:column;gap:3px;margin-top:5px">
+      <label for="host">Server address:</label>
+      <input id="host" role="textbox" type="text" [textContent]="host" placeholder="host" />
+      <label for="host">Database name:</label>
+      <input id="database" role="textbox" type="text" [textContent]="database" placeholder="database" />
+      <label for="host">Login:</label>
+      <input id="user" role="textbox" type="text" [textContent]="user" placeholder="user" />
+      <label for="host">Password:</label>
+      <input id="password" role="textbox" type="password" [textContent]="password" placeholder="password" />
+      <label for="host">SSL mode:</label>
+      <select id="ssl" (change)="onSSLModeSelected($event)">
+        <option value="disable">Disable</option>
+        <option value="prefer">Prefer</option>
+        <option value="require">Require</option>
+        <option value="verify-ca">Verify CA</option>
+      </select>
     </div>
   </app-modal>
   <div class="titleBar-container">

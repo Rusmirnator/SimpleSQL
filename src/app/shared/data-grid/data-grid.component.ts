@@ -21,14 +21,14 @@ export class DataGridComponent implements OnInit {
   @Input() itemsSource: Observable<DataRow[]> = new Observable<DataRow[]>();
   @Input() showTimeStamp?: boolean = false;
 
-  constructor(private _notifyDataUpdated: ChangeDetectorRef) {
+  constructor(private _ref: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
     this.itemsSource.subscribe(() => {
       nextTick(() => {
         this.elapsedTime.next(new Date().toLocaleTimeString());
-        this._notifyDataUpdated.detectChanges();
+        this._ref.detectChanges();
       });
     });
   }
@@ -52,7 +52,7 @@ export class DataGridComponent implements OnInit {
       console.log(this.fieldNameSource);
       this.isWaitIndicatorVisible = false;
 
-      this._notifyDataUpdated.detectChanges();
+      this._ref.detectChanges();
     }
   }
 
@@ -63,7 +63,7 @@ export class DataGridComponent implements OnInit {
 
     this.selectRow(row);
 
-    this._notifyDataUpdated.detectChanges();
+    this._ref.detectChanges();
     this.selectedItems.emit(this.selectedItemsBag);
   }
 
@@ -75,7 +75,7 @@ export class DataGridComponent implements OnInit {
     if ((event as MouseEvent).buttons === 1) {
       this.isWhileSelecting = true;
       this.selectRow(row);
-      this._notifyDataUpdated.detectChanges();
+      this._ref.detectChanges();
       return;
     }
 
@@ -86,7 +86,7 @@ export class DataGridComponent implements OnInit {
     console.log((event as KeyboardEvent).ctrlKey + (event as KeyboardEvent).key);
     if ((event as KeyboardEvent).ctrlKey && (event as KeyboardEvent).key === 'a') {
       this.selectAll();
-      this._notifyDataUpdated.detectChanges();
+      this._ref.detectChanges();
     }
   }
 

@@ -1,4 +1,4 @@
-import { Menu, MenuItem, BrowserWindow, app, ipcMain, IpcMainEvent } from 'electron';
+import { Menu, MenuItem, BrowserWindow, app, ipcMain, IpcMainEvent, ipcRenderer } from 'electron';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { LogLevel } from './enumerations';
@@ -57,27 +57,18 @@ export default class MainWindowRepository {
 
     initializeSettings(): void {
         let filePath = join(this.homeDirectory!, 'simplesql', 'appsettings.json');
-        let configFile = undefined;
 
-        if (existsSync(filePath)) {
-            configFile = this.generalRepository.safelyReadFile(filePath, 'utf-8');
-
-            try {
-                this.settings.consume(JSON.parse(configFile!));
-            } catch (error) {
-                Logger.log(error as string, LogLevel.Error);
-            }
-
-            this.client.configureConnection(this.settings.getSection("Connection:PGSQL").getValue<string>("DatabaseURL"));
-
-            ipcMain.on('sqlQuery', async (event: IpcMainEvent, query: string) => {
-                try {
-                    event.reply('sqlQuery', await this.client.executeQueryAsync(query));
-                } catch (error) {
-                    Logger.log(error as string, LogLevel.Error);
-                }
+        if (!existsSync(filePath)) {
+            ipcMain.on("startup", (event: IpcMainEvent) => {
+                event.reply("configurationRequired", (filePath));
             });
+            ipcMain.on("configurationProvided", (event: IpcMainEvent, newFilePath: string) => {
+                this.loadConfigFile(newFilePath);
+            });
+            Logger.log(`Couldn't locate application settings file at: [${filePath}]`, LogLevel.Warning);
         }
+
+        this.loadConfigFile(filePath);
 
         ipcMain.on('log', (event: IpcMainEvent, content) => {
             try {
@@ -110,5 +101,29 @@ export default class MainWindowRepository {
         let win = BrowserWindow.getFocusedWindow();
 
         win?.reload();
+    }
+
+    private loadConfigFile(filePath: string): void {
+        if (existsSync(filePath)) {
+            let configFile = this.generalRepository.safelyReadFile(filePath, 'utf-8');
+
+            try {
+                this.settings.consume(JSON.parse(configFile!));
+            } catch (error) {
+                Logger.log(error as string, LogLevel.Error);
+            }
+
+            this.client.configureConnection(this.settings.getSection("Connection:PGSQL").getValue<string>("DatabaseURL"));
+
+            ipcMain.on('sqlQuery', async (event: IpcMainEvent, query: string) => {
+                try {
+                    event.reply('sqlQuery', await this.client.executeQueryAsync(query));
+                } catch (error) {
+                    Logger.log(error as string, LogLevel.Error);
+                }
+            });
+
+            Logger.log(`Successfuly loaded application settings file from: [${filePath}]`, LogLevel.Info);
+        }
     }
 }

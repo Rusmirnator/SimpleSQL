@@ -12,7 +12,7 @@ export class IpcService {
     ipcRenderer.on(channel, (event: any, arg: any) => listener(event, arg));
   }
 
-  public send(channel: string, arg : any) : void {
+  public send(channel: string, arg? : any) : void {
     ipcRenderer.send(channel, arg);
   }
 }

@@ -13,7 +13,7 @@ export default class SqlClient implements IProvideSqlConnection {
         this.parameters = new ConnectionParameters();
     }
 
-    configureConnection(connectionString: string): void {
+    configureConnection(connectionString: string, ssl: SSLMode = SSLMode.Disable): void {
         let url = new URL(connectionString);
 
         if (connectionString === null) {
@@ -21,7 +21,7 @@ export default class SqlClient implements IProvideSqlConnection {
             return;
         }
 
-        this.parameters.initialize(url.username, url.password, url.pathname, url.host, parseInt(url.port), SSLMode.Disable);
+        this.parameters.initialize(url.username, url.password, url.pathname, url.host, parseInt(url.port), ssl);
     }
 
     public async executeQueryAsync(query: string, queryParameters?: any[]): Promise<any> {

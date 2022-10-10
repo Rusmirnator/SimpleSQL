@@ -56,6 +56,7 @@ export default class Main {
 
         Main.configureMenu();
         Main.initializeSettings();
+        Main.mainRepository.registerListeners();
         Main.mainWindow!.loadURL(new URL(path.join(__dirname, `/simplesql/index.html`)).href);
         Main.mainWindow!.webContents.setDevToolsWebContents(Main.devToolsWindow!.webContents);
         Main.mainWindow!.webContents.openDevTools({ mode: 'detach' });

@@ -12,6 +12,7 @@ import { ModalComponent } from './shared/modal/modal.component';
 import { IpcService } from './core/services/ipc.service';
 import { LoggerService } from './core/services/logger.service';
 import { SQLClientService } from './core/services/sqlclient.service';
+import { WaitIndicatorComponent } from './shared/wait-indicator/wait-indicator.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { SQLClientService } from './core/services/sqlclient.service';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    ModalComponent
+    ModalComponent,
+    WaitIndicatorComponent
   ],
   providers: [SQLClientService, IpcService, LoggerService],
   bootstrap: [AppComponent]

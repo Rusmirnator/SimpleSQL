@@ -1,21 +1,25 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { IAppSettings } from 'base/interfaces/IAppSettings';
 import { AppSettings } from 'base/shared/AppSettings';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import EventArgs from './core/classes/eventargs';
 import { IDataRow } from './core/interfaces/idata-row';
+import { ITreeViewElement } from './core/interfaces/itree-view-element';
 import { IpcService } from './core/services/ipc.service';
 import { LoggerService } from './core/services/logger.service';
+import { ServerService } from './core/services/server.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
   title: string = 'SimpleSQL'
   dlgTrigger: string | undefined;
+  connectionEstablished: boolean = true;
+  isWaitIndicatorVisible: boolean = false;
 
   appSettings: IAppSettings;
   host: string | undefined;
@@ -25,22 +29,44 @@ export class AppComponent implements OnInit {
   ssl: string | undefined;
   selectedIndex: number | undefined;
 
-  resultSet: Observable<IDataRow[]> = new Observable<IDataRow[]>();
+  resultSet$: Observable<IDataRow[]> = new Observable<IDataRow[]>();
+  databaseName$: Observable<string> = new Observable<string>();
+  databases$: Observable<ITreeViewElement[]> = new Observable<ITreeViewElement[]>();
 
-  constructor(private _logger: LoggerService, private _ipcService: IpcService, private _ref: ChangeDetectorRef) {
+  sub!: Subscription;
+
+  databaseName: string | undefined;
+
+  constructor(private _logger: LoggerService, private _ipcService: IpcService, private _ref: ChangeDetectorRef, private _serverService: ServerService) {
     this.appSettings = new AppSettings();
   }
 
   ngOnInit(): void {
+    this.toggleWaitIndicator();
+
+    this.sub = this._serverService.getDatabaseName().subscribe(dbn =>
+      this.databaseName = dbn
+    );
+
     this._ipcService.send('startup');
     this._ipcService.on('configurationRequired', (configPath: string) => {
+
+      this.connectionEstablished = false;
 
       this._logger.logInfo("Configuration required!");
 
       this.dlgTrigger = "dlgConnectionSettings";
       this._ref.detectChanges();
     });
+
+    this.refresh();
+    this.toggleWaitIndicator();
   }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
+
 
   onSSLModeSelected(event: Event) {
     this.ssl = (event.target as HTMLSelectElement).options[this.selectedIndex ??= 0].value;
@@ -48,7 +74,7 @@ export class AppComponent implements OnInit {
 
   onModalResultResolved(e: EventArgs<HTMLElement>) {
     if (e.handle) {
-      this.initializeFields(e.instance!);
+      this.consumeModalData(e.instance!);
       this.appSettings.loadedSettings = {
         Connection: {
           PGSQL: {
@@ -59,12 +85,17 @@ export class AppComponent implements OnInit {
       }
       this._logger.logInfo(`Manually provided connection settings...`);
       this._ipcService.send('configurationProvided', this.appSettings.loadedSettings);
+
+      this.connectionEstablished = true;
+      this.refresh();
     }
     this.dlgTrigger = '';
+
+    this.toggleWaitIndicator();
     this._ref.detectChanges();
   }
 
-  private initializeFields(modalBody: HTMLElement): void {
+  private consumeModalData(modalBody: HTMLElement): void {
     let elements = modalBody.getElementsByClassName("editable");
     this.host = (elements[0] as HTMLInputElement).value;
     this.database = (elements[1] as HTMLInputElement).value;
@@ -72,5 +103,15 @@ export class AppComponent implements OnInit {
     this.password = (elements[3] as HTMLInputElement).value;
     this.selectedIndex = (elements[4] as HTMLSelectElement).selectedIndex;
     this.ssl = (elements[4] as HTMLSelectElement).options[this.selectedIndex ??= 0].value;
+  }
+
+  private toggleWaitIndicator(override?: boolean) {
+    this.isWaitIndicatorVisible = override ?? !this.isWaitIndicatorVisible;
+  }
+
+  private async refresh(): Promise<void> {
+    if (this.connectionEstablished) {
+      //this.databaseName = this._serverService.getDatabaseName();
+    }
   }
 }

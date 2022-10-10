@@ -71,22 +71,6 @@ export default class MainWindowRepository {
         }
 
         this.loadConfigFile(filePath);
-
-        ipcMain.on('log', (event: IpcMainEvent, content) => {
-            try {
-                event.reply('log', Logger.log(content));
-            } catch (error) {
-                Logger.log(error as string, LogLevel.Error);
-            }
-        });
-
-        ipcMain.on('log:error', (event: IpcMainEvent, content) => {
-            try {
-                event.reply('log', Logger.log(content, LogLevel.Error));
-            } catch (error) {
-                Logger.log(error as string, LogLevel.Error);
-            }
-        });
     }
 
     emitKeyPressedEvent(keyGesture: string) {
@@ -115,7 +99,10 @@ export default class MainWindowRepository {
                 Logger.log(error as string, LogLevel.Error);
             }
 
-            this.client.configureConnection(this.settings.getSection("Connection:PGSQL").getValue<string>("DatabaseURL"));
+            let connectionString = this.settings.getSection("Connection:PGSQL").getValue<string>("DatabaseURL");
+            let ssl = this.settings.getSection("Connection:PGSQL").getValue<string>("SSL");
+
+            this.client.configureConnection(connectionString);
 
             ipcMain.on('sqlQuery', async (event: IpcMainEvent, query: string) => {
                 try {
@@ -127,5 +114,47 @@ export default class MainWindowRepository {
 
             Logger.log(`Successfuly loaded application settings file from: [${filePath}]`, LogLevel.Info);
         }
+    }
+
+    registerListeners(): void {
+        ipcMain.on('log', (event: IpcMainEvent, content) => {
+            try {
+                event.reply('log', Logger.log(content));
+            } catch (error) {
+                Logger.log(error as string, LogLevel.Error);
+            }
+        });
+
+        ipcMain.on('log:warning', (event: IpcMainEvent, content) => {
+            try {
+                event.reply('log', Logger.log(content, LogLevel.Warning));
+            } catch (error) {
+                Logger.log(error as string, LogLevel.Error);
+            }
+        });
+
+        ipcMain.on('log:error', (event: IpcMainEvent, content) => {
+            try {
+                event.reply('log', Logger.log(content, LogLevel.Error));
+            } catch (error) {
+                Logger.log(error as string, LogLevel.Error);
+            }
+        });
+
+        ipcMain.on('log:debug', (event: IpcMainEvent, content) => {
+            try {
+                event.reply('log', Logger.log(content, LogLevel.Debug));
+            } catch (error) {
+                Logger.log(error as string, LogLevel.Error);
+            }
+        });
+
+        ipcMain.on('log:trace', (event: IpcMainEvent, content) => {
+            try {
+                event.reply('log', Logger.log(content, LogLevel.Trace));
+            } catch (error) {
+                Logger.log(error as string, LogLevel.Error);
+            }
+        });
     }
 }

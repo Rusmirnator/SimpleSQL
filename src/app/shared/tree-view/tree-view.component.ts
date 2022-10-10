@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { nextTick } from 'process';
 import { Observable } from 'rxjs';
-import { DataRow } from 'src/app/core/classes/data-row';
+import { ITreeViewElement } from 'src/app/core/interfaces/itree-view-element';
 
 @Component({
   selector: 'app-tree-view',
@@ -10,8 +10,8 @@ import { DataRow } from 'src/app/core/classes/data-row';
 })
 export class TreeViewComponent implements OnInit {
 
-  @Output() selectedItem: EventEmitter<DataRow> = new EventEmitter<DataRow>();
-  @Input() itemsSource: Observable<DataRow[]> = new Observable<DataRow[]>();
+  @Output() selectedItem: EventEmitter<ITreeViewElement> = new EventEmitter<ITreeViewElement>();
+  @Input() itemsSource: Observable<ITreeViewElement[]> = new Observable<ITreeViewElement[]>();
 
   constructor(private _ref: ChangeDetectorRef) { }
 

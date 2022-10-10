@@ -7,9 +7,11 @@ import { IpcService } from './ipc.service';
 export class SQLClientService {
 
   private responseCallback!: Function;
+  private temporaryValue?: IResponseObject;
 
   constructor(private _ipcService: IpcService) {
     _ipcService.on('sqlQuery', (_event: any, arg: IResponseObject) => this.responseCallback(arg));
+    _ipcService.on('sqlQueryAsync', (_event: any, arg: IResponseObject) => this.setTemporaryValue(arg));
   }
 
   sqlQuery(query: string, callback: Function): void {
@@ -32,6 +34,26 @@ export class SQLClientService {
     } catch (exception) {
       console.log(exception);
     }
+  }
+
+  async sqlQueryAsync(query: string, args?: any[]): Promise<IResponseObject> {
+    let tasks: Promise<any>[] = [];
+
+    tasks.push(new Promise<void>((resolve) => {
+      this._ipcService.send('sqlQuery', query);
+      return resolve;
+    }));
+
+    tasks.push(new Promise<IResponseObject>((returnValue) => {
+      while (this.temporaryValue === undefined) {
+      }
+      this.temporaryValue = returnValue;
+      return ;
+    }));
+  }
+
+  private setTemporaryValue(response: IResponseObject) {
+    this.temporaryValue = response;
   }
 }
 

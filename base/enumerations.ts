@@ -5,3 +5,8 @@ export enum LogLevel {
     Debug = 'DEBUG',
     Trace = 'TRACE'
 }
+
+export enum ServerProvider {
+    PGSQL = 'pg',
+    MSSQL = 'ms'
+}

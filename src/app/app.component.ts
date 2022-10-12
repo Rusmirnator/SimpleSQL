@@ -1,7 +1,8 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { BindableBase } from 'base/bindablebase';
 import { IAppSettings } from 'base/interfaces/IAppSettings';
 import { AppSettings } from 'base/shared/AppSettings';
-import { Observable, Subscription } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import EventArgs from './core/classes/eventargs';
 import { IDataRow } from './core/interfaces/idata-row';
 import { ITreeViewElement } from './core/interfaces/itree-view-element';
@@ -14,10 +15,9 @@ import { ServerService } from './core/services/server.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent extends BindableBase implements OnInit {
 
-  title: string = 'SimpleSQL'
-  dlgTrigger: string | undefined;
+  dlgTrigger: string | null | undefined;
   connectionEstablished: boolean = true;
   isWaitIndicatorVisible: boolean = false;
 
@@ -29,27 +29,41 @@ export class AppComponent implements OnInit, OnDestroy {
   ssl: string | undefined;
   selectedIndex: number | undefined;
 
-  resultSet$: Observable<IDataRow[]> = new Observable<IDataRow[]>();
-  databaseName$: Observable<string> = new Observable<string>();
-  databases$: Observable<ITreeViewElement[]> = new Observable<ITreeViewElement[]>();
+  public get databaseName(): string {
+    return this.getValue<string>("databaseName$");
+  }
 
-  sub!: Subscription;
+  public set databaseName(value: string) {
+    if (this.setValue("databaseName$", value)) {
+      this._ref.detectChanges();
+    }
+  }
 
-  databaseName: string | undefined;
+  public get databases(): ITreeViewElement[] {
+    return this.getValue<ITreeViewElement[]>("databases$");
+  }
+
+  public set databases(value: ITreeViewElement[]) {
+    if (this.setValue("databases$", value)) {
+      this._ref.detectChanges();
+    }
+  }
+
+  resultSet$: BehaviorSubject<IDataRow[]> = new BehaviorSubject<IDataRow[]>([]);
+  databaseName$: BehaviorSubject<string> = new BehaviorSubject<string>("");
+  databases$: BehaviorSubject<ITreeViewElement[]> = new BehaviorSubject<ITreeViewElement[]>([]);
 
   constructor(private _logger: LoggerService, private _ipcService: IpcService, private _ref: ChangeDetectorRef, private _serverService: ServerService) {
+    super();
+
     this.appSettings = new AppSettings();
   }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.toggleWaitIndicator();
 
-    this.sub = this._serverService.getDatabaseName().subscribe(dbn =>
-      this.databaseName = dbn
-    );
-
     this._ipcService.send('startup');
-    this._ipcService.on('configurationRequired', (configPath: string) => {
+    this._ipcService.on('configurationRequired', (_configPath: string) => {
 
       this.connectionEstablished = false;
 
@@ -59,14 +73,16 @@ export class AppComponent implements OnInit, OnDestroy {
       this._ref.detectChanges();
     });
 
-    this.refresh();
+    await this.refresh();
     this.toggleWaitIndicator();
   }
 
-  ngOnDestroy(): void {
-    this.sub.unsubscribe();
-  }
+  protected override raisePropertyChanged<T>(propertyName: string, value: T): void {
+    super.raisePropertyChanged(propertyName, value);
+    let key: keyof this = propertyName as any;
 
+    (this[key] as unknown as BehaviorSubject<T>).next(value);
+  }
 
   onSSLModeSelected(event: Event) {
     this.ssl = (event.target as HTMLSelectElement).options[this.selectedIndex ??= 0].value;
@@ -89,7 +105,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.connectionEstablished = true;
       this.refresh();
     }
-    this.dlgTrigger = '';
+    this.dlgTrigger = "";
 
     this.toggleWaitIndicator();
     this._ref.detectChanges();
@@ -105,13 +121,20 @@ export class AppComponent implements OnInit, OnDestroy {
     this.ssl = (elements[4] as HTMLSelectElement).options[this.selectedIndex ??= 0].value;
   }
 
-  private toggleWaitIndicator(override?: boolean) {
-    this.isWaitIndicatorVisible = override ?? !this.isWaitIndicatorVisible;
+  private toggleWaitIndicator() {
+    this.isWaitIndicatorVisible = !this.isWaitIndicatorVisible;
+    this._ref.detectChanges();
   }
 
   private async refresh(): Promise<void> {
     if (this.connectionEstablished) {
-      //this.databaseName = this._serverService.getDatabaseName();
+      this._serverService.getDatabaseName((res: string) => {
+        this.databaseName = res;
+      });
+
+      this._serverService.getDatabases((res: ITreeViewElement[]) => {
+        this.databases = res;
+      });
     }
   }
 }

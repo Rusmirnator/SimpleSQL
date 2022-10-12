@@ -5,18 +5,14 @@ import { IpcService } from './ipc.service';
   providedIn: 'root'
 })
 export class SQLClientService {
-
-  private responseCallback!: Function;
   private temporaryValue?: IResponseObject;
 
   constructor(private _ipcService: IpcService) {
-    _ipcService.on('sqlQuery', (_event: any, arg: IResponseObject) => this.responseCallback(arg));
     _ipcService.on('sqlQueryAsync', (_event: any, arg: IResponseObject) => this.setTemporaryValue(arg));
   }
 
   sqlQuery(query: string, callback: Function): void {
-    this.responseCallback = callback;
-
+    this._ipcService.on('sqlQuery', (_event: any, arg: IResponseObject) => callback(arg));
     this._ipcService.send('sqlQuery', query);
   }
 
@@ -36,20 +32,29 @@ export class SQLClientService {
     }
   }
 
-  async sqlQueryAsync(query: string, args?: any[]): Promise<IResponseObject> {
+  async sqlQueryAsync(query: string, args?: any[]): Promise<IResponseObject | unknown> {
     let tasks: Promise<any>[] = [];
 
-    tasks.push(new Promise<void>((resolve) => {
+    tasks.push(new Promise<void>((resolve, reject) => {
       this._ipcService.send('sqlQuery', query);
-      return resolve;
     }));
 
-    tasks.push(new Promise<IResponseObject>((returnValue) => {
+    tasks.push(new Promise<IResponseObject>((resolve, reject) => {
+      console.log("promise 2");
       while (this.temporaryValue === undefined) {
+        setTimeout(() => {
+          console.log("waiting...");
+        }, 1000);
       }
-      this.temporaryValue = returnValue;
-      return ;
+
+      let res = this.temporaryValue;
+
+      this.temporaryValue = undefined;
+
+      return res;
     }));
+
+    return await Promise.all(tasks);
   }
 
   private setTemporaryValue(response: IResponseObject) {

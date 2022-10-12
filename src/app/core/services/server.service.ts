@@ -1,7 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ServerProvider } from 'base/enumerations';
-import { Observable } from 'rxjs';
-import { TreeViewElement } from '../classes/tree-view-element';
 import { IResponseObject, SQLClientService } from './sqlclient.service';
 
 @Injectable({
@@ -9,32 +7,26 @@ import { IResponseObject, SQLClientService } from './sqlclient.service';
 })
 export class ServerService {
 
-  private provider?: ServerProvider | ServerProvider.PGSQL;
+  private provider?: ServerProvider = ServerProvider.PGSQL;
 
   constructor(private _sqlService: SQLClientService) { }
 
-  getServerMembers(): Observable<TreeViewElement[]> {
-    let response: IResponseObject;
+  getDatabases(callback: Function): void {
     let query: string;
 
     switch (this.provider) {
       case ServerProvider.PGSQL:
-        query = "SELECT datname FROM pg_database";
+        query = "SELECT datname AS header FROM pg_database";
         break;
       case ServerProvider.MSSQL:
         query = "SELECT name FROM sys.databases";
         break;
     }
 
-    this._sqlService.sqlQuery(query!, (requestResponse: IResponseObject) => response = requestResponse);
-
-    return new Observable(sub => {
-      sub.next(response.rows);
-    });
+    this._sqlService.sqlQuery(query!, (response: IResponseObject) => callback(response.rows));
   }
 
-  getDatabaseName(): Observable<string> {
-    let response: IResponseObject;
+  getDatabaseName(callback: Function): void {
     let query: string;
 
     switch (this.provider) {
@@ -45,9 +37,6 @@ export class ServerService {
         query = "SELECT DB_NAME() AS databaseName";
         break;
     }
-
-    this._sqlService.sqlQuery(query!, (requestResponse: IResponseObject) => response = requestResponse);
-
-    return response!.rows[0] ?? "luj";
+    this._sqlService.sqlQuery(query!, (response: IResponseObject) => callback(response.rows[0]));
   }
 }

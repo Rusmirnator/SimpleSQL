@@ -1,4 +1,4 @@
-<div class="lds-dual-ring" [ngClass]="'isVisible ? visible : '">
+<div class="lds-dual-ring" [ngClass]="isVisible === true ? '' : 'invisible'">
     <ng-content>
     </ng-content>
 </div>

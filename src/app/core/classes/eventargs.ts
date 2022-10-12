@@ -1,4 +1,4 @@
-import { IEventArgs } from "../interfaces/ieventargs";
+import { IEventArgs } from "../../../../base/interfaces/IEventArgs";
 
 export default class EventArgs<T> implements IEventArgs<T>{
     instance?: T | undefined;

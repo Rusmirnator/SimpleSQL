@@ -13,6 +13,7 @@ import { IpcService } from './core/services/ipc.service';
 import { LoggerService } from './core/services/logger.service';
 import { SQLClientService } from './core/services/sqlclient.service';
 import { WaitIndicatorComponent } from './shared/wait-indicator/wait-indicator.component';
+import { TreeViewElementPipe } from './core/pipes/tree-view-element.pipe';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { WaitIndicatorComponent } from './shared/wait-indicator/wait-indicator.c
     EditorComponent,
     DataGridComponent,
     RibbonComponent,
-    TreeViewComponent
+    TreeViewComponent,
+    TreeViewElementPipe
   ],
   imports: [
     BrowserModule,

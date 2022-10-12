@@ -1,5 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { nextTick } from 'process';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ITreeViewElement } from 'src/app/core/interfaces/itree-view-element';
 
@@ -13,14 +12,9 @@ export class TreeViewComponent implements OnInit {
   @Output() selectedItem: EventEmitter<ITreeViewElement> = new EventEmitter<ITreeViewElement>();
   @Input() itemsSource: Observable<ITreeViewElement[]> = new Observable<ITreeViewElement[]>();
 
-  constructor(private _ref: ChangeDetectorRef) { }
+  constructor() { }
 
   ngOnInit(): void {
-    this.itemsSource.subscribe(() => {
-      nextTick(() => {
-        this._ref.detectChanges();
-      });
-    });
   }
 
 }

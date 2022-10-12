@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { IEventArgs } from 'base/interfaces/IEventArgs';
 import EventArgs from 'src/app/core/classes/eventargs';
-import { IEventArgs } from 'src/app/core/interfaces/ieventargs';
 import { BackdropComponent } from '../backdrop/backdrop.component';
 
 @Component({

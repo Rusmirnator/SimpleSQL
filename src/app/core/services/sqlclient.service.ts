@@ -5,14 +5,11 @@ import { IpcService } from './ipc.service';
   providedIn: 'root'
 })
 export class SQLClientService {
-  private temporaryValue?: IResponseObject;
 
-  constructor(private _ipcService: IpcService) {
-    _ipcService.on('sqlQueryAsync', (_event: any, arg: IResponseObject) => this.setTemporaryValue(arg));
-  }
+  constructor(private _ipcService: IpcService) { }
 
   sqlQuery(query: string, callback: Function): void {
-    this._ipcService.on('sqlQuery', (_event: any, arg: IResponseObject) => callback(arg));
+    this._ipcService.once(this.prepareQueryId(query), (_event: any, arg: IResponseObject) => callback(arg));
     this._ipcService.send('sqlQuery', query);
   }
 
@@ -39,26 +36,19 @@ export class SQLClientService {
       this._ipcService.send('sqlQuery', query);
     }));
 
-    tasks.push(new Promise<IResponseObject>((resolve, reject) => {
-      console.log("promise 2");
-      while (this.temporaryValue === undefined) {
-        setTimeout(() => {
-          console.log("waiting...");
-        }, 1000);
-      }
-
-      let res = this.temporaryValue;
-
-      this.temporaryValue = undefined;
-
-      return res;
-    }));
-
     return await Promise.all(tasks);
   }
 
-  private setTemporaryValue(response: IResponseObject) {
-    this.temporaryValue = response;
+  private prepareQueryId(query: string): string {
+    let hash = 0, i, chr;
+
+    for (i = 0; i < query.length; i++) {
+      chr = query.charCodeAt(i);
+      hash = ((hash << 5) - hash) + chr;
+      hash |= 0;
+    }
+
+    return `sqlQuery:${hash.toString()}`;
   }
 }
 

@@ -106,7 +106,7 @@ export default class MainWindowRepository {
 
             ipcMain.on('sqlQuery', async (event: IpcMainEvent, query: string) => {
                 try {
-                    event.reply('sqlQuery', await this.client.executeQueryAsync(query));
+                    event.reply(`sqlQuery:${this.generalRepository.toHashCode(query)}`, await this.client.executeQueryAsync(query));
                 } catch (error) {
                     Logger.log(error as string, LogLevel.Error);
                 }

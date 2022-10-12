@@ -8,11 +8,15 @@ export class IpcService {
 
   constructor() { }
 
-  public on(channel: string, listener: Function) : void {
+  public on(channel: string, listener: Function): void {
     ipcRenderer.on(channel, (event: any, arg: any) => listener(event, arg));
   }
 
-  public send(channel: string, arg? : any) : void {
+  public once(channel: string, listener: Function): void {
+    ipcRenderer.once(channel, (event: any, arg: any) => listener(event, arg));
+  }
+
+  public send(channel: string, arg?: any): void {
     ipcRenderer.send(channel, arg);
   }
 }

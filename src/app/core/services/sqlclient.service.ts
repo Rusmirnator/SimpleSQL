@@ -13,7 +13,7 @@ export class SQLClientService {
     this._ipcService.send('sqlQuery', query);
   }
 
-  tryConnectAsync(callback: Function): void {
+  tryConnect(callback: Function): void {
     let canConnect: boolean = false;
 
     try {
@@ -41,6 +41,30 @@ export class SQLClientService {
     });
   }
 
+  asSingle<T>(source: IResponseObject): T {
+    return this.asMany(source)[0] as T;
+  }
+
+  asMany<T>(source: IResponseObject): T[] {
+    let res: T[] = [];
+
+    source.rows.forEach((row) => {
+      res.push(this.mapSingle<T>(source.names, row));
+    });
+
+    return res;
+  }
+
+  private mapSingle<T>(colSource: string[], rowSource: Object[]): T {
+    let entries = new Map<string, Object>();
+
+    colSource.forEach((col) => {
+      entries.set(col, rowSource[this.getColumnIndex(col, colSource)]);
+    });
+
+    return Object.fromEntries(entries) as unknown as T;
+  }
+
   private prepareQueryId(query: string): string {
     let hash = 0, i, chr;
 
@@ -51,6 +75,10 @@ export class SQLClientService {
     }
 
     return `sqlQuery:${hash.toString()}`;
+  }
+
+  private getColumnIndex(colName: string, colSource: string[]): number {
+    return colSource.indexOf(colName);
   }
 }
 

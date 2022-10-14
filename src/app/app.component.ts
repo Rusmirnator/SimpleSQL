@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { IAppSettings } from 'base/interfaces/IAppSettings';
 import { AppSettings } from 'base/shared/AppSettings';
-import { BehaviorSubject, from, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import EventArgs from './core/classes/eventargs';
 import { IDataRow } from './core/interfaces/idata-row';
 import { ITreeViewElement } from './core/interfaces/itree-view-element';
@@ -99,10 +99,8 @@ export class AppComponent implements OnInit {
 
   private async initAsync(): Promise<void> {
     if (this.connectionEstablished) {
-      this.databaseName$ = from(await this._serverService.getDatabaseNameAsync());
-      let res = new BehaviorSubject<ITreeViewElement[]>(await this._serverService.getDatabasesAsync());
-
-      this.databases$ = res.asObservable();
+      this.databaseName$ = (await this._serverService.getDatabaseNameAsync()).asObservable();
+      this.databases$ = (await this._serverService.getDatabasesAsync()).asObservable()
     }
   }
 }

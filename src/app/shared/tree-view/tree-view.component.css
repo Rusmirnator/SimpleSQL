@@ -20,11 +20,12 @@
 
 .branch {
     display: block;
-    min-height: 10px;
+    min-width: fit-content;
     min-height: fit-content;
 }
 
 .branch:hover {
     border: 1px;
     border-color: black;
+    background: lightyellow;
 }

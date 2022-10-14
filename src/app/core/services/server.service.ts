@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ServerProvider } from 'base/enumerations';
+import { BehaviorSubject } from 'rxjs';
 import { DataRow } from '../classes/data-row';
 import { TreeViewElement } from '../classes/tree-view-element';
 import { IDataRow } from '../interfaces/idata-row';
@@ -15,12 +16,12 @@ export class ServerService {
 
   constructor(private _sqlService: SQLClientService) { }
 
-  async getDatabasesAsync(): Promise<ITreeViewElement[]> {
+  async getDatabasesAsync(): Promise<BehaviorSubject<ITreeViewElement[]>> {
     let query: string;
 
     switch (this.provider) {
       case ServerProvider.PGSQL:
-        query = "SELECT datname AS header, datdba as number FROM pg_database";
+        query = "SELECT datname AS header, ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS index FROM pg_database";
         break;
       case ServerProvider.MSSQL:
         query = "SELECT name FROM sys.databases";
@@ -29,12 +30,10 @@ export class ServerService {
 
     let res = await this._sqlService.sqlQueryAsync(query!);
 
-    console.log(res);
-
-    return this.toTreeViewElementArray(res);
+    return new BehaviorSubject<ITreeViewElement[]>(this._sqlService.asMany(res));
   }
 
-  async getDatabaseNameAsync(): Promise<string> {
+  async getDatabaseNameAsync(): Promise<BehaviorSubject<string>> {
     let query: string;
 
     switch (this.provider) {
@@ -48,36 +47,12 @@ export class ServerService {
 
     let res = await this._sqlService.sqlQueryAsync(query!);
 
-    console.log(res);
-
-    return res.rows[0];
+    return new BehaviorSubject<string>(res.rows[0]);
   }
 
-  private toDataRowArray(response: IResponseObject): IDataRow[] {
-    let output: IDataRow[] = [];
-    let columns = response.names;
+  async getResultSetAsync(query: string): Promise<BehaviorSubject<IDataRow[]>> {
+    let res = await this._sqlService.sqlQueryAsync(query!);
 
-    // response.rows.map((row: [], i) => {
-    //   let obj = new DataRow(i);
-    //   let entries = Object.entries(obj.rowData!);
-    //   obj.createRowData(response.names, row)
-
-    //   columns.map((col, j) => {
-    //     entries.push([col, row[j]]);
-    //     output.push(obj);
-    //     console.log(obj);
-    //   })
-    // });
-    return output;
-  }
-
-  private toTreeViewElementArray(response: IResponseObject): ITreeViewElement[] {
-    let output: ITreeViewElement[] = [];
-
-    response.rows.map((row, i) => {
-      output.push(new TreeViewElement(row[i], false, false, i));
-    });
-
-    return output;
+    return new BehaviorSubject<IDataRow[]>(this._sqlService.asMany(res));
   }
 }

@@ -36,18 +36,18 @@ export class DataGridComponent implements OnInit {
   onDataInitialized(data: DataRow[]): void {
     if (this.fieldNameSource === undefined) {
 
-      this.fieldNameSource = [];
-      for (let o of data) {
-        console.log(o);
-        for (let f of Object.keys(o.Instance)) {
-          this.fieldNameSource.push(f);
-        }
-        break;
-      }
+      // this.fieldNameSource = [];
+      // for (let o of data) {
+      //   console.log(o);
+      //   for (let f of Object.keys(o.instance)) {
+      //     this.fieldNameSource.push(f);
+      //   }
+      //   break;
+      // }
 
-      for (let property of Object.keys(data[0].Instance)) {
-        console.log(property);
-      }
+      // for (let property of Object.keys(data[0].instance)) {
+      //   console.log(property);
+      // }
 
       console.log(this.fieldNameSource);
       this.isWaitIndicatorVisible = false;
@@ -95,7 +95,7 @@ export class DataGridComponent implements OnInit {
 
     this.itemsSource.forEach(data => {
       data.forEach(row => {
-        row.IsSelected = false;
+        row.isSelected = false;
       });
     });
   }
@@ -103,7 +103,7 @@ export class DataGridComponent implements OnInit {
   selectAll(): void {
     this.itemsSource.forEach(data => {
       data.forEach(row => {
-        row.IsSelected = true;
+        row.isSelected = true;
       });
     });
   }
@@ -111,25 +111,25 @@ export class DataGridComponent implements OnInit {
   selectSome(startIndex: number, lastIndex: number): void {
     this.itemsSource.forEach(data => {
       data.forEach(row => {
-        if (row.Index >= startIndex && row.Index <= lastIndex) {
-          row.IsSelected = true;
-          this.selectedItemsBag.push(row.Instance);
+        if (row.index >= startIndex && row.index <= lastIndex) {
+          row.isSelected = true;
+          this.selectedItemsBag.push(row.rowData);
         }
       })
     });
   }
 
   selectRow(row: DataRow): void {
-    row.IsSelected = !row.IsSelected;
+    row.isSelected = !row.isSelected;
 
-    switch (row.IsSelected) {
+    switch (row.isSelected) {
       case true:
 
-        this.selectedItemsBag.push(row.Instance);
+        this.selectedItemsBag.push(row.rowData);
         break;
 
       case false:
-        this.selectedItemsBag.splice(this.selectedItemsBag.indexOf(row.Instance), 1);
+        this.selectedItemsBag.splice(this.selectedItemsBag.indexOf(row.rowData), 1);
         break;
     }
   }

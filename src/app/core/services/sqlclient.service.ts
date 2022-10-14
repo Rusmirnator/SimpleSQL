@@ -29,14 +29,16 @@ export class SQLClientService {
     }
   }
 
-  async sqlQueryAsync(query: string, args?: any[]): Promise<IResponseObject | unknown> {
-    let tasks: Promise<any>[] = [];
-
-    tasks.push(new Promise<void>((resolve, reject) => {
+  async sqlQueryAsync(query: string, args?: any[]): Promise<IResponseObject> {
+    return new Promise((resolve, reject) => {
       this._ipcService.send('sqlQuery', query);
-    }));
-
-    return await Promise.all(tasks);
+      this._ipcService.once(this.prepareQueryId(query), (_event: any, response: IResponseObject) => {
+        if (response === undefined) {
+          reject("Couldn't query asynchronously!");
+        }
+        resolve(response);
+      });
+    });
   }
 
   private prepareQueryId(query: string): string {

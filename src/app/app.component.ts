@@ -1,8 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import { BindableBase } from 'base/bindablebase';
 import { IAppSettings } from 'base/interfaces/IAppSettings';
 import { AppSettings } from 'base/shared/AppSettings';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, from, Observable } from 'rxjs';
 import EventArgs from './core/classes/eventargs';
 import { IDataRow } from './core/interfaces/idata-row';
 import { ITreeViewElement } from './core/interfaces/itree-view-element';
@@ -15,7 +14,7 @@ import { ServerService } from './core/services/server.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent extends BindableBase implements OnInit {
+export class AppComponent implements OnInit {
 
   dlgTrigger: string | null | undefined;
   connectionEstablished: boolean = true;
@@ -29,33 +28,11 @@ export class AppComponent extends BindableBase implements OnInit {
   ssl: string | undefined;
   selectedIndex: number | undefined;
 
-  public get databaseName(): string {
-    return this.getValue<string>("databaseName$");
-  }
-
-  public set databaseName(value: string) {
-    if (this.setValue("databaseName$", value)) {
-      this._ref.detectChanges();
-    }
-  }
-
-  public get databases(): ITreeViewElement[] {
-    return this.getValue<ITreeViewElement[]>("databases$");
-  }
-
-  public set databases(value: ITreeViewElement[]) {
-    if (this.setValue("databases$", value)) {
-      this._ref.detectChanges();
-    }
-  }
-
-  resultSet$: BehaviorSubject<IDataRow[]> = new BehaviorSubject<IDataRow[]>([]);
-  databaseName$: BehaviorSubject<string> = new BehaviorSubject<string>("");
-  databases$: BehaviorSubject<ITreeViewElement[]> = new BehaviorSubject<ITreeViewElement[]>([]);
+  resultSet$: Observable<IDataRow[]> = new Observable<IDataRow[]>();
+  databaseName$: Observable<string> = new Observable<string>();
+  databases$: Observable<ITreeViewElement[]> = new Observable<ITreeViewElement[]>();
 
   constructor(private _logger: LoggerService, private _ipcService: IpcService, private _ref: ChangeDetectorRef, private _serverService: ServerService) {
-    super();
-
     this.appSettings = new AppSettings();
   }
 
@@ -73,15 +50,9 @@ export class AppComponent extends BindableBase implements OnInit {
       this._ref.detectChanges();
     });
 
-    await this.refresh();
+    await this.initAsync();
+
     this.toggleWaitIndicator();
-  }
-
-  protected override raisePropertyChanged<T>(propertyName: string, value: T): void {
-    super.raisePropertyChanged(propertyName, value);
-    let key: keyof this = propertyName as any;
-
-    (this[key] as unknown as BehaviorSubject<T>).next(value);
   }
 
   onSSLModeSelected(event: Event) {
@@ -103,7 +74,7 @@ export class AppComponent extends BindableBase implements OnInit {
       this._ipcService.send('configurationProvided', this.appSettings.loadedSettings);
 
       this.connectionEstablished = true;
-      this.refresh();
+      this.initAsync();
     }
     this.dlgTrigger = "";
 
@@ -126,15 +97,12 @@ export class AppComponent extends BindableBase implements OnInit {
     this._ref.detectChanges();
   }
 
-  private async refresh(): Promise<void> {
+  private async initAsync(): Promise<void> {
     if (this.connectionEstablished) {
-      this._serverService.getDatabaseName((res: string) => {
-        this.databaseName = res;
-      });
+      this.databaseName$ = from(await this._serverService.getDatabaseNameAsync());
+      let res = new BehaviorSubject<ITreeViewElement[]>(await this._serverService.getDatabasesAsync());
 
-      this._serverService.getDatabases((res: ITreeViewElement[]) => {
-        this.databases = res;
-      });
+      this.databases$ = res.asObservable();
     }
   }
 }

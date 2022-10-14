@@ -35,7 +35,6 @@ export default class SqlClient implements IProvideSqlConnection {
             Logger.log(statement.text, LogLevel.Debug);
 
             response = await client.execute(statement);
-
         } catch (err) {
             Logger.log(err as string, LogLevel.Error);
         }

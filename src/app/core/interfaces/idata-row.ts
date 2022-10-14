@@ -1,8 +1,9 @@
 export interface IDataRow {
-    Index: number;
-    IsSelected: boolean;
-    Instance: Object;
+    index: number;
+    isSelected: boolean;
+    rowData: Map<string, Object>;
 
-    getRowData() : Object;
-    getCellData(key: string) : any;
+    createRowData(columns: string[], rowValues: Object[]): void;
+    getRowData<T>(): T;
+    getCellData(key: string): Object;
 }

@@ -53,7 +53,7 @@ export class BindableBase implements INotifyPropertyChanged {
      */
     protected raisePropertyChanged<T>(propertyName: string, value: T): void {
         console.log(`Property ${propertyName} changed! New value: \n`);
-        console.log(this._dynamicStorage);
+        console.log(value);
 
         this.changeEmitter.emit('propertyChanged', propertyName, value);
     }

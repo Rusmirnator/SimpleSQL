@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { ServerProvider } from 'base/enumerations';
+import { ResponseObject } from 'base/shared/ResponseObject';
 import { BehaviorSubject } from 'rxjs';
-import { DataRow } from '../classes/data-row';
-import { TreeViewElement } from '../classes/tree-view-element';
 import { IDataRow } from '../interfaces/idata-row';
 import { ITreeViewElement } from '../interfaces/itree-view-element';
-import { IResponseObject, SQLClientService } from './sqlclient.service';
+import { SQLClientService } from './sqlclient.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,9 +27,9 @@ export class ServerService {
         break;
     }
 
-    let res = await this._sqlService.sqlQueryAsync(query!);
+    let res = new ResponseObject(await this._sqlService.sqlQueryAsync(query!));
 
-    return new BehaviorSubject<ITreeViewElement[]>(this._sqlService.asMany(res));
+    return new BehaviorSubject<ITreeViewElement[]>(res.asMany<ITreeViewElement>());
   }
 
   async getDatabaseNameAsync(): Promise<BehaviorSubject<string>> {
@@ -45,14 +44,14 @@ export class ServerService {
         break;
     }
 
-    let res = await this._sqlService.sqlQueryAsync(query!);
+    let res = new ResponseObject(await this._sqlService.sqlQueryAsync(query!));
 
-    return new BehaviorSubject<string>(res.rows[0]);
+    return new BehaviorSubject<string>(res.rows![0]);
   }
 
   async getResultSetAsync(query: string): Promise<BehaviorSubject<IDataRow[]>> {
     let res = await this._sqlService.sqlQueryAsync(query!);
 
-    return new BehaviorSubject<IDataRow[]>(this._sqlService.asMany(res));
+    return new BehaviorSubject<IDataRow[]>([]);
   }
 }

@@ -1,5 +1,4 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { nextTick } from 'process';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DataRow } from 'src/app/core/classes/data-row';
 
@@ -16,7 +15,7 @@ export class DataGridComponent implements OnInit {
   isWhileSelecting: boolean | undefined;
 
   @Output() selectedItems = new EventEmitter<any[]>();
-  @Input() columnsSource?: string[];
+  @Input() columnsSource?: Observable<string[]> = new Observable<string[]>();;
   @Input() fieldNameSource?: string[];
   @Input() itemsSource: Observable<DataRow[]> = new Observable<DataRow[]>();
   @Input() showTimeStamp?: boolean = false;
@@ -25,35 +24,13 @@ export class DataGridComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.itemsSource.subscribe(() => {
-      nextTick(() => {
-        this.elapsedTime.next(new Date().toLocaleTimeString());
-        this._ref.detectChanges();
-      });
+    this.itemsSource.subscribe((value) => {
+      this.onDataReceived(value);
     });
   }
 
-  onDataInitialized(data: DataRow[]): void {
-    if (this.fieldNameSource === undefined) {
-
-      // this.fieldNameSource = [];
-      // for (let o of data) {
-      //   console.log(o);
-      //   for (let f of Object.keys(o.instance)) {
-      //     this.fieldNameSource.push(f);
-      //   }
-      //   break;
-      // }
-
-      // for (let property of Object.keys(data[0].instance)) {
-      //   console.log(property);
-      // }
-
-      console.log(this.fieldNameSource);
-      this.isWaitIndicatorVisible = false;
-
-      this._ref.detectChanges();
-    }
+  onDataReceived(newData: DataRow[]): void {
+    this.columnsSource = new BehaviorSubject<string[]>(newData[0].getColumns());
   }
 
   onSelectedItemsChanged(event: Event, row: DataRow, index: number): void {

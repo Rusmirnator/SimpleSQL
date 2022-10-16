@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { ServerProvider } from 'base/enumerations';
 import { ResponseObject } from 'base/shared/ResponseObject';
 import { BehaviorSubject } from 'rxjs';
+import { DataRow } from '../classes/data-row';
 import { IDataRow } from '../interfaces/idata-row';
 import { ITreeViewElement } from '../interfaces/itree-view-element';
 import { SQLClientService } from './sqlclient.service';
@@ -49,9 +50,18 @@ export class ServerService {
     return new BehaviorSubject<string>(res.rows![0]);
   }
 
-  async getResultSetAsync(query: string): Promise<BehaviorSubject<IDataRow[]>> {
-    let res = await this._sqlService.sqlQueryAsync(query!);
+  async executeQueryAsync(query: string): Promise<BehaviorSubject<IDataRow[]>> {
+    let res = new ResponseObject(await this._sqlService.sqlQueryAsync(query!));
+    let dataRow: IDataRow;
+    let resultSet: IDataRow[] = [];
 
-    return new BehaviorSubject<IDataRow[]>([]);
+    res.rows?.forEach((_, i) => {
+      dataRow = new DataRow(i);
+      dataRow.fromResponse(res, i);
+
+      resultSet.push(dataRow);
+    });
+
+    return new BehaviorSubject<IDataRow[]>(resultSet);
   }
 }

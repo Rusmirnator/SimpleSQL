@@ -38,7 +38,7 @@ tbody tr {
 }
 
 tbody tr:nth-child(odd) {
-    background-color: aliceblue;
+    background-color: lightgreen;
 }
 
 tbody tr:hover {
@@ -58,6 +58,7 @@ tbody tr.selected {
 }
 
 tbody {
+    display: table-row;
     overflow-y: scroll;
     overflow-x: hidden;
     max-height: calc(100% - 17px);

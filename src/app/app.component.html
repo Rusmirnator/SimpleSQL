@@ -37,12 +37,11 @@
       </app-tree-view>
     </div>
     <div class="module-container">
-      <app-ribbon>
+      <app-ribbon [commands]="commands$">
       </app-ribbon>
-      <app-editor>
+      <app-editor (editValue)="onEditValueChanged($event)">
       </app-editor>
-      <app-data-grid [itemsSource]="resultSet$"
-                     [columnsSource]="['Id','Name','Test','Test 2','Test 3','Test 4','Test 5','Test 6']">
+      <app-data-grid [itemsSource]="resultSet$">
       </app-data-grid>
       <router-outlet></router-outlet>
     </div>

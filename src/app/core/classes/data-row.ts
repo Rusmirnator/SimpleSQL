@@ -1,38 +1,34 @@
+import { IResponseObject } from "base/interfaces/IResponseObject";
 import { IDataRow } from "../interfaces/idata-row";
 
 export class DataRow implements IDataRow {
     index: number = 0;
     isSelected: boolean = false;
-    rowData: Map<string, Object> = new Map<string, Object>();
+    rowData: Map<string, Object>;
 
     constructor(index: number, instance?: Object) {
         this.index = index;
-        if (instance !== undefined) {
-            this.createRowData(Object.keys(instance!), Object.values(instance!));
+        if (instance) {
+            this.rowData = new Map<string, Object>(Object.entries(instance));
         }
+        this.rowData ??= new Map<string, Object>();
+    }
+    getColumns(): string[] {
+        return Array.from(this.rowData.keys());
     }
 
-    createRowData(columns: string[], rowValues: Object[]): void {
-        throw new Error("Method not implemented.");
+    fromResponse(response: IResponseObject, rowIndex: number = 0): void {
+        response.names?.forEach((row, i) => {
+            this.rowData.set(row, response.rows![rowIndex][response.getColumnIndex(row)]);
+        });
+        this.index = rowIndex;
     }
 
-    getRowData<T>(): T {
-        return this.rowData as unknown as T;
+    getRowData<T>(): T | undefined {
+        return Object.fromEntries(this.rowData) as unknown as T;
     }
 
-    getCellData(propertyName: string): Object {
-        if (this.rowData === undefined) {
-            return "null";
-        }
-
-        let entries = Object.entries(this.rowData);
-
-        for (let i = 0; i < entries.length; i++) {
-            if (entries[i][0] === propertyName) {
-                return entries[i][1];
-            }
-        }
-
-        return "empty";
+    getCellData(propertyName: string): Object | undefined {
+        return this.rowData.get(propertyName);
     }
 }

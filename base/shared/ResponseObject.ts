@@ -5,10 +5,10 @@ export class ResponseObject implements IResponseObject {
     rows?: any[];
     status?: string;
 
-    constructor(response: IResponseObject) {
-        this.names = response.names;
-        this.rows = response.rows;
-        this.status = response.status;
+    constructor(response?: IResponseObject) {
+        this.names = response?.names;
+        this.rows = response?.rows;
+        this.status = response?.status;
     }
 
     asSingle<T>(): T {
@@ -38,4 +38,19 @@ export class ResponseObject implements IResponseObject {
         return this.names!.indexOf(colName);
     }
 
+    createErrorMessage(error: string): void {
+        let row: string[] = [];
+        row.push(error);
+
+        if (!this.names) {
+            this.names = [];
+        }
+
+        if (!this.rows) {
+            this.rows = [];
+        }
+
+        this.names?.push("error");
+        this.rows?.push(row);
+    }
 }

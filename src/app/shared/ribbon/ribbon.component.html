@@ -1,15 +1,8 @@
 <div class="container" aria-label="SimpleSQL">
     <div class="label">Main</div>
     <div class="page" aria-label="Main">
-        <div class="group" aria-label="Command">
-            <button>F5 - Execute</button>
-            <button>Ctrl+S - Save</button>
-            <button>Ctrl+Shift+S - Save all</button>
-        </div>
-        <div class="group" aria-label="Interactions">
-            <button>Ctrl+R - Show/Hide output</button>
-            <button>Ctrl+N - New query</button>
-            <button>Ctrl+W - Write script</button>
+        <div class="group" aria-label="Command" *ngFor="let command of commands | async">
+            <button (click)="command.execute()">{{command.keyGesture}} - {{command.description}}</button>
         </div>
     </div>
 </div>

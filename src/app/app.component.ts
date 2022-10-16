@@ -1,7 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { IAppSettings } from 'base/interfaces/IAppSettings';
 import { AppSettings } from 'base/shared/AppSettings';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { AsyncCommand } from './core/classes/async-command';
+import { Command } from './core/classes/command';
 import EventArgs from './core/classes/eventargs';
 import { IDataRow } from './core/interfaces/idata-row';
 import { ITreeViewElement } from './core/interfaces/itree-view-element';
@@ -27,13 +29,16 @@ export class AppComponent implements OnInit {
   password: string | undefined;
   ssl: string | undefined;
   selectedIndex: number | undefined;
+  script: string | undefined;
 
   resultSet$: Observable<IDataRow[]> = new Observable<IDataRow[]>();
   databaseName$: Observable<string> = new Observable<string>();
   databases$: Observable<ITreeViewElement[]> = new Observable<ITreeViewElement[]>();
+  commands$: Observable<Command[]> = new Observable<Command[]>();
 
   constructor(private _logger: LoggerService, private _ipcService: IpcService, private _ref: ChangeDetectorRef, private _serverService: ServerService) {
     this.appSettings = new AppSettings();
+    this.initializeCommands();
   }
 
   async ngOnInit(): Promise<void> {
@@ -82,6 +87,10 @@ export class AppComponent implements OnInit {
     this._ref.detectChanges();
   }
 
+  onEditValueChanged(editValue: string) {
+    this.script = editValue;
+  }
+
   private consumeModalData(modalBody: HTMLElement): void {
     let elements = modalBody.getElementsByClassName("editable");
     this.host = (elements[0] as HTMLInputElement).value;
@@ -97,10 +106,29 @@ export class AppComponent implements OnInit {
     this._ref.detectChanges();
   }
 
+  private initializeCommands(): void {
+    let commands: Command[] = [];
+    commands.push(new AsyncCommand(() => this.onQueryExecutedAsync(), () => this.canExecuteQuery(), "F5", "Execute"));
+
+    this.commands$ = new BehaviorSubject<Command[]>(commands).asObservable();
+  }
+
   private async initAsync(): Promise<void> {
     if (this.connectionEstablished) {
       this.databaseName$ = (await this._serverService.getDatabaseNameAsync()).asObservable();
-      this.databases$ = (await this._serverService.getDatabasesAsync()).asObservable()
+      this.databases$ = (await this._serverService.getDatabasesAsync()).asObservable();
     }
+  }
+
+  async onQueryExecutedAsync(): Promise<void> {
+    this.toggleWaitIndicator();
+
+    this.resultSet$ = (await this._serverService.executeQueryAsync(this.script!)).asObservable();
+
+    this.toggleWaitIndicator();
+  }
+
+  canExecuteQuery(): boolean {
+    return this.script !== undefined && this.script.length > 0;
   }
 }

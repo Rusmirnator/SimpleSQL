@@ -5,6 +5,8 @@ import { Client, Query, SSLMode } from 'ts-postgres'
 import { URL } from "whatwg-url";
 import Logger from "./logger";
 import { LogLevel } from "./enumerations";
+import { IResponseObject } from "./interfaces/IResponseObject";
+import { ResponseObject } from "./shared/ResponseObject";
 
 export default class SqlClient implements IProvideSqlConnection {
     parameters: IConnectionParameters;
@@ -24,7 +26,7 @@ export default class SqlClient implements IProvideSqlConnection {
         this.parameters.initialize(url.username, url.password, url.pathname, url.host, parseInt(url.port), ssl);
     }
 
-    public async executeQueryAsync(query: string, queryParameters?: any[]): Promise<any> {
+    public async executeQueryAsync(query: string, queryParameters?: any[]): Promise<IResponseObject> {
         let response;
         let statement = new Query(query, queryParameters);
         const client = new Client(this.parameters);
@@ -35,12 +37,14 @@ export default class SqlClient implements IProvideSqlConnection {
             Logger.log(statement.text, LogLevel.Debug);
 
             response = await client.execute(statement);
-        } catch (err) {
+        } catch (err: any) {
             Logger.log(err as string, LogLevel.Error);
+            response = new ResponseObject();
+            response.createErrorMessage(err);
         }
         finally {
             await client.end();
-            return response;
+            return response as unknown as IResponseObject;
         }
     }
 }

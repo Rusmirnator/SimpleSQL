@@ -35,8 +35,9 @@ export class SQLClientService {
       this._ipcService.send('sqlQuery', query);
       this._ipcService.once(this.prepareQueryId(query), (_event: any, response: IResponseObject) => {
         if (response === undefined) {
-          reject("Couldn't query asynchronously!");
+          return reject("Response was undefined!");
         }
+
         resolve(response);
       });
     });

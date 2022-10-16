@@ -3,7 +3,7 @@
     <table class="table-bordered" *ngIf="!isWaitIndicatorVisible">
         <thead>
             <tr>
-                <th *ngFor="let header of columnsSource">{{header}}</th>
+                <th *ngFor="let header of columnsSource | async">{{header}}</th>
             </tr>
         </thead>
         <tbody>
@@ -11,7 +11,7 @@
                 (click)="onSelectedItemsChanged($event, item, item.index)"
                 (mouseover)="onSelectionPending($event, item, item.index)"
                 [className]="item.isSelected === true ? 'selected' : 'unselected'">
-                <td *ngFor="let f of fieldNameSource">
+                <td *ngFor="let f of item.rowData.keys()">
                     <span clss="normalizedCell">
                         {{item.getCellData(f)}}
                     </span>
@@ -19,7 +19,7 @@
             </tr>
         </tbody>
         <tfoot *ngIf="showTimeStamp == true">
-            Ostatnio odświeżono: {{elapsedTime | async}}
+            Last update: {{elapsedTime | async}}
         </tfoot>
     </table>
 </div>

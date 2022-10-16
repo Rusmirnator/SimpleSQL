@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { Command } from 'src/app/core/classes/command';
 import { KeyGestureService } from 'src/app/core/services/key-gesture.service';
 
 @Component({
@@ -8,9 +10,12 @@ import { KeyGestureService } from 'src/app/core/services/key-gesture.service';
 })
 export class RibbonComponent implements OnInit {
 
+  @Input() commands?: Observable<Command[]> = new Observable<Command[]>();
+
   constructor(private _keyGestureService: KeyGestureService) { }
 
   ngOnInit(): void {
+
   }
 
 }

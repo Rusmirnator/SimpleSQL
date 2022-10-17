@@ -20,9 +20,16 @@ export default class Logger {
 
     static log(message: string, level: LogLevel = LogLevel.Info) {
         let currentTime = new Date();
+        let normalizedTimeStamp: string = "";
+
+        normalizedTimeStamp += `${Logger.repository.left(currentTime.getHours() + "0", 2)}:`;
+        normalizedTimeStamp += `${Logger.repository.left(currentTime.getMinutes() + "0", 2)}:`;
+        normalizedTimeStamp += `${Logger.repository.left(currentTime.getSeconds() + "0", 2)}:`;
+        normalizedTimeStamp += `${Logger.repository.left(currentTime.getMilliseconds() + "00", 3)}`;
+
         Logger.repository.safelyWriteToFile(
             Logger.path,
-            `${this.newLine}${currentTime.getHours().toFixed()}:${currentTime.getMinutes().toFixed()}:${currentTime.getSeconds().toFixed()}:${currentTime.getMilliseconds().toPrecision(3)}|${level}|${message}`,
+            `${this.newLine}${normalizedTimeStamp}|${level}|${message}`,
             "utf-8");
 
         if (Logger.newLine === "") {

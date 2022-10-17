@@ -29,16 +29,29 @@ export default class GeneralPurposeRepository {
 
     public toHashCode(value: string): number {
         let hash = 0, i, chr;
-    
+
         if (value.length === 0) {
-          return hash;
+            return hash;
         }
-    
+
         for (i = 0; i < value.length; i++) {
-          chr = value.charCodeAt(i);
-          hash = ((hash << 5) - hash) + chr;
-          hash |= 0;
+            chr = value.charCodeAt(i);
+            hash = ((hash << 5) - hash) + chr;
+            hash |= 0;
         }
         return hash;
-      }
+    }
+
+    /**
+     * Gets slice of given string.
+     * @param value Source string.
+     * @param length Slice length.
+     * @returns Slice from source string with specified length.
+     */
+    public left(value: string, length: number): string {
+        if (length > value.length) {
+            return value;
+        }
+        return value.slice(0, length);
+    }
 }

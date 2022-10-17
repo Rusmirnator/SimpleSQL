@@ -32,36 +32,36 @@ tbody {
     flex: 1 1 auto;
 }
 
-thead th {
+th {
     background: #FCCF47;
     border: solid black 1px;
     padding: 3px;
 }
 
-tbody td,
+td,
 th {
     text-align: center;
 }
 
-thead th:hover {
+th:hover {
     cursor: pointer;
     background: #F8F8F8;
 }
 
-tbody tr:nth-child(odd) {
+tr:nth-child(odd) {
     background: #bef7ff;
 }
 
-tbody tr:hover {
+tr:hover {
     background-color: rgb(219, 247, 201);
     cursor: default;
 }
 
-tbody tr {
+tr {
     max-height: fit-content;
 }
 
-tbody tr.selected {
+tr.selected {
     background-color: yellow;
 }
 

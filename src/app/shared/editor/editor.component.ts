@@ -15,6 +15,6 @@ export class EditorComponent implements OnInit {
   }
 
   onTextInput(event: Event){
-    this.editValue.emit((event.target as HTMLElement).innerText);
+    this.editValue.emit((event.target as HTMLTextAreaElement).value);
   }
 }

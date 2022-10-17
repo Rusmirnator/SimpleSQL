@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { DataRow } from 'src/app/core/classes/data-row';
 
 @Component({
@@ -25,6 +25,7 @@ export class DataGridComponent implements OnInit {
 
   ngOnInit(): void {
     this.itemsSource.subscribe((value) => {
+      console.log(value);
       this.onDataReceived(value);
     });
   }

@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { IAppSettings } from 'base/interfaces/IAppSettings';
 import { AppSettings } from 'base/shared/AppSettings';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
 import { AsyncCommand } from './core/classes/async-command';
 import { Command } from './core/classes/command';
 import EventArgs from './core/classes/eventargs';
@@ -35,6 +35,7 @@ export class AppComponent implements OnInit {
   databaseName$: Observable<string> = new Observable<string>();
   databases$: Observable<ITreeViewElement[]> = new Observable<ITreeViewElement[]>();
   commands$: Observable<Command[]> = new Observable<Command[]>();
+  columns$: Observable<string[]> = new Observable<string[]>();
 
   constructor(private _logger: LoggerService, private _ipcService: IpcService, private _ref: ChangeDetectorRef, private _serverService: ServerService) {
     this.appSettings = new AppSettings();
@@ -122,8 +123,9 @@ export class AppComponent implements OnInit {
 
   async onQueryExecutedAsync(): Promise<void> {
     this.toggleWaitIndicator();
-
-    this.resultSet$ = (await this._serverService.executeQueryAsync(this.script!)).asObservable();
+    let sub = await this._serverService.executeQueryAsync(this.script!);
+    this.columns$ = new BehaviorSubject(sub.getValue()[0].getColumns()).asObservable();
+    this.resultSet$ = (sub).asObservable();
 
     this.toggleWaitIndicator();
   }

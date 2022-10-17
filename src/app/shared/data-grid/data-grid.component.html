@@ -12,7 +12,7 @@
                 (mouseover)="onSelectionPending($event, item, item.index)"
                 [className]="item.isSelected === true ? 'selected' : 'unselected'">
                 <td *ngFor="let f of item.rowData.keys()">
-                    <span clss="normalizedCell">
+                    <span class="normalizedCell">
                         {{item.getCellData(f)}}
                     </span>
                 </td>

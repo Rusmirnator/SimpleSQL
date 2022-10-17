@@ -33,7 +33,7 @@ export default class SqlClient implements IProvideSqlConnection {
 
         try {
             await client.connect();
-
+            
             Logger.log(statement.text, LogLevel.Debug);
 
             response = await client.execute(statement);

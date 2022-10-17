@@ -3,74 +3,7 @@
     display: flex;
     flex: 1 1 auto;
     flex-direction: column;
-}
-
-table {
-    white-space: nowrap;
-    background: lightsteelblue;
-    flex: 1 1 auto;
-    padding: 3px;
-}
-
-thead {
-    background-color: rgb(179, 174, 174);
-    max-height: fit-content;
-    position: sticky;
-    top: 0;
-    overflow-x: hidden;
-}
-
-thead th {
-    align-content: flex-start;
-    color: white;
-    align-items: flex-start;
-}
-
-thead th:hover {
-    cursor: default;
-    background-color: lightblue;
-    color: lightyellow;
-}
-
-tbody tr {
-    margin: 0;
-    border: none;
-}
-
-tbody tr:nth-child(odd) {
-    background-color: lightgreen;
-}
-
-tbody tr:hover {
-    background-color: lightcyan;
-    cursor: default;
-}
-
-tbody tr.selected {
-    background-color: yellow;
-}
-
-.normalizedCell {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    border: none;
-}
-
-tbody {
-    display: table-row;
-    overflow-y: scroll;
-    overflow-x: hidden;
-    max-height: calc(100% - 17px);
-    max-width: calc(100% - 17px);
-}
-
-tfoot {
-    max-height: fit-content;
-    background-color: rgb(179, 174, 174);
-    position: sticky;
-    bottom: 0;
-    column-span: all;
+    contain: strict;
 }
 
 .label {
@@ -84,4 +17,51 @@ tfoot {
     background: lightgray;
     cursor: pointer;
     user-select: none;
+}
+
+table {
+    overflow: auto;
+    white-space: nowrap;
+    display: block;
+    background: lightsteelblue;
+}
+
+tbody {
+    flex: 1 1 auto;
+}
+
+thead th {
+    align-content: flex-start;
+    color: white;
+    align-items: flex-start;
+}
+
+thead th:hover {
+    cursor: pointer;
+    background-color: lightblue;
+    color: lightyellow;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: lightgrey;
+}
+
+tbody tr:hover {
+    background-color: lightcyan;
+    cursor: default;
+}
+
+tbody tr {
+    max-height: fit-content;
+}
+
+tbody tr.selected {
+    background-color: yellow;
+}
+
+.normalizedCell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: none;
 }

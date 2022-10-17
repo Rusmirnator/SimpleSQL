@@ -10,7 +10,7 @@
   width: 100vw;
   height: 100vh;
   user-select: none;
-  background-color: #39326e;
+  background: #1795A8;
 }
 
 .main-content-container {
@@ -23,7 +23,7 @@
 
 .footer-container,
 .titleBar-container {
-  background: #17134e;
+  background: #24AFC1;
   text-align: justify;
   height: min-content;
   padding-left: 3px;

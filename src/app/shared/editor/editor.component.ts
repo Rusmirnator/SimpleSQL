@@ -12,9 +12,14 @@ export class EditorComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+
   }
 
-  onTextInput(event: Event){
+  onTextInput(event: Event) {
     this.editValue.emit((event.target as HTMLTextAreaElement).value);
+  }
+
+  onEditorLoad(event: Event) {
+    (event.target as HTMLTextAreaElement).value = "";
   }
 }

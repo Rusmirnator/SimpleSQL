@@ -20,7 +20,10 @@ export default class Logger {
 
     static log(message: string, level: LogLevel = LogLevel.Info) {
         let currentTime = new Date();
-        Logger.repository.safelyWriteToFile(Logger.path, `${this.newLine}${currentTime.getHours()}:${currentTime.getMinutes()}:${currentTime.getSeconds()}:${currentTime.getMilliseconds()}|${level}|${message}`, "utf-8");
+        Logger.repository.safelyWriteToFile(
+            Logger.path,
+            `${this.newLine}${currentTime.getHours().toFixed()}:${currentTime.getMinutes().toFixed()}:${currentTime.getSeconds().toFixed()}:${currentTime.getMilliseconds().toPrecision(3)}|${level}|${message}`,
+            "utf-8");
 
         if (Logger.newLine === "") {
             Logger.newLine = "\n";

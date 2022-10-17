@@ -1,5 +1,5 @@
 <div class="container">
     <div class="label">Query</div>
-    <textarea class="editor" (input)="onTextInput($event)">
+    <textarea class="editor" (input)="onTextInput($event)" (load)="onEditorLoad($event)">
     </textarea>
 </div>

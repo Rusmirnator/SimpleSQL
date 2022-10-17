@@ -4,10 +4,11 @@
 }
 
 .label {
-    background: lightsteelblue;
+    background: #FCCF47;
     font-weight: bolder;
     padding: 3px;
     width: fit-content;
+    border-radius: 3px 3px 0px 0px;
 }
 
 .label:hover {
@@ -19,7 +20,7 @@
 .page {
     display: flex;
     flex-direction: row;
-    background: lightsteelblue;
+    background: #FCCF47;
     padding: 3px;
 }
 
@@ -37,5 +38,5 @@ button {
 }
 
 button:hover{
-    background: lightgray;
+    background: rgb(255, 255, 255);
 }

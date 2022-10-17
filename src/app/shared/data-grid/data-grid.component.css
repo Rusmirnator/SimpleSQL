@@ -7,9 +7,10 @@
 }
 
 .label {
-    background: lightsteelblue;
+    background: #FCCF47;
     font-weight: bolder;
     padding: 3px;
+    border-radius: 3px 3px 0px 0px;
     width: fit-content;
 }
 
@@ -23,7 +24,8 @@ table {
     overflow: auto;
     white-space: nowrap;
     display: block;
-    background: lightsteelblue;
+    background: snow;
+    flex: 1 1 auto;
 }
 
 tbody {
@@ -31,23 +33,27 @@ tbody {
 }
 
 thead th {
-    align-content: flex-start;
-    color: white;
-    align-items: flex-start;
+    background: #FCCF47;
+    border: solid black 1px;
+    padding: 3px;
+}
+
+tbody td,
+th {
+    text-align: center;
 }
 
 thead th:hover {
     cursor: pointer;
-    background-color: lightblue;
-    color: lightyellow;
+    background: #F8F8F8;
 }
 
 tbody tr:nth-child(odd) {
-    background-color: lightgrey;
+    background: #bef7ff;
 }
 
 tbody tr:hover {
-    background-color: lightcyan;
+    background-color: rgb(219, 247, 201);
     cursor: default;
 }
 
@@ -63,5 +69,4 @@ tbody tr.selected {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    border: none;
 }

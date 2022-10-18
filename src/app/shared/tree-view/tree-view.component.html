@@ -1,6 +1,6 @@
 <div class="layout-root">
     <span class="label">Server explorer</span>
-    <div class="tree" *ngFor="let branch of itemsSource | async">
-        <div class="branch">[{{branch.index}}] {{branch.header}}</div>
+    <div class="tree">
+        <div *ngFor="let branch of itemsSource | async" class="branch">[{{branch.index}}] {{branch.header}}</div>
     </div>
 </div>

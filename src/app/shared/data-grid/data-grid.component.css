@@ -1,72 +1,59 @@
-.layout-root {
-    user-select: none;
-    display: flex;
+ .layout-root {
+     user-select: none;
+     display: flex;
+     flex: 1 1 auto;
+     flex-direction: column;
+     contain: strict;
+ }
+
+ .table-container {
+    overflow: auto;
+    display:flex;
     flex: 1 1 auto;
     flex-direction: column;
     contain: strict;
+    background:white;
+ }
+
+ .table-container::-webkit-scrollbar {
+    display: none;
 }
 
-.label {
-    background: #FCCF47;
-    font-weight: bolder;
-    padding: 3px;
-    border-radius: 3px 3px 0px 0px;
-    width: fit-content;
-}
+ .label {
+     background: #FCCF47;
+     font-weight: bolder;
+     padding: 3px;
+     border-radius: 3px 3px 0px 0px;
+     width: fit-content;
+ }
 
-.label:hover {
-    background: lightgray;
-    cursor: pointer;
-    user-select: none;
-}
+ .label:hover {
+     background: lightgray;
+     cursor: pointer;
+     user-select: none;
+ }
 
-table {
-    overflow: auto;
-    white-space: nowrap;
-    display: block;
-    background: snow;
-    flex: 1 1 auto;
-}
+ table {
+     text-align: left;
+     position: relative;
+     border-collapse: collapse;
+     background-color: white;
+ }
 
-tbody {
-    flex: 1 1 auto;
-}
+ th,
+ td {
+     padding: 0.25rem;
+ }
 
-th {
-    background: #FCCF47;
-    border: solid black 1px;
-    padding: 3px;
-}
+ tr.red th {
+     background: #FCCF47;
+     color: white;
+ }
 
-td,
-th {
-    text-align: center;
-}
-
-th:hover {
-    cursor: pointer;
-    background: #F8F8F8;
-}
-
-tr:nth-child(odd) {
-    background: #bef7ff;
-}
-
-tr:hover {
-    background-color: rgb(219, 247, 201);
-    cursor: default;
-}
-
-tr {
-    max-height: fit-content;
-}
-
-tr.selected {
-    background-color: yellow;
-}
-
-.normalizedCell {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
+ th {
+     background: white;
+     position: sticky;
+     top: 0;
+     /* Don't forget this, required for the stickiness */
+     box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
+ }

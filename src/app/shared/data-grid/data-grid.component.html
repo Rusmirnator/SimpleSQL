@@ -1,25 +1,27 @@
 <div class="layout-root">
-    <div class="label">Result set</div>
-    <table class="table-bordered" *ngIf="!isWaitIndicatorVisible">
-        <thead>
-            <tr>
-                <th *ngFor="let header of columnsSource | async">{{header}}</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let item of itemsSource | async" 
-                (click)="onSelectedItemsChanged($event, item, item.index)"
-                (mouseover)="onSelectionPending($event, item, item.index)"
-                [className]="item.isSelected === true ? 'selected' : 'unselected'">
-                <td *ngFor="let f of item.rowData.keys()">
-                    <span class="normalizedCell">
-                        {{item.getCellData(f)}}
-                    </span>
-                </td>
-            </tr>
-        </tbody>
-        <tfoot *ngIf="showTimeStamp == true">
-            Last update: {{elapsedTime | async}}
-        </tfoot>
-    </table>
+    <span class="label">Result set</span>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr class="red">
+                    <th *ngFor="let header of columnsSource | async">{{header}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of itemsSource | async" 
+                    (click)="onSelectedItemsChanged($event, item, item.index)"
+                    (mouseover)="onSelectionPending($event, item, item.index)"
+                    [className]="item.isSelected === true ? 'selected' : 'unselected'">
+                    <td *ngFor="let f of item.rowData.keys()">
+                        <span class="normalizedCell">
+                            {{item.getCellData(f)}}
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot *ngIf="showTimeStamp == true">
+                Last update: {{elapsedTime | async}}
+            </tfoot>
+        </table>
+    </div>
 </div>

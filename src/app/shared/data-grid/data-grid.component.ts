@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { DataRow } from 'src/app/core/classes/data-row';
 
 @Component({
@@ -16,7 +16,6 @@ export class DataGridComponent implements OnInit {
 
   @Output() selectedItems = new EventEmitter<any[]>();
   @Input() columnsSource?: Observable<string[]> = new Observable<string[]>();;
-  @Input() fieldNameSource?: string[];
   @Input() itemsSource: Observable<DataRow[]> = new Observable<DataRow[]>();
   @Input() showTimeStamp?: boolean = false;
 
@@ -24,10 +23,18 @@ export class DataGridComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.itemsSource.subscribe((value) => {
-      console.log(value);
-      this.onDataReceived(value);
-    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['itemsSource']) {
+      let observable = changes['itemsSource'].currentValue as Observable<DataRow[]>;
+
+      if (observable) {
+        observable.subscribe(val => {
+          this.onDataReceived(val);
+        });
+      }
+    }
   }
 
   onDataReceived(newData: DataRow[]): void {

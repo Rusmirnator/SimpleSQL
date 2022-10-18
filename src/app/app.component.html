@@ -41,7 +41,7 @@
       </app-ribbon>
       <app-editor (editValue)="onEditValueChanged($event)">
       </app-editor>
-      <app-data-grid [itemsSource]="resultSet$" [columnsSource]="columns$">
+      <app-data-grid [itemsSource]="resultSet$">
       </app-data-grid>
       <router-outlet></router-outlet>
     </div>

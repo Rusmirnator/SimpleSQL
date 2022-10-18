@@ -35,7 +35,6 @@ export class AppComponent implements OnInit {
   databaseName$: Observable<string> = new Observable<string>();
   databases$: Observable<ITreeViewElement[]> = new Observable<ITreeViewElement[]>();
   commands$: Observable<Command[]> = new Observable<Command[]>();
-  columns$: Observable<string[]> = new Observable<string[]>();
 
   constructor(private _logger: LoggerService, private _ipcService: IpcService, private _ref: ChangeDetectorRef, private _serverService: ServerService) {
     this.appSettings = new AppSettings();
@@ -123,9 +122,7 @@ export class AppComponent implements OnInit {
 
   async onQueryExecutedAsync(): Promise<void> {
     this.toggleWaitIndicator();
-    let sub = await this._serverService.executeQueryAsync(this.script!);
-    this.columns$ = new BehaviorSubject(sub.getValue()[0].getColumns()).asObservable();
-    this.resultSet$ = (sub).asObservable();
+    this.resultSet$ = (await this._serverService.executeQueryAsync(this.script!)).asObservable();
 
     this.toggleWaitIndicator();
   }

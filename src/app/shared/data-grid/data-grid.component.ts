@@ -39,6 +39,7 @@ export class DataGridComponent implements OnInit {
 
   onDataReceived(newData: DataRow[]): void {
     this.columnsSource = new BehaviorSubject<string[]>(newData[0].getColumns());
+    this.elapsedTime = new BehaviorSubject<string>(new Date().toLocaleTimeString());
   }
 
   onSelectedItemsChanged(event: Event, row: DataRow, index: number): void {

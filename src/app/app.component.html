@@ -1,5 +1,5 @@
 <div class="window" role="main">
-  <app-modal [isVisible]="dlgTrigger === 'dlgConnectionSettings'" title="Connection settings"
+  <sm-modal [isVisible]="dlgTrigger === 'dlgConnectionSettings'" title="Connection settings"
     (modalResult)="onModalResultResolved($event)">
     <div style="display:flex; flex-direction:column;gap:3px;margin-top:5px">
       <label for="host">Server address:</label>
@@ -18,9 +18,9 @@
         <option value="verify-ca">Verify CA</option>
       </select>
     </div>
-  </app-modal>
-  <app-wait-indicator [isVisible]="isWaitIndicatorVisible">
-  </app-wait-indicator>
+  </sm-modal>
+  <sm-wait-indicator [isVisible]="isWaitIndicatorVisible">
+  </sm-wait-indicator>
   <div class="titleBar-container">
     <div class="title">
       SimpleSQL
@@ -33,20 +33,14 @@
   </div>
   <div class="main-content-container">
     <div class="explorer-container">
-      <app-tree-view [itemsSource]="databases$">
-      </app-tree-view>
+      <sm-tree-view [itemsSource]="databases$">
+      </sm-tree-view>
     </div>
     <div class="module-container">
-      <app-ribbon [commands]="commands$">
-      </app-ribbon>
-      <app-editor (editValue)="onEditValueChanged($event)">
-      </app-editor>
-      <app-data-grid [itemsSource]="resultSet$">
-      </app-data-grid>
       <router-outlet></router-outlet>
     </div>
   </div>
   <div class="footer-container">
-    <app-footer [databaseName]="databaseName$"></app-footer>
+    <sm-footer [label]="'Database name: '" [value]="databaseName$"></sm-footer>
   </div>
 </div>

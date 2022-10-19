@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
-  selector: 'app-backdrop',
+  selector: 'sm-backdrop',
   templateUrl: './backdrop.component.html',
   styleUrls: ['./backdrop.component.css'],
   imports: [CommonModule],

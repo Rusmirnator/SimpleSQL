@@ -1,0 +1,8 @@
+<div class="layout-root">
+    <sm-ribbon [commands]="commands$">
+    </sm-ribbon>
+    <sm-editor (editValue)="onEditValueChanged($event)">
+    </sm-editor>
+    <sm-data-grid [itemsSource]="resultSet$">
+    </sm-data-grid>
+</div>

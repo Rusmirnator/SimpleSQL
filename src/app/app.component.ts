@@ -1,11 +1,9 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { IAppSettings } from 'base/interfaces/IAppSettings';
 import { AppSettings } from 'base/shared/AppSettings';
-import { BehaviorSubject, catchError, Observable, tap } from 'rxjs';
-import { AsyncCommand } from './core/classes/async-command';
-import { Command } from './core/classes/command';
+import { Observable } from 'rxjs';
 import EventArgs from './core/classes/eventargs';
-import { IDataRow } from './core/interfaces/idata-row';
 import { ITreeViewElement } from './core/interfaces/itree-view-element';
 import { IpcService } from './core/services/ipc.service';
 import { LoggerService } from './core/services/logger.service';
@@ -31,14 +29,11 @@ export class AppComponent implements OnInit {
   selectedIndex: number | undefined;
   script: string | undefined;
 
-  resultSet$: Observable<IDataRow[]> = new Observable<IDataRow[]>();
   databaseName$: Observable<string> = new Observable<string>();
   databases$: Observable<ITreeViewElement[]> = new Observable<ITreeViewElement[]>();
-  commands$: Observable<Command[]> = new Observable<Command[]>();
 
-  constructor(private _logger: LoggerService, private _ipcService: IpcService, private _ref: ChangeDetectorRef, private _serverService: ServerService) {
+  constructor(private _logger: LoggerService, private _ipcService: IpcService, private _ref: ChangeDetectorRef, private _serverService: ServerService, private _router: Router) {
     this.appSettings = new AppSettings();
-    this.initializeCommands();
   }
 
   async ngOnInit(): Promise<void> {
@@ -87,10 +82,6 @@ export class AppComponent implements OnInit {
     this._ref.detectChanges();
   }
 
-  onEditValueChanged(editValue: string) {
-    this.script = editValue;
-  }
-
   private consumeModalData(modalBody: HTMLElement): void {
     let elements = modalBody.getElementsByClassName("editable");
     this.host = (elements[0] as HTMLInputElement).value;
@@ -106,28 +97,12 @@ export class AppComponent implements OnInit {
     this._ref.detectChanges();
   }
 
-  private initializeCommands(): void {
-    let commands: Command[] = [];
-    commands.push(new AsyncCommand(() => this.onQueryExecutedAsync(), () => this.canExecuteQuery(), "F5", "Execute"));
-
-    this.commands$ = new BehaviorSubject<Command[]>(commands).asObservable();
-  }
-
   private async initAsync(): Promise<void> {
     if (this.connectionEstablished) {
       this.databaseName$ = (await this._serverService.getDatabaseNameAsync()).asObservable();
       this.databases$ = (await this._serverService.getDatabasesAsync()).asObservable();
+
+      this._router.navigate(['/inquiry']);
     }
-  }
-
-  async onQueryExecutedAsync(): Promise<void> {
-    this.toggleWaitIndicator();
-    this.resultSet$ = (await this._serverService.executeQueryAsync(this.script!)).asObservable();
-
-    this.toggleWaitIndicator();
-  }
-
-  canExecuteQuery(): boolean {
-    return this.script !== undefined && this.script.length > 0;
   }
 }

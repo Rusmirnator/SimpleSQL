@@ -5,7 +5,7 @@ import EventArgs from 'src/app/core/classes/eventargs';
 import { BackdropComponent } from '../backdrop/backdrop.component';
 
 @Component({
-  selector: 'app-modal',
+  selector: 'sm-modal',
   templateUrl: './modal.component.html',
   styleUrls: ['./modal.component.css'],
   imports: [BackdropComponent, CommonModule],

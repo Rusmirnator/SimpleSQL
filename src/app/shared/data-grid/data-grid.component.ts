@@ -1,11 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DataRow } from 'src/app/core/classes/data-row';
 
 @Component({
-  selector: 'app-data-grid',
+  selector: 'sm-data-grid',
   templateUrl: './data-grid.component.html',
-  styleUrls: ['./data-grid.component.css']
+  styleUrls: ['./data-grid.component.css'],
+  imports: [CommonModule],
+  standalone: true
 })
 export class DataGridComponent implements OnInit {
 

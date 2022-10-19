@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-wait-indicator',
+  selector: 'sm-wait-indicator',
   templateUrl: './wait-indicator.component.html',
   styleUrls: ['./wait-indicator.component.css'],
   imports: [CommonModule],

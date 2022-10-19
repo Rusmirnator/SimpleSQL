@@ -1,11 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ITreeViewElement } from 'src/app/core/interfaces/itree-view-element';
 
 @Component({
-  selector: 'app-tree-view',
+  selector: 'sm-tree-view',
   templateUrl: './tree-view.component.html',
-  styleUrls: ['./tree-view.component.css']
+  styleUrls: ['./tree-view.component.css'],
+  imports: [CommonModule],
+  standalone: true
 })
 export class TreeViewComponent implements OnInit {
 

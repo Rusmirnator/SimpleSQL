@@ -1,12 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Command } from 'src/app/core/classes/command';
 import { KeyGestureService } from 'src/app/core/services/key-gesture.service';
 
 @Component({
-  selector: 'app-ribbon',
+  selector: 'sm-ribbon',
   templateUrl: './ribbon.component.html',
-  styleUrls: ['./ribbon.component.css']
+  styleUrls: ['./ribbon.component.css'],
+  imports: [CommonModule],
+  standalone: true
 })
 export class RibbonComponent implements OnInit {
 

@@ -41,8 +41,6 @@
 }
 
 .module-container {
-  display: grid;
-  grid-template-rows: 1fr 4fr 5fr;
   height: auto;
   flex: 1 1 auto;
   margin: 3px;
@@ -87,22 +85,4 @@
 .titleBar-container button:hover {
   background: lightgrey;
   cursor: pointer;
-}
-
-app-ribbon {
-  margin-bottom: 3px;
-  grid-row: 1;
-}
-
-app-editor {
-  flex: 1 1 auto;
-  margin-bottom: 3px;
-  display: flex;
-  grid-row: 2;
-}
-
-app-data-grid {
-  flex: 1 1 auto;
-  display:flex;
-  grid-row: 3;
 }

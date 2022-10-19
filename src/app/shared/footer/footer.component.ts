@@ -1,14 +1,18 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'app-footer',
+  selector: 'sm-footer',
   templateUrl: './footer.component.html',
-  styleUrls: ['./footer.component.css']
+  styleUrls: ['./footer.component.css'],
+  imports: [CommonModule],
+  standalone: true
 })
 export class FooterComponent implements OnInit {
 
-  @Input() databaseName = new Observable<string>();
+  @Input() value = new Observable<string>();
+  @Input() label: string = "";
 
   constructor() { }
 

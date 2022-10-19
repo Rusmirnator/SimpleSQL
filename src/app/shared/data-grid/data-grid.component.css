@@ -6,17 +6,17 @@
  }
 
  .table-container {
-    overflow: auto;
-    display:flex;
-    flex: 1 1 auto;
-    flex-direction: column;
-    contain: strict;
-    background:white;
+     overflow: auto;
+     display: flex;
+     flex: 1 1 auto;
+     flex-direction: column;
+     contain: strict;
+     background: white;
  }
 
  .table-container::-webkit-scrollbar {
-    display: none;
-}
+     display: none;
+ }
 
  .label {
      background: #FCCF47;
@@ -48,6 +48,10 @@
  tr.red th {
      background: #FCCF47;
      color: white;
+ }
+
+ tr:hover {
+     background: #a6f5ff;
  }
 
  th {

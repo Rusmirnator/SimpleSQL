@@ -27,7 +27,5 @@
 }
 
 .branch:hover {
-    border: 1px;
-    border-color: black;
-    background: lightyellow;
+    background: #a6f5ff;
 }

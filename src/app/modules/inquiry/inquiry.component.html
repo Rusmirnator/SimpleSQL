@@ -1,8 +1,14 @@
 <div class="layout-root">
-    <sm-ribbon [commands]="commands$">
-    </sm-ribbon>
-    <sm-editor (editValue)="onEditValueChanged($event)">
-    </sm-editor>
-    <sm-data-grid [itemsSource]="resultSet$">
-    </sm-data-grid>
+    <div class="ribbon-container">
+        <sm-ribbon [commands]="commands$">
+        </sm-ribbon>
+    </div>
+    <div class="editor-container">
+        <sm-editor (editValue)="onEditValueChanged($event)">
+        </sm-editor>
+    </div>
+    <div class="data-grid-container">
+        <sm-data-grid [itemsSource]="resultSet$">
+        </sm-data-grid>
+    </div>
 </div>

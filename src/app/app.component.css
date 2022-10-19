@@ -7,8 +7,8 @@
   display: flex;
   flex-direction: column;
   justify-items: center;
-  width: 100vw;
-  height: 100vh;
+  height: -webkit-fill-available;
+  width: -webkit-fill-available;
   user-select: none;
   background: #1795A8;
 }
@@ -41,7 +41,6 @@
 }
 
 .module-container {
-  height: auto;
   flex: 1 1 auto;
   margin: 3px;
 }

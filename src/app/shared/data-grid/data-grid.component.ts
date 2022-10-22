@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { OnChanges, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { DataRow } from 'src/app/core/classes/data-row';
 
@@ -10,7 +10,10 @@ import { DataRow } from 'src/app/core/classes/data-row';
   imports: [CommonModule],
   standalone: true
 })
-export class DataGridComponent implements OnInit {
+export class DataGridComponent implements OnInit, OnChanges {
+
+  @ViewChild('.first') firstRow!: ElementRef;
+  @ViewChild('.last') lastRow!: ElementRef;
 
   /**Virtualized chunk current startindex */
   private _startIndex: number = 0;
@@ -61,34 +64,25 @@ export class DataGridComponent implements OnInit {
     }
 
     this.nextChunk(newData);
+    console.log(this.firstRow);
   }
 
-  onScroll(event: Event) {
-    event.target?.addEventListener('onVisible',() => this.onVisible((event.target as HTMLElement), () => console.log(event.target as HTMLElement)));
-    
-  }
+  @HostListener('click', ['$event.target'])
+  onVisibleChanged(element: HTMLElement) {
 
-  @HostListener('document:scroll',['$event'])
-  onVisible(element: HTMLElement, callback: Function) {
-    // new IntersectionObserver((entries, observer) => {
-    //   entries.forEach(entry => {
-    //     if (entry.intersectionRatio === 1) {
-    //       callback(element);
-    //       observer.disconnect();
-    //     }
-    //   });
-    // }).observe(element);
-
-    const windowHeight = window.innerHeight;
-    // const boundingRectFive = this.divFive.nativeElement.getBoundingClientRect();
-    // const boundingRectEight = this.divEight.nativeElement.getBoundingClientRect();
+    console.log(element);
+    console.log(this.firstRow);
+    console.log(this.lastRow);
+    // const windowHeight = window.innerHeight;
+    // const boundingRectFive = this.firstRow.nativeElement.getBoundingClientRect();
+    // const boundingRectEight = this.lastRow.nativeElement.getBoundingClientRect();
 
     // if (boundingRectFive.top >= 0 && boundingRectFive.bottom <= windowHeight) {
 
     // } else if (boundingRectEight.top >= 0 && boundingRectEight.bottom <= windowHeight) {
 
     // } else {
-      
+
     // }
   }
 

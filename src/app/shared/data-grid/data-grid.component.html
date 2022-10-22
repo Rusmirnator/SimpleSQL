@@ -4,17 +4,19 @@
         <table>
             <thead>
                 <tr class="red">
+                    <th *ngIf="columnsSource | async">#</th>
                     <th *ngFor="let header of columnsSource | async">{{header}}</th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let item of virtualizedItemsSource | async"
+                <tr *ngFor="let item of virtualizedItemsSource | async; let index = index;"
                     (click)="onSelectedItemsChanged($event, item, item.index)"
                     (mouseover)="onSelectionPending($event, item, item.index)"
-                    [className]="item.isSelected === true ? 'selected' : 'unselected'">
+                    [ngClass]="{first: index === 0, last: index === 99, selected: item.isSelected === true}">
+                    <td class="normalizedCell">[{{index}}]</td>
                     <td *ngFor="let f of item.rowData.keys()">
                         <span class="normalizedCell">
-                            {{item.getCellData(f)}}
+                           {{item.getCellData(f)}}
                         </span>
                     </td>
                 </tr>

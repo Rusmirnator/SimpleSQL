@@ -1,6 +1,6 @@
 <div class="layout-root">
     <span class="label">Result set</span>
-    <div class="table-container">
+    <div class="table-container" (scroll)="onScroll($event)">
         <table>
             <thead>
                 <tr class="red">
@@ -12,8 +12,8 @@
                 <tr *ngFor="let item of virtualizedItemsSource | async; let index = index;"
                     (click)="onSelectedItemsChanged($event, item, item.index)"
                     (mouseover)="onSelectionPending($event, item, item.index)"
-                    [ngClass]="{first: index === 0, last: index === 99, selected: item.isSelected === true}">
-                    <td class="normalizedCell">[{{index}}]</td>
+                    [ngClass]="{first: index === 0, selected: item.isSelected === true}">
+                    <td class="normalizedCell">[{{item.index}}]</td>
                     <td *ngFor="let f of item.rowData.keys()">
                         <span class="normalizedCell">
                            {{item.getCellData(f)}}

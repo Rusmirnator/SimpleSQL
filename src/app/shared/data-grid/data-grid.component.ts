@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { OnChanges, ChangeDetectorRef, Component, ElementRef, EventEmitter, HostListener, Input, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { OnChanges, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { DataRow } from 'src/app/core/classes/data-row';
 
 @Component({
@@ -12,26 +12,25 @@ import { DataRow } from 'src/app/core/classes/data-row';
 })
 export class DataGridComponent implements OnInit, OnChanges {
 
-  @ViewChild('.first') firstRow!: ElementRef;
-  @ViewChild('.last') lastRow!: ElementRef;
-
+  /**Cached scroll position relative to top */
+  private _cachedPosition: number = 0;
   /**Virtualized chunk current startindex */
   private _startIndex: number = 0;
   /**Virtualized chunk endindex */
-  private _endIndex: number = 0;
-  /**Virtualized chunk size */
-  private readonly _chunkSize = 100;
+  private _endIndex: number = 33;
+  /**Virtualization step size */
+  private _step = 1;
 
   selectedItemsBag: any[] = [];
   isWaitIndicatorVisible: boolean = false;
   elapsedTime = new BehaviorSubject<string>(new Date().toLocaleTimeString());
-  isWhileSelecting: boolean | undefined;
+  isFrozen: boolean | undefined;
 
   virtualizedItemsSource: Observable<DataRow[]> = new Observable<DataRow[]>();
 
   @Output() selectedItems = new EventEmitter<any[]>();
   @Input() columnsSource?: Observable<string[]> = new Observable<string[]>();;
-  @Input() itemsSource: Observable<DataRow[]> = new Observable<DataRow[]>();
+  @Input() itemsSource: BehaviorSubject<DataRow[]> = new BehaviorSubject<DataRow[]>([]);
   @Input() enableVirtualization: boolean = true;
   @Input() showTimeStamp?: boolean = false;
 
@@ -55,35 +54,29 @@ export class DataGridComponent implements OnInit, OnChanges {
 
   onDataReceived(newData: DataRow[]): void {
     this.cleanUp();
+    if (newData.length === 0) {
+      return;
+    }
     this.columnsSource = new BehaviorSubject<string[]>(newData[0].getColumns());
     this.elapsedTime = new BehaviorSubject<string>(new Date().toLocaleTimeString());
 
-    if (!this.enableVirtualization || newData.length <= this._chunkSize) {
+    if (!this.enableVirtualization || newData.length <= this._step) {
       this.virtualizedItemsSource = new BehaviorSubject<DataRow[]>(newData).asObservable();
       return;
     }
 
-    this.nextChunk(newData);
-    console.log(this.firstRow);
+    this.stepForward(newData);
   }
 
-  @HostListener('click', ['$event.target'])
-  onVisibleChanged(element: HTMLElement) {
+  onScroll(event: Event): void {
+    let currentPosition = (event.target as HTMLElement).scrollTop;
+    let descending = currentPosition > this._cachedPosition;
 
-    console.log(element);
-    console.log(this.firstRow);
-    console.log(this.lastRow);
-    // const windowHeight = window.innerHeight;
-    // const boundingRectFive = this.firstRow.nativeElement.getBoundingClientRect();
-    // const boundingRectEight = this.lastRow.nativeElement.getBoundingClientRect();
+    this.itemsSource.subscribe(value => {
+       descending ? this.stepForward(value) : this.stepBackward(value);
+    });
 
-    // if (boundingRectFive.top >= 0 && boundingRectFive.bottom <= windowHeight) {
-
-    // } else if (boundingRectEight.top >= 0 && boundingRectEight.bottom <= windowHeight) {
-
-    // } else {
-
-    // }
+    this._cachedPosition = currentPosition;
   }
 
   onSelectedItemsChanged(event: Event, row: DataRow, index: number): void {
@@ -98,18 +91,18 @@ export class DataGridComponent implements OnInit, OnChanges {
   }
 
   onSelectionPending(event: Event, row: DataRow, index: number): void {
-    if (!this.isWhileSelecting && !(event as PointerEvent).ctrlKey) {
+    if (!this.isFrozen && !(event as PointerEvent).ctrlKey) {
       this.unselectAll();
     }
 
     if ((event as MouseEvent).buttons === 1) {
-      this.isWhileSelecting = true;
+      this.isFrozen = true;
       this.selectRow(row);
       this._ref.detectChanges();
       return;
     }
 
-    this.isWhileSelecting = false;
+    this.isFrozen = false;
   }
 
   onKeyCombination(event: Event): void {
@@ -165,28 +158,25 @@ export class DataGridComponent implements OnInit, OnChanges {
   }
 
   private takeSome(data: DataRow[]): DataRow[] {
-    console.log(`Took some starting at ${this._startIndex} ending with ${this._endIndex}`);
     return data.slice(this._startIndex, this._endIndex);
   }
 
-  private nextChunk(data: DataRow[]): void {
-    this._endIndex += this._chunkSize;
+  private stepForward(data: DataRow[]): void {
+    this._endIndex += this._step;
 
     this.recalculateRange(data, true);
-
     this.virtualizedItemsSource = new BehaviorSubject<DataRow[]>(this.takeSome(data)).asObservable();
 
-    this._startIndex += this._chunkSize;
+    this._startIndex += this._step;
   }
 
-  private previousChunk(data: DataRow[]): void {
-    this._startIndex -= this._chunkSize;
+  private stepBackward(data: DataRow[]): void {
+    this._startIndex -= this._step;
 
     this.recalculateRange(data, false);
-
     this.virtualizedItemsSource = new BehaviorSubject<DataRow[]>(this.takeSome(data)).asObservable();
 
-    this._endIndex -= this._chunkSize;
+    this._endIndex -= this._step;
   }
 
   private recalculateRange(data: DataRow[], next: boolean = true): void {
@@ -195,7 +185,7 @@ export class DataGridComponent implements OnInit, OnChanges {
       case true:
 
         if (!data[this._startIndex]) {
-          this._startIndex = indexRange - this._chunkSize;
+          this._startIndex = indexRange - this._step;
         }
         if (!data[this._endIndex]) {
           this._endIndex = indexRange;
@@ -207,7 +197,7 @@ export class DataGridComponent implements OnInit, OnChanges {
           this._startIndex = 0;
         }
         if (!data[this._endIndex]) {
-          this._endIndex += this._chunkSize;
+          this._endIndex += this._step;
         }
         break;
     }
@@ -215,6 +205,7 @@ export class DataGridComponent implements OnInit, OnChanges {
 
   private cleanUp(): void {
     this._startIndex = 0;
-    this._endIndex = 0;
+    this._endIndex = 33;
+    this._step = 1;
   }
 }

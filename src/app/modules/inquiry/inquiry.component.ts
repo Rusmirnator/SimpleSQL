@@ -15,7 +15,7 @@ export class InquiryComponent implements OnInit {
   isWaitIndicatorVisible: boolean = false;
   script: string | undefined;
 
-  resultSet$: Observable<IDataRow[]> = new Observable<IDataRow[]>();
+  resultSet$: BehaviorSubject<IDataRow[]> = new BehaviorSubject<IDataRow[]>([]);
   commands$: Observable<Command[]> = new Observable<Command[]>();
   
   constructor(private _ref: ChangeDetectorRef, private _serverService: ServerService) {
@@ -43,7 +43,7 @@ export class InquiryComponent implements OnInit {
 
   async onQueryExecutedAsync(): Promise<void> {
     this.toggleWaitIndicator();
-    this.resultSet$ = (await this._serverService.executeQueryAsync(this.script!)).asObservable();
+    this.resultSet$ = await this._serverService.executeQueryAsync(this.script!);
 
     this.toggleWaitIndicator();
   }

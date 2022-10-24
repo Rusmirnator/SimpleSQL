@@ -8,15 +8,17 @@ export default class ConnectionParameters implements IConnectionParameters {
     host!: string;
     port?: number | undefined;
     ssl?: (SSLMode.Disable | SSL);
+    options?: Object[]
 
     constructor() { }
 
-    initialize(user: string, password: string, database: string, host: string, port?: number, ssl?: SSLMode.Disable): void {
+    initialize(user: string, password: string, database: string, host: string, port?: number, ssl?: SSLMode.Disable, options?: Object[]): void {
         this.user = user;
         this.password = password;
         this.database = database.slice(1);
         this.host = host;
         this.port = port;
         this.ssl = ssl;
+        this.options = options;
     }
 }

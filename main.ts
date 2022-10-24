@@ -1,6 +1,7 @@
 import MainWindowRepository from './base/mainWindowRepository';
 import { BrowserWindow } from "electron";
 import { URL } from 'whatwg-url'
+import Logger from "./base/logger";
 import * as path from 'path';
 
 export default class Main {
@@ -50,14 +51,14 @@ export default class Main {
                 nodeIntegration: true,
                 contextIsolation: false
             }
-        })
+        });
 
         Main.devToolsWindow = new BrowserWindow();
 
         Main.configureMenu();
         Main.initializeSettings();
         Main.mainRepository.registerListeners();
-        Main.mainWindow!.loadURL(new URL(path.join(__dirname, `/simplesql/index.html`)).href);
+        Main.mainWindow!.loadURL(new URL(path.join('file://', __dirname, '/simplesql/index.html')).href);
         Main.mainWindow!.webContents.setDevToolsWebContents(Main.devToolsWindow!.webContents);
         Main.mainWindow!.webContents.openDevTools({ mode: 'detach' });
     }

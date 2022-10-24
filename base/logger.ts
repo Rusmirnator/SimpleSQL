@@ -14,6 +14,7 @@ export default class Logger {
         Logger.logFileName = `${new Date().toDateString()}.log`;
         Logger.path = path.join(app.getPath("appData"), 'simplesql', Logger.logFileName);
         Logger.newLine = existsSync(Logger.path) ? "\n" : "";
+        console.log(`Logger path: [${Logger.path}]`);
     }
 
     constructor() { }

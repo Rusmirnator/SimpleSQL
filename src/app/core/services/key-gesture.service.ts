@@ -6,17 +6,18 @@ import { IpcService } from './ipc.service';
 })
 export class KeyGestureService {
 
-  gestureResolver?: Function;
+  private gestureResolver?: Function;
+
   constructor(private _ipcService: IpcService) {
     this._ipcService.on('keyPressed', (_event: any, arg: string) => this.onKeyPressed(arg));
   }
 
-  public registerGestureResolver(resolverFunction: Function){
+  public registerGestureResolver(resolverFunction: Function) {
     this.gestureResolver = resolverFunction;
   }
 
   private onKeyPressed(keyGesture: string) {
-    if(this.gestureResolver !== null){
+    if (this.gestureResolver !== null) {
       this.gestureResolver?.call(this, keyGesture);
     }
   }

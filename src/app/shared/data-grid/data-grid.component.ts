@@ -1,25 +1,26 @@
 import { CommonModule } from '@angular/common';
 import { OnChanges, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { DataRow } from 'src/app/core/classes/data-row';
+import { VisibilityChangedDirective } from 'src/app/core/directives/visibility-changed.directive';
 
 @Component({
   selector: 'sm-data-grid',
   templateUrl: './data-grid.component.html',
   styleUrls: ['./data-grid.component.css'],
-  imports: [CommonModule],
+  imports: [CommonModule, VisibilityChangedDirective],
   standalone: true
 })
 export class DataGridComponent implements OnInit, OnChanges {
 
-  /**Cached scroll position relative to top */
-  private _cachedPosition: number = 0;
+  /**Tendency direction of a scroll event procs */
+  private _tendency: number = 0;
   /**Virtualized chunk current startindex */
   private _startIndex: number = 0;
   /**Virtualized chunk endindex */
   private _endIndex: number = 33;
   /**Virtualization step size */
-  private _step = 1;
+  private _step = 33;
 
   selectedItemsBag: any[] = [];
   isWaitIndicatorVisible: boolean = false;
@@ -69,14 +70,13 @@ export class DataGridComponent implements OnInit, OnChanges {
   }
 
   onScroll(event: Event): void {
-    let currentPosition = (event.target as HTMLElement).scrollTop;
-    let descending = currentPosition > this._cachedPosition;
-
     this.itemsSource.subscribe(value => {
-       descending ? this.stepForward(value) : this.stepBackward(value);
+      this.resolveStepDirection(event.target as HTMLElement) ? this.stepForward(value) : this.stepBackward(value);
     });
+  }
 
-    this._cachedPosition = currentPosition;
+  onVisible(event: Event): void {
+    console.log(event);
   }
 
   onSelectedItemsChanged(event: Event, row: DataRow, index: number): void {
@@ -197,7 +197,7 @@ export class DataGridComponent implements OnInit, OnChanges {
           this._startIndex = 0;
         }
         if (!data[this._endIndex]) {
-          this._endIndex += this._step;
+          this._endIndex += indexRange;
         }
         break;
     }
@@ -207,5 +207,13 @@ export class DataGridComponent implements OnInit, OnChanges {
     this._startIndex = 0;
     this._endIndex = 33;
     this._step = 1;
+  }
+
+  private resolveStepDirection(element: HTMLElement): boolean {
+    let currentPosition = element.scrollTop;
+    let forward = currentPosition > this._tendency;
+
+    this._tendency = currentPosition;
+    return forward;
   }
 }

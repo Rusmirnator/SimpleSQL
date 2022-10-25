@@ -12,11 +12,12 @@
                 <tr *ngFor="let item of virtualizedItemsSource | async; let index = index;"
                     (click)="onSelectedItemsChanged($event, item, item.index)"
                     (mouseover)="onSelectionPending($event, item, item.index)"
-                    [ngClass]="{first: index === 0, selected: item.isSelected === true}">
+                    [ngClass]="{backward: index === 3, forward: index === 30, selected: item.isSelected === true}"
+                    (visibilityChanged)="onVisible($event)" >
                     <td class="normalizedCell">[{{item.index}}]</td>
                     <td *ngFor="let f of item.rowData.keys()">
                         <span class="normalizedCell">
-                           {{item.getCellData(f)}}
+                            {{item.getCellData(f)}}
                         </span>
                     </td>
                 </tr>

@@ -22,8 +22,6 @@ export class VisibilityChangedDirective implements OnInit, OnDestroy {
       });
       this.observer.observe(this.el.nativeElement);
     });
-    console.log(this.observer);
-    console.log(this.ngZone);
   }
 
   ngOnDestroy(): void {

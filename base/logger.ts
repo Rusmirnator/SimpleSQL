@@ -29,9 +29,7 @@ export default class Logger {
         normalizedTimeStamp += `${Logger.repository.left(currentTime.getMilliseconds() + "00", 3)}`;
 
         Logger.repository.safelyWriteToFile(
-            Logger.path,
-            `${this.newLine}${normalizedTimeStamp}|${level}|${message}`,
-            "utf-8");
+            Logger.path,`${this.newLine}${normalizedTimeStamp}|${level}|${message}`,"utf-8");
 
         if (Logger.newLine === "") {
             Logger.newLine = "\n";

@@ -5,6 +5,7 @@ import { DataGridComponent } from 'src/app/shared/data-grid/data-grid.component'
 import { EditorComponent } from 'src/app/shared/editor/editor.component';
 import { RibbonComponent } from 'src/app/shared/ribbon/ribbon.component';
 import { WaitIndicatorComponent } from 'src/app/shared/wait-indicator/wait-indicator.component';
+import { ModalComponent } from 'src/app/shared/modal/modal.component';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { WaitIndicatorComponent } from 'src/app/shared/wait-indicator/wait-indic
     DataGridComponent,
     EditorComponent,
     RibbonComponent,
-    WaitIndicatorComponent
+    WaitIndicatorComponent,
+    ModalComponent
   ]
 })
 export class InquiryModule {

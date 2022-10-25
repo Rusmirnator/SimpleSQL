@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AsyncCommand } from 'src/app/core/classes/async-command';
 import { Command } from 'src/app/core/classes/command';
+import EventArgs from 'src/app/core/classes/eventargs';
 import { IDataRow } from 'src/app/core/interfaces/idata-row';
 import { ServerService } from 'src/app/core/services/server.service'; 
 
@@ -12,6 +13,7 @@ import { ServerService } from 'src/app/core/services/server.service';
 })
 export class InquiryComponent implements OnInit {
 
+   dlgTrigger: string = '';
   isWaitIndicatorVisible: boolean = false;
   script: string | undefined;
 
@@ -31,9 +33,16 @@ export class InquiryComponent implements OnInit {
 
   private initializeCommands(): void {
     let commands: Command[] = [];
-    commands.push(new AsyncCommand(() => this.onQueryExecutedAsync(), () => this.canExecuteQuery(), "F5", "Execute"));
+    commands.push(new AsyncCommand(() => this.executeQueryAsync(), () => this.canExecuteQuery(), "F5", "Execute"));
+    commands.push(new AsyncCommand(() => this.writeScriptAsync(), () => this.canWriteScript(), "CmdOrCtrl+S", "Write to file"));
+    commands.push(new Command(() => this.showHelp(), () => this.canShowHelp(), 'F1', 'Help'));
 
     this.commands$ = new BehaviorSubject<Command[]>(commands).asObservable();
+  }
+
+  onModalResultResolved(e: EventArgs<HTMLElement>): void {
+    this.dlgTrigger = '';
+    this._ref.detectChanges();
   }
 
   private toggleWaitIndicator() {
@@ -41,14 +50,37 @@ export class InquiryComponent implements OnInit {
     this._ref.detectChanges();
   }
 
-  async onQueryExecutedAsync(): Promise<void> {
+  async executeQueryAsync(): Promise<void> {
     this.toggleWaitIndicator();
+    
     this.resultSet$ = await this._serverService.executeQueryAsync(this.script!);
 
     this.toggleWaitIndicator();
   }
 
+  async writeScriptAsync(): Promise<void> {
+    this.toggleWaitIndicator();
+
+    //write blabla 
+    //if operation success blabla
+
+    this.toggleWaitIndicator();
+  }
+
+  showHelp(): void {
+    this.dlgTrigger = 'dlgHelp';
+    this._ref.detectChanges();
+  }
+
   canExecuteQuery(): boolean {
+    return this.script !== undefined && this.script.length > 0;
+  }
+
+  canShowHelp(): boolean {
+    return this.dlgTrigger.length === 0;
+  }
+
+  canWriteScript(): boolean {
     return this.script !== undefined && this.script.length > 0;
   }
 }

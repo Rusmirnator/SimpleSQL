@@ -23,7 +23,7 @@ export default class SqlClient implements IProvideSqlConnection {
             return;
         }
 
-        this.parameters.initialize(url.username, url.password, url.pathname, url.host, parseInt(url.port), SSLMode.Require, [ { trustServerCertificate: true } ]);
+        this.parameters.initialize(url.username, url.password, url.pathname, url.host, parseInt(url.port), SSLMode.Disable);
     }
 
     public async executeQueryAsync(query: string, queryParameters?: any[]): Promise<IResponseObject> {

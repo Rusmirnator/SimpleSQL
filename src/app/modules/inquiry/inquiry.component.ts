@@ -33,9 +33,9 @@ export class InquiryComponent implements OnInit {
 
   private initializeCommands(): void {
     let commands: Command[] = [];
+    commands.push(new Command(() => this.showHelp(), () => this.canShowHelp(), 'F1', 'Help'));
     commands.push(new AsyncCommand(() => this.executeQueryAsync(), () => this.canExecuteQuery(), "F5", "Execute"));
     commands.push(new AsyncCommand(() => this.writeScriptAsync(), () => this.canWriteScript(), "CmdOrCtrl+S", "Write to file"));
-    commands.push(new Command(() => this.showHelp(), () => this.canShowHelp(), 'F1', 'Help'));
 
     this.commands$ = new BehaviorSubject<Command[]>(commands).asObservable();
   }
@@ -52,7 +52,7 @@ export class InquiryComponent implements OnInit {
 
   async executeQueryAsync(): Promise<void> {
     this.toggleWaitIndicator();
-    
+
     this.resultSet$ = await this._serverService.executeQueryAsync(this.script!);
 
     this.toggleWaitIndicator();

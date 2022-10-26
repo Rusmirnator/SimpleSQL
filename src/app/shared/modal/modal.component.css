@@ -4,8 +4,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     background: #fff;
-    min-height: 350px;
-    min-width: 400px;
+    min-width: 320px;
     z-index: 99;
 }
 

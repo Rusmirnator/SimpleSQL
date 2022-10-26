@@ -16,7 +16,6 @@ export class AsyncCommand extends Command {
         }
 
         if (canExecute) {
-            console.log("executed asynchronously");
             await this.toExecute();
         }
     }

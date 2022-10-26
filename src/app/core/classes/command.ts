@@ -19,7 +19,6 @@ export class Command {
         }
 
         if(canExecute){
-            console.log("executed synchronously");
             this.toExecute();
         }
     }

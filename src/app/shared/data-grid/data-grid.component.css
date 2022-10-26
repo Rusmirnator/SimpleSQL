@@ -2,16 +2,15 @@
      user-select: none;
      display: flex;
      flex: 1 1 auto;
+     contain: strict;
      flex-direction: column;
  }
 
  .table-container {
      overflow: auto;
-     display: flex;
      flex: 1 1 auto;
      flex-direction: column;
-     contain: strict;
-     background: white;
+     background: #1795A8;
  }
 
  .table-container::-webkit-scrollbar {

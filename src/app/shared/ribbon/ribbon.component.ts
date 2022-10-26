@@ -25,7 +25,7 @@ export class RibbonComponent implements OnInit {
           return c.keyGesture === arg;
         })?.execute();
       });
-      this._logger.logInfo(`Execute request:${arg}`);
+      this._logger.logInfo(`KeyGesture request:${arg}`);
     });
   }
 

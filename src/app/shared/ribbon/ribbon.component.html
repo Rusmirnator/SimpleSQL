@@ -1,8 +1,8 @@
-<div class="container" aria-label="SimpleSQL">
+<div class="container">
     <div class="label">Main</div>
-    <div class="page" aria-label="Main">
-        <div class="group" aria-label="Command" *ngFor="let command of commands | async">
-            <button (click)="command.execute()">{{command.keyGesture}} - {{command.description}}</button>
+    <div class="page">
+        <div class="group">
+            <button *ngFor="let command of commands | async" (click)="command.execute()">{{command.keyGesture}} - {{command.description}}</button>
         </div>
     </div>
 </div>

@@ -5,6 +5,7 @@ import { BehaviorSubject } from 'rxjs';
 import { DataRow } from '../classes/data-row';
 import { IDataRow } from '../interfaces/idata-row';
 import { ITreeViewElement } from '../interfaces/itree-view-element';
+import { IpcService } from './ipc.service';
 import { SQLClientService } from './sqlclient.service';
 
 @Injectable({
@@ -14,7 +15,7 @@ export class ServerService {
 
   private provider?: ServerProvider = ServerProvider.PGSQL;
 
-  constructor(private _sqlService: SQLClientService) { }
+  constructor(private _sqlService: SQLClientService, private _ipc: IpcService) { }
 
   async getDatabasesAsync(): Promise<BehaviorSubject<ITreeViewElement[]>> {
     let query: string;
@@ -63,5 +64,18 @@ export class ServerService {
     });
 
     return new BehaviorSubject<IDataRow[]>(resultSet);
+  }
+
+  async saveScriptAsync(script: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this._ipc.send('saveScript', script);
+      this._ipc.once('scriptSaved', (_event: any, err: string) => {
+        if (err) {
+          return reject(err);
+        }
+
+        resolve();
+      });
+    });
   }
 }

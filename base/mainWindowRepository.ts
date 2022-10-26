@@ -156,5 +156,16 @@ export default class MainWindowRepository {
                 Logger.log(error as string, LogLevel.Error);
             }
         });
+
+        ipcMain.on('saveScript', (event: IpcMainEvent, script, path) => {
+            try {
+                this.generalRepository.safelyWriteToFile(path, script, "utf-8");
+                event.reply('scriptSaved');
+
+                Logger.log(`Successfuly saved script to file.`, LogLevel.Trace)
+            } catch (error) {
+                Logger.log(error as string, LogLevel.Error);
+            }
+        });
     }
 }

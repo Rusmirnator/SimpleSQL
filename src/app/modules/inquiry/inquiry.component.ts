@@ -61,8 +61,7 @@ export class InquiryComponent implements OnInit {
   async writeScriptAsync(): Promise<void> {
     this.toggleWaitIndicator();
 
-    //write blabla 
-    //if operation success blabla
+    await this._serverService.saveScriptAsync(this.script!);
 
     this.toggleWaitIndicator();
   }

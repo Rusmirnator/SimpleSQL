@@ -3,6 +3,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { AsyncCommand } from 'src/app/core/classes/async-command';
 import { Command } from 'src/app/core/classes/command';
 import EventArgs from 'src/app/core/classes/eventargs';
+import { ViewHandler } from 'src/app/core/classes/view-handler';
 import { IDataRow } from 'src/app/core/interfaces/idata-row';
 import { ServerService } from 'src/app/core/services/server.service'; 
 
@@ -11,16 +12,16 @@ import { ServerService } from 'src/app/core/services/server.service';
   templateUrl: './inquiry.component.html',
   styleUrls: ['./inquiry.component.css']
 })
-export class InquiryComponent implements OnInit {
+export class InquiryComponent extends ViewHandler implements OnInit {
 
-   dlgTrigger: string = '';
-  isWaitIndicatorVisible: boolean = false;
+  error: string = "";
   script: string | undefined;
 
   resultSet$: BehaviorSubject<IDataRow[]> = new BehaviorSubject<IDataRow[]>([]);
   commands$: Observable<Command[]> = new Observable<Command[]>();
   
   constructor(private _ref: ChangeDetectorRef, private _serverService: ServerService) {
+    super();
     this.initializeCommands();
    }
 
@@ -35,40 +36,49 @@ export class InquiryComponent implements OnInit {
     let commands: Command[] = [];
     commands.push(new Command(() => this.showHelp(), () => this.canShowHelp(), 'F1', 'Help'));
     commands.push(new AsyncCommand(() => this.executeQueryAsync(), () => this.canExecuteQuery(), "F5", "Execute"));
-    commands.push(new AsyncCommand(() => this.writeScriptAsync(), () => this.canWriteScript(), "CmdOrCtrl+S", "Write to file"));
+    commands.push(new Command(() => this.selectPath(), () => this.canWriteScript(), "CmdOrCtrl+S", "Write to file"));
 
     this.commands$ = new BehaviorSubject<Command[]>(commands).asObservable();
   }
 
-  onModalResultResolved(e: EventArgs<HTMLElement>): void {
-    this.dlgTrigger = '';
-    this._ref.detectChanges();
-  }
+  async onModalResultResolved(e: EventArgs<HTMLElement>): Promise<void> {
+    if (this.getDialog('help')) {
+      this.closeDialog();
+    }
 
-  private toggleWaitIndicator() {
-    this.isWaitIndicatorVisible = !this.isWaitIndicatorVisible;
+    if (this.getDialog('selectPath')) {
+      this.closeDialog();
+
+      await this.writeScriptAsync(e.instance);
+    }
+
     this._ref.detectChanges();
   }
 
   async executeQueryAsync(): Promise<void> {
-    this.toggleWaitIndicator();
+    this.changeState();
 
     this.resultSet$ = await this._serverService.executeQueryAsync(this.script!);
 
-    this.toggleWaitIndicator();
+    this.changeState();
   }
 
-  async writeScriptAsync(): Promise<void> {
-    this.toggleWaitIndicator();
-
-    await this._serverService.saveScriptAsync(this.script!);
-
-    this.toggleWaitIndicator();
+  selectPath(): void {
+    this.showDialog('selectPath');
   }
 
   showHelp(): void {
-    this.dlgTrigger = 'dlgHelp';
-    this._ref.detectChanges();
+    this.showDialog('help');
+  }
+
+  async writeScriptAsync(content?: HTMLElement): Promise<void> {
+    this.changeState();
+
+    let path: string = content?.innerHTML!;
+
+    await this._serverService.saveScriptAsync(path, this.script!);
+
+    this.changeState();
   }
 
   canExecuteQuery(): boolean {
@@ -76,7 +86,7 @@ export class InquiryComponent implements OnInit {
   }
 
   canShowHelp(): boolean {
-    return this.dlgTrigger.length === 0;
+    return !this.getDialog("help");
   }
 
   canWriteScript(): boolean {

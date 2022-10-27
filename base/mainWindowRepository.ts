@@ -157,7 +157,7 @@ export default class MainWindowRepository {
             }
         });
 
-        ipcMain.on('saveScript', (event: IpcMainEvent, script, path) => {
+        ipcMain.on('saveScript', (event: IpcMainEvent, [script, path]) => {
             try {
                 this.generalRepository.safelyWriteToFile(path, script, "utf-8");
                 event.reply('scriptSaved');

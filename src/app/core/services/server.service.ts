@@ -66,9 +66,9 @@ export class ServerService {
     return new BehaviorSubject<IDataRow[]>(resultSet);
   }
 
-  async saveScriptAsync(script: string): Promise<void> {
+  async saveScriptAsync(path: string, script: string): Promise<void> {
     return new Promise((resolve, reject) => {
-      this._ipc.send('saveScript', script);
+      this._ipc.send('saveScript', [path, script]);
       this._ipc.once('scriptSaved', (_event: any, err: string) => {
         if (err) {
           return reject(err);

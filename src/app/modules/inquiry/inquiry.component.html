@@ -1,9 +1,16 @@
 <div class="layout-root">
-    <sm-wait-indicator [isVisible]="isWaitIndicatorVisible"></sm-wait-indicator>
-    <sm-modal [isVisible]="dlgTrigger === 'dlgHelp'" title="Help"
-    (modalResult)="onModalResultResolved($event)">
-    <div>test</div>
-</sm-modal>
+    <sm-wait-indicator [isVisible]="isBusy().getValue()"></sm-wait-indicator>
+    <sm-modal [isVisible]="getDialog('help')" title="Help" (modalResult)="onModalResultResolved($event)">
+        <div class="content">
+            <p>That's actually a test dialog, pretending to be help related.</p>
+        </div>
+    </sm-modal>
+    <sm-modal [isVisible]="getDialog('selectPath')" title="Choose folder" (modalResult)="onModalResultResolved($event)">
+        <div class="content" style="display:flex; flex-direction:column;gap:3px;margin-top:5px">
+            <label for="path">Path:</label>
+            <input id="path" role="textbox" type="file" class="editable" placeholder="Choose folder to save script to..." />
+        </div>
+    </sm-modal>
     <div class="ribbon-container">
         <sm-ribbon [commands]="commands$">
         </sm-ribbon>

@@ -1,4 +1,4 @@
-import { readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync, existsSync, mkdirSync } from 'fs';
 
 export default class GeneralPurposeRepository {
 
@@ -15,12 +15,20 @@ export default class GeneralPurposeRepository {
         return "";
     }
 
+    /**
+     * Safely writes specified text to file. If any of the directories in specified path doesn't exits, automatically creates it.
+     * @param filePath Full path including filename and extension.
+     * @param content Text content to write.
+     * @param encoding Encoding which specified content should be written with.
+     */
     public safelyWriteToFile(filePath: string, content: string, encoding?: string): void {
         let options = {
             encoding: encoding,
             flag: "a"
         };
+
         try {
+            this.makePath(filePath);
             writeFileSync(filePath, content, options);
         } catch (error) {
             console.log(error);
@@ -53,5 +61,18 @@ export default class GeneralPurposeRepository {
             return value;
         }
         return value.slice(0, length);
+    }
+
+    private makePath(path: string): void {
+        let directoriesOnTheWay = path.replace(/\\/g, '/').split('/').slice(0, -1);
+        let root = directoriesOnTheWay.shift();
+
+        directoriesOnTheWay.reduce((acc, dir) => {
+            let folderPath = acc + dir + '/';
+            if (!existsSync(folderPath)) {
+                mkdirSync(folderPath);
+            }
+            return folderPath;
+        }, root);
     }
 }

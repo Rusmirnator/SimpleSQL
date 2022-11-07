@@ -28,7 +28,7 @@ export default class GeneralPurposeRepository {
         };
 
         try {
-            this.makePath(filePath);
+            this.ensureDirectoryExists(filePath);
             writeFileSync(filePath, content, options);
         } catch (error) {
             console.log(error);
@@ -63,9 +63,22 @@ export default class GeneralPurposeRepository {
         return value.slice(0, length);
     }
 
-    private makePath(path: string): void {
+    /**
+     * Determines if directory exists and creates it if needed.
+     * @param path Path to be verified and prepared.
+     * @returns Whether given directory exists.
+     */
+    public ensureDirectoryExists(path: string): boolean {
         let directoriesOnTheWay = path.replace(/\\/g, '/').split('/').slice(0, -1);
         let root = directoriesOnTheWay.shift();
+
+        if (root?.length === 0) {
+            root = '/';
+        }
+
+        if (existsSync(directoriesOnTheWay.join("/"))) {
+            return true;
+        }
 
         directoriesOnTheWay.reduce((acc, dir) => {
             let folderPath = acc + dir + '/';
@@ -74,5 +87,7 @@ export default class GeneralPurposeRepository {
             }
             return folderPath;
         }, root);
+
+        return false;
     }
 }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AsyncCommand } from 'src/app/core/classes/async-command';
 import { Command } from 'src/app/core/classes/command';
@@ -20,7 +20,7 @@ export class InquiryComponent extends ViewHandler implements OnInit {
   resultSet$: BehaviorSubject<IDataRow[]> = new BehaviorSubject<IDataRow[]>([]);
   commands$: Observable<Command[]> = new Observable<Command[]>();
   
-  constructor(private _ref: ChangeDetectorRef, private _serverService: ServerService) {
+  constructor(private _serverService: ServerService) {
     super();
     this.initializeCommands();
    }
@@ -51,8 +51,6 @@ export class InquiryComponent extends ViewHandler implements OnInit {
 
       await this.writeScriptAsync(e.instance);
     }
-
-    this._ref.detectChanges();
   }
 
   async executeQueryAsync(): Promise<void> {

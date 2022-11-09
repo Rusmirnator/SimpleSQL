@@ -1,5 +1,5 @@
 <div class="window" role="main">
-  <sm-modal [isVisible]="dlgTrigger === 'dlgConnectionSettings'" title="Connection settings"
+  <sm-modal [isVisible]="getDialog('dlgConnectionSettings')" title="Connection settings"
     (modalResult)="onModalResultResolved($event)">
     <div style="display:flex; flex-direction:column;gap:3px;margin-top:5px">
       <label for="host">Server address:</label>
@@ -19,7 +19,7 @@
       </select>
     </div>
   </sm-modal>
-  <sm-wait-indicator [isVisible]="isWaitIndicatorVisible">
+  <sm-wait-indicator [isVisible]="isBusy() | async">
   </sm-wait-indicator>
   <div class="titleBar-container">
     <div class="title">

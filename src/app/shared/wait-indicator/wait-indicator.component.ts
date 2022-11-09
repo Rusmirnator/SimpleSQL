@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'sm-wait-indicator',
@@ -10,7 +11,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class WaitIndicatorComponent implements OnInit {
 
-  @Input() isVisible: boolean = false;
+  @Input() isVisible: boolean | null = false;
 
   constructor() { }
 

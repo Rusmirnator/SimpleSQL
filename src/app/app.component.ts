@@ -4,6 +4,7 @@ import { IAppSettings } from 'base/interfaces/IAppSettings';
 import { AppSettings } from 'base/shared/AppSettings';
 import { Observable } from 'rxjs';
 import EventArgs from './core/classes/eventargs';
+import { ViewHandler } from './core/classes/view-handler';
 import { ITreeViewElement } from './core/interfaces/itree-view-element';
 import { IpcService } from './core/services/ipc.service';
 import { LoggerService } from './core/services/logger.service';
@@ -14,7 +15,7 @@ import { ServerService } from './core/services/server.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent extends ViewHandler implements OnInit {
 
   dlgTrigger: string | null | undefined;
   connectionEstablished: boolean = true;
@@ -32,12 +33,13 @@ export class AppComponent implements OnInit {
   databaseName$: Observable<string> = new Observable<string>();
   databases$: Observable<ITreeViewElement[]> = new Observable<ITreeViewElement[]>();
 
-  constructor(private _logger: LoggerService, private _ipcService: IpcService, private _ref: ChangeDetectorRef, private _serverService: ServerService, private _router: Router) {
+  constructor(private _logger: LoggerService, private _ipcService: IpcService, private _serverService: ServerService, private _router: Router) {
+    super();
     this.appSettings = new AppSettings();
   }
 
   async ngOnInit(): Promise<void> {
-    this.toggleWaitIndicator();
+    this.changeState();
 
     this._ipcService.send('startup');
     this._ipcService.on('configurationRequired', (_configPath: string) => {
@@ -47,12 +49,11 @@ export class AppComponent implements OnInit {
       this._logger.logInfo("Configuration required!");
 
       this.dlgTrigger = "dlgConnectionSettings";
-      this._ref.detectChanges();
     });
 
     await this.initAsync();
 
-    this.toggleWaitIndicator();
+    this.changeState();
   }
 
   onSSLModeSelected(event: Event) {
@@ -78,8 +79,7 @@ export class AppComponent implements OnInit {
     }
     this.dlgTrigger = "";
 
-    this.toggleWaitIndicator();
-    this._ref.detectChanges();
+    this.changeState();
   }
 
   private consumeModalData(modalBody: HTMLElement): void {
@@ -90,11 +90,6 @@ export class AppComponent implements OnInit {
     this.password = (elements[3] as HTMLInputElement).value;
     this.selectedIndex = (elements[4] as HTMLSelectElement).selectedIndex;
     this.ssl = (elements[4] as HTMLSelectElement).options[this.selectedIndex ??= 0].value;
-  }
-
-  private toggleWaitIndicator() {
-    this.isWaitIndicatorVisible = !this.isWaitIndicatorVisible;
-    this._ref.detectChanges();
   }
 
   private async initAsync(): Promise<void> {

@@ -5,6 +5,7 @@ import { Command } from 'src/app/core/classes/command';
 import EventArgs from 'src/app/core/classes/eventargs';
 import { ViewHandler } from 'src/app/core/classes/view-handler';
 import { IDataRow } from 'src/app/core/interfaces/idata-row';
+import { LoggerService } from 'src/app/core/services/logger.service';
 import { ServerService } from 'src/app/core/services/server.service';
 
 @Component({
@@ -20,7 +21,7 @@ export class InquiryComponent extends ViewHandler implements OnInit {
   resultSet$: BehaviorSubject<IDataRow[]> = new BehaviorSubject<IDataRow[]>([]);
   commands$: Observable<Command[]> = new Observable<Command[]>();
 
-  constructor(private _ref: ChangeDetectorRef, private _serverService: ServerService) {
+  constructor(private _ref: ChangeDetectorRef, private _serverService: ServerService, private _logger: LoggerService) {
     super();
     this.initializeCommands();
   }
@@ -69,12 +70,22 @@ export class InquiryComponent extends ViewHandler implements OnInit {
     this.showDialog('help');
   }
 
-  async writeScriptAsync(content?: HTMLElement): Promise<void> {
+  async writeScriptAsync(modalBody?: HTMLElement): Promise<void> {
     this.changeState();
 
-    let path: string = content?.innerHTML!;
+    let elements = modalBody?.getElementsByClassName("editable");
 
-    await this._serverService.saveScriptAsync(path, this.script!);
+    let path: string = (elements![0] as HTMLInputElement).value;
+
+    if (path) {
+      this._logger.logInfo(`Choosen path: ${path}`);
+      await this._serverService.saveScriptAsync(path, this.script!);
+    }
+
+    if (!path) {
+      this.error = "Couldn't save script - path was empty or invalid!";
+      this.showDialog("error");
+    }
 
     this.changeState();
   }
@@ -94,7 +105,7 @@ export class InquiryComponent extends ViewHandler implements OnInit {
   protected override raisePropertyChanged<T>(propertyName: string, value: T): void {
     console.log(`Property ${propertyName} changed! New value: \n`);
     console.log(value);
-    
+
     this._ref.detectChanges();
   }
 }

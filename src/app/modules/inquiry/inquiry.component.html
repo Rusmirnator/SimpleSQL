@@ -2,13 +2,20 @@
     <sm-wait-indicator [isVisible]="isBusy()"></sm-wait-indicator>
     <sm-modal [isVisible]="getDialog('help')" title="Help" (modalResult)="onModalResultResolved($event)">
         <div class="content">
-            <p>That's actually a test dialog, pretending to be help related.</p>
+            <p><b>SimpleSQL</b></p><br>
+            <p>This app is currently in early phase of development. It's capable of executing single statements only!!!</p>
+        </div>
+    </sm-modal>
+    <sm-modal [isVisible]="getDialog('error')" title="Error" (modalResult)="onModalResultResolved($event)">
+        <div class="content">
+            <p>{{error}}</p>
         </div>
     </sm-modal>
     <sm-modal [isVisible]="getDialog('selectPath')" title="Choose folder" (modalResult)="onModalResultResolved($event)">
         <div class="content" style="display:flex; flex-direction:column;gap:3px;margin-top:5px">
             <label for="path">Path:</label>
-            <input id="path" role="textbox" type="file" class="editable" placeholder="Choose folder to save script to..." />
+            <input id="path" role="textbox" type="file" class="editable"
+                placeholder="Choose folder to save script to..." />
         </div>
     </sm-modal>
     <div class="ribbon-container">

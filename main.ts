@@ -1,7 +1,6 @@
 import MainWindowRepository from './base/mainWindowRepository';
 import { BrowserWindow } from "electron";
 import { URL } from 'whatwg-url'
-import Logger from "./base/logger";
 import * as path from 'path';
 
 export default class Main {
@@ -78,6 +77,7 @@ export default class Main {
         Main.mainRepository.registerMenuItem('action', 'F11', 'F11');
         Main.mainRepository.registerMenuItem('action', 'F12', 'F12');
         Main.mainRepository.registerMenuItem('action', 'Show/Hide grid', 'CmdOrCtrl+R');
+        Main.mainRepository.registerMenuItem('action', 'Save script to file', 'CmdOrCtrl+S');
         Main.mainRepository.registerMenuCategory('dev', 'Development');
         Main.mainRepository.registerMenuItem('dev', 'Reload', 'CmdOrCtrl+Shift+R');
         Main.mainRepository.finalizeMenuConfiguration();

@@ -6,6 +6,7 @@ import { INotifyPropertyChanged } from "./interfaces/INotifyPropertyChanged";
 export class BindableBase implements INotifyPropertyChanged {
 
     private _dynamicStorage: Map<string, Object>;
+    
 
     changeEmitter: EventEmitter = new EventEmitter();
     propertyChanged: <T>(propertyName: string, value: T) => void;

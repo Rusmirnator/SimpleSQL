@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 
 @Component({
   selector: 'sm-wait-indicator',

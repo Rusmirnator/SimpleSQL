@@ -17,9 +17,7 @@ import { ServerService } from './core/services/server.service';
 })
 export class AppComponent extends ViewHandler implements OnInit {
 
-  dlgTrigger: string | null | undefined;
   connectionEstablished: boolean = true;
-  isWaitIndicatorVisible: boolean = false;
 
   appSettings: IAppSettings;
   host: string | undefined;
@@ -33,7 +31,7 @@ export class AppComponent extends ViewHandler implements OnInit {
   databaseName$: Observable<string> = new Observable<string>();
   databases$: Observable<ITreeViewElement[]> = new Observable<ITreeViewElement[]>();
 
-  constructor(private _logger: LoggerService, private _ipcService: IpcService, private _serverService: ServerService, private _router: Router) {
+  constructor(private _ref: ChangeDetectorRef, private _logger: LoggerService, private _ipcService: IpcService, private _serverService: ServerService, private _router: Router) {
     super();
     this.appSettings = new AppSettings();
   }
@@ -48,7 +46,7 @@ export class AppComponent extends ViewHandler implements OnInit {
 
       this._logger.logInfo("Configuration required!");
 
-      this.dlgTrigger = "dlgConnectionSettings";
+      this.showDialog("dlgConnectionSettings");
     });
 
     await this.initAsync();
@@ -77,7 +75,7 @@ export class AppComponent extends ViewHandler implements OnInit {
       this.connectionEstablished = true;
       this.initAsync();
     }
-    this.dlgTrigger = "";
+    this.closeDialog();
 
     this.changeState();
   }
@@ -99,5 +97,12 @@ export class AppComponent extends ViewHandler implements OnInit {
 
       this._router.navigate(['/inquiry']);
     }
+  }
+
+  protected override raisePropertyChanged<T>(propertyName: string, value: T): void {
+    console.log(`Property ${propertyName} changed! New value: \n`);
+    console.log(value);
+
+    this._ref.detectChanges();
   }
 }

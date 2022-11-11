@@ -1,5 +1,5 @@
 <div class="layout-root">
-    <sm-wait-indicator [isVisible]="isBusy() | async"></sm-wait-indicator>
+    <sm-wait-indicator [isVisible]="isBusy()"></sm-wait-indicator>
     <sm-modal [isVisible]="getDialog('help')" title="Help" (modalResult)="onModalResultResolved($event)">
         <div class="content">
             <p>That's actually a test dialog, pretending to be help related.</p>

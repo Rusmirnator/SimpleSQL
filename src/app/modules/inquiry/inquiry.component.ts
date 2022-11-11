@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AsyncCommand } from 'src/app/core/classes/async-command';
 import { Command } from 'src/app/core/classes/command';
 import EventArgs from 'src/app/core/classes/eventargs';
 import { ViewHandler } from 'src/app/core/classes/view-handler';
 import { IDataRow } from 'src/app/core/interfaces/idata-row';
-import { ServerService } from 'src/app/core/services/server.service'; 
+import { ServerService } from 'src/app/core/services/server.service';
 
 @Component({
   selector: 'im-inquiry',
@@ -19,11 +19,11 @@ export class InquiryComponent extends ViewHandler implements OnInit {
 
   resultSet$: BehaviorSubject<IDataRow[]> = new BehaviorSubject<IDataRow[]>([]);
   commands$: Observable<Command[]> = new Observable<Command[]>();
-  
-  constructor(private _serverService: ServerService) {
+
+  constructor(private _ref: ChangeDetectorRef, private _serverService: ServerService) {
     super();
     this.initializeCommands();
-   }
+  }
 
   ngOnInit(): void {
   }
@@ -89,5 +89,12 @@ export class InquiryComponent extends ViewHandler implements OnInit {
 
   canWriteScript(): boolean {
     return this.script !== undefined && this.script.length > 0;
+  }
+
+  protected override raisePropertyChanged<T>(propertyName: string, value: T): void {
+    console.log(`Property ${propertyName} changed! New value: \n`);
+    console.log(value);
+    
+    this._ref.detectChanges();
   }
 }

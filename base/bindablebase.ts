@@ -1,15 +1,16 @@
 import * as EventEmitter from "events";
 import { INotifyPropertyChanged } from "./interfaces/INotifyPropertyChanged";
+import { PropertyChangedEventArgs } from "./shared/PropertyChangedEventArgs";
 /**
  * Allows relatively easy control over property binding.
  */
 export class BindableBase implements INotifyPropertyChanged {
 
     private _dynamicStorage: Map<string, Object>;
-    
+
 
     changeEmitter: EventEmitter = new EventEmitter();
-    propertyChanged: <T>(propertyName: string, value: T) => void;
+    propertyChanged: <T>(e: PropertyChangedEventArgs<T>) => void;
 
     constructor() {
         this._dynamicStorage = new Map<string, Object>();
@@ -42,20 +43,19 @@ export class BindableBase implements INotifyPropertyChanged {
         }
 
         this._dynamicStorage.set(propertyName, value);
-        this.propertyChanged(propertyName, value);
+        this.propertyChanged(new PropertyChangedEventArgs(propertyName, value));
 
         return true;
     }
 
     /**
      * Manualy raises 'propertyChanged' event.
-     * @param propertyName Key name used to store value.
-     * @param value Value associated with raise of new event.
+     * @e Data associated with risen event.
      */
-    protected raisePropertyChanged<T>(propertyName: string, value: T): void {
-        console.log(`Property ${propertyName} changed! New value: \n`);
-        console.log(value);
+    protected raisePropertyChanged<T>(e: PropertyChangedEventArgs<T>): void {
+        console.log(`Property ${e.propertyName} changed! New value: \n`);
+        console.log(e.value);
 
-        this.changeEmitter.emit('propertyChanged', propertyName, value);
+        this.changeEmitter.emit('propertyChanged', e);
     }
 }

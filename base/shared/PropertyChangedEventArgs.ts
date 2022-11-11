@@ -1,7 +1,9 @@
 import { IEventArgs } from "base/interfaces/IEventArgs";
 
+/**
+ * Contains data associated with changed property.
+ */
 export class PropertyChangedEventArgs<T> implements IEventArgs<T>{
-    instance?: T | undefined;
     handle: boolean;
     propertyName: string;
     value: T;

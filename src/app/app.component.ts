@@ -2,6 +2,7 @@ import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { IAppSettings } from 'base/interfaces/IAppSettings';
 import { AppSettings } from 'base/shared/AppSettings';
+import { PropertyChangedEventArgs } from 'base/shared/PropertyChangedEventArgs';
 import { Observable } from 'rxjs';
 import EventArgs from './core/classes/eventargs';
 import { ViewHandler } from './core/classes/view-handler';
@@ -99,9 +100,9 @@ export class AppComponent extends ViewHandler implements OnInit {
     }
   }
 
-  protected override raisePropertyChanged<T>(propertyName: string, value: T): void {
-    console.log(`Property ${propertyName} changed! New value: \n`);
-    console.log(value);
+  protected override raisePropertyChanged<T>(e: PropertyChangedEventArgs<T>): void {
+    console.log(`Property ${e.propertyName} changed! New value: \n`);
+    console.log(e.value);
 
     this._ref.detectChanges();
   }

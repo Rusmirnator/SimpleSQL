@@ -1,5 +1,4 @@
 import { BindableBase } from "base/bindablebase";
-import { BehaviorSubject } from "rxjs";
 
 /**
  * Provides set of helpful features used to handle dialog related problems.
@@ -12,7 +11,6 @@ export class DialogHandler extends BindableBase {
     private set _dlgTrigger(v: string) {
         this.setValue("_dlgTrigger", v);
     }
-
 
     constructor() {
         super();

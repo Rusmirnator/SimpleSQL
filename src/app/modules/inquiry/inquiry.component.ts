@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { PropertyChangedEventArgs } from 'base/shared/PropertyChangedEventArgs';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { AsyncCommand } from 'src/app/core/classes/async-command';
 import { Command } from 'src/app/core/classes/command';
@@ -102,9 +103,9 @@ export class InquiryComponent extends ViewHandler implements OnInit {
     return this.script !== undefined && this.script.length > 0;
   }
 
-  protected override raisePropertyChanged<T>(propertyName: string, value: T): void {
-    console.log(`Property ${propertyName} changed! New value: \n`);
-    console.log(value);
+  protected override raisePropertyChanged<T>(e: PropertyChangedEventArgs<T>): void {
+    console.log(`Property ${e.propertyName} changed! New value: \n`);
+    console.log(e.value);
 
     this._ref.detectChanges();
   }

@@ -44,7 +44,7 @@ export class InquiryComponent extends ViewHandler implements OnInit {
   }
 
   async onModalResultResolved(e: EventArgs<HTMLElement>): Promise<void> {
-    if (this.getDialog('help')) {
+    if (this.getDialog('help') || this.getDialog('error')) {
       this.closeDialog();
     }
 

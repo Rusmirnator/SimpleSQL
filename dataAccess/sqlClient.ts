@@ -1,12 +1,13 @@
-import { IConnectionParameters } from "./interfaces/IConnectionParameters";
-import { IProvideSqlConnection } from "./interfaces/IProvideSqlConnection";
-import ConnectionParameters from "./shared/ConnectionParameters";
+import { IConnectionParameters } from "../base/interfaces/IConnectionParameters";
+import { IProvideSqlConnection } from "../base/interfaces/IProvideSqlConnection";
+import ConnectionParameters from "../base/shared/ConnectionParameters";
 import { Client, Query, SSLMode } from 'ts-postgres'
 import { URL } from "whatwg-url";
-import Logger from "./logger";
-import { LogLevel } from "./enumerations";
-import { IResponseObject } from "./interfaces/IResponseObject";
-import { ResponseObject } from "./shared/ResponseObject";
+import Logger from "../base/logger";
+import { LogLevel } from "../base/enumerations";
+import { IResponseObject } from "../base/interfaces/IResponseObject";
+import { ResponseObject } from "../base/shared/ResponseObject";
+import { Batch } from "./batch";
 
 export default class SqlClient implements IProvideSqlConnection {
     parameters: IConnectionParameters;
@@ -33,7 +34,7 @@ export default class SqlClient implements IProvideSqlConnection {
 
         try {
             await client.connect();
-            
+
             Logger.log(statement.text, LogLevel.Debug);
 
             response = await client.execute(statement);
@@ -46,5 +47,17 @@ export default class SqlClient implements IProvideSqlConnection {
             await client.end();
             return response as unknown as IResponseObject;
         }
+    }
+
+    public async executeBatchAsync(script: string): Promise<IResponseObject[]> {
+        let response: IResponseObject[] = [];
+        let batch = new Batch(script);
+        batch.build();
+
+        while (batch.isValid() && batch.next()) {
+            response.push(await this.executeQueryAsync(batch.getCurrent()!.text));
+        }
+
+        return response;
     }
 }

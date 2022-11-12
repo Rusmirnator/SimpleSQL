@@ -1,4 +1,4 @@
-import MainWindowRepository from './base/mainWindowRepository';
+import MainWindowRepository from './mainWindowRepository';
 import { BrowserWindow } from "electron";
 import { URL } from 'whatwg-url'
 import * as path from 'path';

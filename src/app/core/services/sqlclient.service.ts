@@ -43,15 +43,29 @@ export class SQLClientService {
     });
   }
 
-  private prepareQueryId(query: string): string {
+  async sqlBatchAsync(script: string): Promise<IResponseObject[]> {
+    return new Promise((resolve, reject) => {
+      this._ipcService.send('sqlBatch', script);
+      this._ipcService.once(this.prepareQueryId(script.length > 128 ? script.slice(0, 127) : script, "sqlBatch"), 
+      (_event: any, response: IResponseObject[]) => {
+        if (response === undefined) {
+          return reject("Response was undefined!");
+        }
+
+        resolve(response);
+      });
+    });
+  }
+
+  private prepareQueryId(statement: string, prefix: string = "sqlQuery"): string {
     let hash = 0, i, chr;
 
-    for (i = 0; i < query.length; i++) {
-      chr = query.charCodeAt(i);
+    for (i = 0; i < statement.length; i++) {
+      chr = statement.charCodeAt(i);
       hash = ((hash << 5) - hash) + chr;
       hash |= 0;
     }
 
-    return `sqlQuery:${hash.toString()}`;
+    return `${prefix}:${hash.toString()}`;
   }
 }

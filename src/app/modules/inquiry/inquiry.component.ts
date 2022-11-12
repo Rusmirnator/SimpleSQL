@@ -59,6 +59,9 @@ export class InquiryComponent extends ViewHandler implements OnInit {
     this.changeState();
 
     this.resultSet$ = await this._serverService.executeQueryAsync(this.script!);
+    let resultSets = await this._serverService.executeBatchAsync(this.script!);
+
+    console.log(resultSets);
 
     this.changeState();
   }

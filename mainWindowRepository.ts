@@ -1,12 +1,12 @@
 import { Menu, MenuItem, BrowserWindow, app, ipcMain, IpcMainEvent } from 'electron';
 import { existsSync } from 'fs';
 import { join } from 'path';
-import { LogLevel } from './enumerations';
-import GeneralPurposeRepository from './generalPurposeRepository';
-import { IAppSettings } from './interfaces/IAppSettings';
-import Logger from './logger';
-import { AppSettings } from './shared/AppSettings';
-import SqlClient from './sqlClient';
+import { LogLevel } from './base/enumerations';
+import GeneralPurposeRepository from './base/generalPurposeRepository';
+import { IAppSettings } from './base/interfaces/IAppSettings';
+import Logger from './base/logger';
+import { AppSettings } from './base/shared/AppSettings';
+import SqlClient from './dataAccess/sqlClient';
 
 export default class MainWindowRepository {
     private settings: AppSettings;
@@ -107,6 +107,15 @@ export default class MainWindowRepository {
             ipcMain.on('sqlQuery', async (event: IpcMainEvent, query: string) => {
                 try {
                     event.reply(`sqlQuery:${this.generalRepository.toHashCode(query)}`, await this.client.executeQueryAsync(query));
+                } catch (error) {
+                    Logger.log(error as string, LogLevel.Error);
+                }
+            });
+
+            ipcMain.on('sqlBatch', async (event: IpcMainEvent, script: string) => {
+                try {
+                    event.reply(`sqlBatch:${this.generalRepository.toHashCode(script.length > 128 ? script.slice(0, 127) : script)}`,
+                         await this.client.executeBatchAsync(script));
                 } catch (error) {
                     Logger.log(error as string, LogLevel.Error);
                 }

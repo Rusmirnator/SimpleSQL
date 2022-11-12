@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ServerProvider } from 'base/enumerations';
+import { IResponseObject } from 'base/interfaces/IResponseObject';
 import { ResponseObject } from 'base/shared/ResponseObject';
 import { BehaviorSubject } from 'rxjs';
 import { DataRow } from '../classes/data-row';
@@ -52,7 +53,21 @@ export class ServerService {
   }
 
   async executeQueryAsync(query: string): Promise<BehaviorSubject<IDataRow[]>> {
-    let res = new ResponseObject(await this._sqlService.sqlQueryAsync(query!));
+    return new BehaviorSubject<IDataRow[]>(this.toDataRowArray(await this._sqlService.sqlQueryAsync(query!)));
+  }
+
+  async executeBatchAsync(script: string): Promise<BehaviorSubject<IDataRow[][]>> {
+    let response = await this._sqlService.sqlBatchAsync(script!);
+    let resultSets: DataRow[][] = [];
+
+    for (let result of response) {
+      resultSets.push(this.toDataRowArray(new ResponseObject(result)));
+    }
+    return new BehaviorSubject<IDataRow[][]>(resultSets);
+  }
+
+  private toDataRowArray(response: IResponseObject): DataRow[] {
+    let res = new ResponseObject(response);
     let dataRow: IDataRow;
     let resultSet: IDataRow[] = [];
 
@@ -63,7 +78,7 @@ export class ServerService {
       resultSet.push(dataRow);
     });
 
-    return new BehaviorSubject<IDataRow[]>(resultSet);
+    return resultSet;
   }
 
   async saveScriptAsync(path: string, script: string): Promise<void> {

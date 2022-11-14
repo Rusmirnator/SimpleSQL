@@ -1,0 +1,5 @@
+<div class="container">
+    <span tabIndex="{{i}}" class="header" *ngFor="let caption of headersSource | async; let i = index" 
+    (click)="onHeaderClick($event, i)"
+    (show)="onHeaderLoaded($event)">Rows: {{caption}}</span>
+</div>

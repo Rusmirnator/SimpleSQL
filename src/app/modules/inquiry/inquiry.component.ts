@@ -19,7 +19,16 @@ export class InquiryComponent extends ViewHandler implements OnInit {
   error: string = "";
   script: string | undefined;
 
+  private get resultSets(): IDataRow[][] {
+    return this.getValue("resultSets");
+  }
+
+  private set resultSets(value: IDataRow[][]) {
+    this.setValue("resultSets", value);
+  }
+
   resultSet$: BehaviorSubject<IDataRow[]> = new BehaviorSubject<IDataRow[]>([]);
+  tabs$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   commands$: Observable<Command[]> = new Observable<Command[]>();
 
   constructor(private _ref: ChangeDetectorRef, private _serverService: ServerService, private _logger: LoggerService) {
@@ -55,13 +64,26 @@ export class InquiryComponent extends ViewHandler implements OnInit {
     }
   }
 
+  onTabItemSelected(selectedIndex: number): void {
+    this.changeState();
+
+    this.resultSet$.next(this.resultSets[selectedIndex]);
+
+    this.changeState();
+  }
+
   async executeQueryAsync(): Promise<void> {
     this.changeState();
 
-    this.resultSet$ = await this._serverService.executeQueryAsync(this.script!);
-    let resultSets = await this._serverService.executeBatchAsync(this.script!);
+    this.resultSets = (await this._serverService.executeBatchAsync(this.script!)).getValue();
 
-    console.log(resultSets);
+    let tabs: string[] = [];
+
+    this.resultSets.forEach((arr) => {
+      tabs.push(arr.length.toString());
+    });
+
+    this.tabs$ = new BehaviorSubject(tabs);
 
     this.changeState();
   }

@@ -23,7 +23,6 @@ export class DataGridComponent implements OnInit, OnChanges {
   private _step = 33;
 
   selectedItemsBag: any[] = [];
-  isWaitIndicatorVisible: boolean = false;
   elapsedTime = new BehaviorSubject<string>(new Date().toLocaleTimeString());
   isFrozen: boolean | undefined;
 

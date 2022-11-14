@@ -11,12 +11,10 @@ import { WaitIndicatorComponent } from './viewAPI/wait-indicator/wait-indicator.
 import { TreeViewComponent } from './viewAPI/tree-view/tree-view.component';
 import { FooterComponent } from './viewAPI/footer/footer.component';
 import { InquiryModule } from './modules/inquiry/inquiry.module';
-import { GroupComponent } from './viewAPI/group/group.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    GroupComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,

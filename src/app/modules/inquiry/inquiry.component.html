@@ -2,8 +2,9 @@
     <sm-wait-indicator [isVisible]="isBusy()"></sm-wait-indicator>
     <sm-modal [isVisible]="getDialog('help')" title="Help" (modalResult)="onModalResultResolved($event)">
         <div class="content">
-            <p><b>SimpleSQL</b></p><br>
-            <p>This app is currently in early phase of development. It's capable of executing single statements only!!!</p>
+            <span><b>SimpleSQL</b></span>
+            <span>This app is currently in early phase of development. It's capable of executing single
+                statementsonly!!!</span>
         </div>
     </sm-modal>
     <sm-modal [isVisible]="getDialog('error')" title="Error" (modalResult)="onModalResultResolved($event)">
@@ -27,6 +28,9 @@
         </sm-editor>
     </div>
     <div class="data-grid-container">
+        <div>
+            <sm-tabbed-group [headersSource]="tabs$" (selectedIndex)="onTabItemSelected($event)"></sm-tabbed-group>
+        </div>
         <sm-data-grid [itemsSource]="resultSet$">
         </sm-data-grid>
     </div>

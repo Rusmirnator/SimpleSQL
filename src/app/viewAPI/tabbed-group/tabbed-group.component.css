@@ -1,0 +1,23 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 0px 3px;
+}
+
+.header {
+    background: #FCCF47;
+    font-weight: bolder;
+    padding: 3px;
+    border-radius: 3px 3px 0px 0px;
+    width: fit-content;
+}
+
+.header:hover {
+    background: lightgray;
+    cursor: pointer;
+    user-select: none;
+}
+
+.selected {
+    background: #ffc61c;
+}

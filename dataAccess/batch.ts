@@ -69,7 +69,7 @@ export class Batch {
     }
 
     private prepareStatements(rawScript: string): void {
-        this._buffer = rawScript.replace(/[\r\n\t]/g, " ").split(" ");
+        this._buffer = this.removeEmptyEntries(rawScript.replace(/[\r\n\t]/g, "\0").split("\0"));
         let next: string | undefined;
         let statement: string[] = [];
 
@@ -98,5 +98,11 @@ export class Batch {
         this._queue.push(new Query(preparedStatement));
 
         return [];
+    }
+
+    private removeEmptyEntries(buffer: string[]) {
+        return buffer.filter((v) => {
+            return v !== "";
+        });
     }
 }

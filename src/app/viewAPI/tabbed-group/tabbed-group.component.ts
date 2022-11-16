@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 
@@ -11,7 +11,9 @@ import { Observable } from 'rxjs';
 })
 export class TabbedGroupComponent implements OnInit {
 
-  private _selectedIndex?: number;
+  private _selectedIndex: number = 0;
+
+  @ViewChildren("header") headers?: QueryList<ElementRef>;
 
   @Input() headersSource: Observable<string[]> = new Observable<string[]>();
   @Output() selectedIndex: EventEmitter<number> = new EventEmitter<number>();
@@ -24,15 +26,10 @@ export class TabbedGroupComponent implements OnInit {
   onHeaderClick(event: Event, tabIndex: number): void {
     let header = event.target as HTMLElement;
 
-    if (!this.unselectIndex(header)) {
+    if (this.unselectIndex(this.headers?.get(this._selectedIndex)!.nativeElement)) {
 
       this.selectIndex(header, tabIndex);
     }
-  }
-
-  onHeaderLoaded(event: Event): void {
-    console.log(`onHeaderLoaded`);
-    this.selectIndex(event.target as HTMLElement, 0);
   }
 
   private selectIndex(header: HTMLElement, newIndex: number): void {
@@ -43,7 +40,8 @@ export class TabbedGroupComponent implements OnInit {
   }
 
   private unselectIndex(header: HTMLElement): boolean {
-    if (header.getAttribute("tabIndex") === this._selectedIndex?.toString()) {
+    if (header?.getAttribute("tabIndex") === this._selectedIndex.toString()) {
+
       header.classList.remove("selected");
 
       return true;

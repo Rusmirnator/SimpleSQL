@@ -84,6 +84,7 @@ export class InquiryComponent extends ViewHandler implements OnInit {
     });
 
     this.tabs$ = new BehaviorSubject(tabs);
+    this.resultSet$.next(this.resultSets[0]);
 
     this.changeState();
   }

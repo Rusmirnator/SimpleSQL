@@ -39,8 +39,8 @@ export default class Main {
         Main.mainWindow = new BrowserWindow({
             minWidth: 1360,
             minHeight: 768,
-            x: 100,
-            y: 100,
+            x: 0,
+            y: 0,
             frame: false,
             focusable: true,
             useContentSize: true,
@@ -52,7 +52,13 @@ export default class Main {
             }
         });
 
-        Main.devToolsWindow = new BrowserWindow();
+        Main.devToolsWindow = new BrowserWindow({
+            width: 560,
+            height: 768,
+            x: 1360,
+            y: 0,
+            useContentSize: true
+        });
 
         Main.configureMenu();
         Main.initializeSettings();

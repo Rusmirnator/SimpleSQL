@@ -18,7 +18,7 @@ export class DataRow implements IDataRow {
     }
 
     fromResponse(response: IResponseObject, rowIndex: number = 0): void {
-        response.names?.forEach((row, i) => {
+        response.names?.forEach((row) => {
             this.rowData.set(row, response.rows![rowIndex][response.getColumnIndex(row)]);
         });
         this.index = rowIndex;

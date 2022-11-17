@@ -77,7 +77,7 @@ export class ServerService {
 
       resultSet.push(dataRow);
     });
-    console.log(resultSet);
+
     return resultSet;
   }
 

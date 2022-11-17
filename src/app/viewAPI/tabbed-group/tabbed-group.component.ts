@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
   templateUrl: './tabbed-group.component.html',
   styleUrls: ['./tabbed-group.component.css']
 })
-export class TabbedGroupComponent implements OnInit {
+export class TabbedGroupComponent implements OnInit, OnChanges {
 
   private _selectedIndex: number = 0;
 
@@ -19,6 +19,17 @@ export class TabbedGroupComponent implements OnInit {
   @Output() selectedIndex: EventEmitter<number> = new EventEmitter<number>();
 
   constructor() { }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes["headersSource"] && this.headers) {
+      this.headers.forEach((header, i) => {
+        this.unselectIndex((header.nativeElement as HTMLSpanElement), i);
+
+        if (i === 0) {
+          this.selectIndex((header.nativeElement as HTMLSpanElement), 0);
+        }
+      });
+    }
+  }
 
   ngOnInit(): void {
   }
@@ -26,8 +37,7 @@ export class TabbedGroupComponent implements OnInit {
   onHeaderClick(event: Event, tabIndex: number): void {
     let header = event.target as HTMLElement;
 
-    if (this.unselectIndex(this.headers?.get(this._selectedIndex)!.nativeElement)) {
-
+    if (this.unselectIndex(this.headers?.get(this._selectedIndex)!.nativeElement, this._selectedIndex)) {
       this.selectIndex(header, tabIndex);
     }
   }
@@ -39,11 +49,10 @@ export class TabbedGroupComponent implements OnInit {
     this.selectedIndex.emit(this._selectedIndex);
   }
 
-  private unselectIndex(header: HTMLElement): boolean {
-    if (header?.getAttribute("tabIndex") === this._selectedIndex.toString()) {
+  private unselectIndex(header: HTMLElement, oldIndex: number): boolean {
+    if (header?.getAttribute("tabIndex") === oldIndex.toString()) {
 
       header.classList.remove("selected");
-
       return true;
     }
     return false;

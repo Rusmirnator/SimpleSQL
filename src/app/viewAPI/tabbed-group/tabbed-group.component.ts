@@ -1,17 +1,20 @@
 import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
+import { ToolTipDirective } from 'src/app/core/directives/tool-tip.directive';
 
 @Component({
   selector: 'sm-tabbed-group',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ToolTipDirective],
   templateUrl: './tabbed-group.component.html',
   styleUrls: ['./tabbed-group.component.css']
 })
 export class TabbedGroupComponent implements OnInit, OnChanges {
 
   private _selectedIndex: number = 0;
+
+  timeStamp?: Date;
 
   @ViewChildren("header") headers?: QueryList<ElementRef>;
 
@@ -28,6 +31,8 @@ export class TabbedGroupComponent implements OnInit, OnChanges {
           this.selectIndex((header.nativeElement as HTMLSpanElement), 0);
         }
       });
+
+      this.timeStamp = new Date();
     }
   }
 

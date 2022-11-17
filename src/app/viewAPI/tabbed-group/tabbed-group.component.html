@@ -1,6 +1,5 @@
 <div class="container">
-    <span class="header" *ngFor="let caption of headersSource | async; let i = index" 
-    tabIndex="{{i}}" 
-    (click)="onHeaderClick($event, i)"
-    [ngClass]="{selected: i === 0}" #header>Rows: {{caption}}</span>
+    <span class="header" *ngFor="let caption of headersSource | async; let i = index" tabIndex="{{i}}"
+        (click)="onHeaderClick($event, i)" [ngClass]="{selected: i === 0}" [toolTip]="timeStamp?.toString()"
+        #header>Rows: {{caption}}</span>
 </div>

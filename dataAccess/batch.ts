@@ -78,12 +78,12 @@ export class Batch {
 
             if (next?.endsWith(";")) {
                 statement.push(next);
-                statement = this.finalizeStatement(statement.join(" "));
+                statement = this.finalizeStatement(this.ensureStatementIsCorrect(statement.join(" ")));
                 continue;
             }
 
             if (statement.length > 0 && !next) {
-                statement = this.finalizeStatement(statement.join(" "));
+                statement = this.finalizeStatement(this.ensureStatementIsCorrect(statement.join(" ")));
                 continue;
             }
 
@@ -104,5 +104,37 @@ export class Batch {
         return buffer.filter((v) => {
             return v !== "";
         });
+    }
+
+    private ensureStatementIsCorrect(semiPreparedStatement: string): string {
+        let preparedStatement: string = "";
+        let inQuotes: boolean = false;
+        let current: string;
+        let last: string = "";
+
+        for (let i = 0; i < semiPreparedStatement.length; i++) {
+            current = semiPreparedStatement[i];
+
+            switch (inQuotes.valueOf()) {
+                case false:
+                    if (!(last === " " && current === last)) {
+                        preparedStatement += current;
+                    }
+                    
+                    if (last === ";") {
+                        this.finalizeStatement(this.ensureStatementIsCorrect(semiPreparedStatement.slice(i)));
+                        return preparedStatement;
+                    }
+                    break;
+
+                default:
+                    preparedStatement += current;
+                    break;
+            }
+
+            inQuotes = current === "\'" || current === "\"";
+            last = current;
+        }
+        return preparedStatement;
     }
 }

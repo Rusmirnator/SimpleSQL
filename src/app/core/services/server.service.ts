@@ -66,7 +66,7 @@ export class ServerService {
     return new Promise((resolve, reject) => {
       this._ipc.send('saveScript', [path, script]);
       this._ipc.once('scriptSaved', (res: IConveyOperationResult) => {
-        if (res.statusCode != 0) {
+        if (res.statusCode !== 0) {
           return reject(res.message);
         }
         resolve();
@@ -77,8 +77,8 @@ export class ServerService {
   async selectDirectoryAsync(): Promise<string> {
     return new Promise((resolve, reject) => {
       this._ipc.send('selectDirectory');
-      this._ipc.once('directorySelected', (res: IConveyOperationResult) => {
-        if (res.statusCode != 0) {
+      this._ipc.once('directorySelected', (_: any, res: IConveyOperationResult) => {
+        if (res.statusCode !== 0) {
           return reject(res.message);
         }
         resolve(res.result as string);

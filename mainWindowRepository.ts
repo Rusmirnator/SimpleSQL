@@ -1,3 +1,4 @@
+import { IConveyOperationResult } from 'base/interfaces/IConveyOperationResult';
 import { Menu, MenuItem, BrowserWindow, app, ipcMain, IpcMainEvent, SaveDialogReturnValue, dialog } from 'electron';
 import { existsSync } from 'fs';
 import { join } from 'path';
@@ -183,27 +184,48 @@ export default class MainWindowRepository {
             }
         });
 
-        ipcMain.on('selectDirectory', async (event: IpcMainEvent,) => {
+        ipcMain.on('selectDirectory', async (event: IpcMainEvent, result: IConveyOperationResult) => {
             let window = BrowserWindow.getFocusedWindow();
-            let result: string | undefined = "";
             try {
                 if (window) {
                     let dialogResult = await this.selectPathAsync(window);
 
                     if (dialogResult.canceled) {
-                        event.reply('directorySelected', [undefined, undefined])
+                        result = this.createUnsuccessful(-1, "Cancelled...");
+
+                        event.reply('directorySelected', result);
                         return;
                     }
 
-                    result = dialogResult.filePath;
-                    event.reply('directorySelected', [undefined, result]);
+                    result = this.createSuccessful(dialogResult.filePath!);
+
+                    event.reply('directorySelected', result);
                 }
 
-                Logger.log(`Selected path: [${result ? result : "none"}]`, LogLevel.Trace)
+                Logger.log(`Selected path: [${result ? result.result : "none"}]`, LogLevel.Trace)
             } catch (error) {
+                result = this.createUnsuccessful(1, error as string);
+
+                event.reply('directorySelected', result)
+
                 Logger.log(error as string, LogLevel.Error);
-                event.reply('directorySelected', [error, undefined])
             }
         });
+    }
+
+    private createSuccessful(result: Object): IConveyOperationResult {
+        return {
+            statusCode: 0,
+            message: undefined,
+            result: result
+        } as IConveyOperationResult;
+    }
+
+    private createUnsuccessful(statusCode: number, message: string): IConveyOperationResult {
+        return {
+            statusCode: statusCode,
+            message: message,
+            result: undefined
+        } as IConveyOperationResult;
     }
 }

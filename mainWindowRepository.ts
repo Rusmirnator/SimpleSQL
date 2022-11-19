@@ -1,4 +1,4 @@
-import { Menu, MenuItem, BrowserWindow, app, ipcMain, IpcMainEvent } from 'electron';
+import { Menu, MenuItem, BrowserWindow, app, ipcMain, IpcMainEvent, SaveDialogReturnValue, dialog } from 'electron';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { LogLevel } from './base/enumerations';
@@ -115,7 +115,7 @@ export default class MainWindowRepository {
             ipcMain.on('sqlBatch', async (event: IpcMainEvent, script: string) => {
                 try {
                     event.reply(`sqlBatch:${this.generalRepository.toHashCode(script.length > 128 ? script.slice(0, 127) : script)}`,
-                         await this.client.executeBatchAsync(script));
+                        await this.client.executeBatchAsync(script));
                 } catch (error) {
                     Logger.log(error as string, LogLevel.Error);
                 }
@@ -123,6 +123,12 @@ export default class MainWindowRepository {
 
             Logger.log(`Successfuly loaded application settings file from: [${filePath}]`, LogLevel.Info);
         }
+    }
+
+    private async selectPathAsync(window: Electron.BrowserWindow): Promise<SaveDialogReturnValue> {
+        return await dialog.showSaveDialog(window, {
+            properties: ['showOverwriteConfirmation']
+        });
     }
 
     registerListeners(): void {
@@ -174,6 +180,29 @@ export default class MainWindowRepository {
                 Logger.log(`Successfuly saved script to file.`, LogLevel.Trace)
             } catch (error) {
                 Logger.log(error as string, LogLevel.Error);
+            }
+        });
+
+        ipcMain.on('selectDirectory', async (event: IpcMainEvent,) => {
+            let window = BrowserWindow.getFocusedWindow();
+            let result: string | undefined = "";
+            try {
+                if (window) {
+                    let dialogResult = await this.selectPathAsync(window);
+
+                    if (dialogResult.canceled) {
+                        event.reply('directorySelected', [undefined, undefined])
+                        return;
+                    }
+
+                    result = dialogResult.filePath;
+                    event.reply('directorySelected', [undefined, result]);
+                }
+
+                Logger.log(`Selected path: [${result ? result : "none"}]`, LogLevel.Trace)
+            } catch (error) {
+                Logger.log(error as string, LogLevel.Error);
+                event.reply('directorySelected', [error, undefined])
             }
         });
     }

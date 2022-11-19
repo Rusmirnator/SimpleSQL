@@ -27,6 +27,14 @@ export class InquiryComponent extends ViewHandler implements OnInit {
     this.setValue("resultSets", value);
   }
 
+  public get selectedPath(): string {
+    return this.getValue("selectedPath");
+  }
+
+  private set selectedPath(value: string) {
+    this.setValue("selectedPath", value);
+  }
+
   resultSet$: BehaviorSubject<IDataRow[]> = new BehaviorSubject<IDataRow[]>([]);
   tabs$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   commands$: Observable<Command[]> = new Observable<Command[]>();
@@ -87,6 +95,10 @@ export class InquiryComponent extends ViewHandler implements OnInit {
     this.resultSet$.next(this.resultSets[0]);
 
     this.changeState();
+  }
+
+  async browseDirectories(): Promise<void> {
+    this.selectedPath = await this._serverService.selectDirectoryAsync();
   }
 
   selectPath(): void {

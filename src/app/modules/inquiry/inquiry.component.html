@@ -2,9 +2,15 @@
     <sm-wait-indicator [isVisible]="isBusy()"></sm-wait-indicator>
     <sm-modal [isVisible]="getDialog('help')" title="Help" (modalResult)="onModalResultResolved($event)">
         <div class="content">
-            <span><b>SimpleSQL</b></span>
-            <span>This app is currently in early phase of development. It's capable of executing single
-                statementsonly!!!</span>
+            <p><b>SimpleSQL</b></p>
+            <p>This app is currently in early phase of development, so there is <b>limited</b> usage available at this
+                moment:</p>
+            <p> - you <b style="color: green;">can</b> query using single statement with or without ";" ending</p>
+            <p> - you <b style="color: green;">can</b> query using multiple statement in a batch under standard Postgres
+                syntax rules</p>
+            <p> - you <b style="color: green;">can</b> execute procedures</p>
+            <p> - you <b style="color: red;">cannot</b> execute create or replace scripts nor batches, in exception of
+                single script not containing ";" in body.</p>
         </div>
     </sm-modal>
     <sm-modal [isVisible]="getDialog('error')" title="Error" (modalResult)="onModalResultResolved($event)">
@@ -14,9 +20,9 @@
     </sm-modal>
     <sm-modal [isVisible]="getDialog('selectPath')" title="Choose folder" (modalResult)="onModalResultResolved($event)">
         <div class="content" style="display:flex; flex-direction:column;gap:3px;margin-top:5px">
-            <label for="path">Path:</label>
-            <input id="path" role="textbox" type="file" class="editable"
-                placeholder="Choose folder to save script to..." />
+            <button (click)="browseDirectories()">Choose folder</button>
+            <input id="path" role="textbox" type="text" class="editable" [textContent]="selectedPath"
+                placeholder="Choose folder to save script to..." readonly/>
         </div>
     </sm-modal>
     <div class="ribbon-container">

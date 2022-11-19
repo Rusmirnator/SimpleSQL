@@ -1,0 +1,8 @@
+CREATE OR REPLACE PROCEDURE CreateDictionaryEntry(IN CategoryId INT, IN Description TEXT, Value INT, OUT Res INT, OUT Msg TEXT)
+LANGUAGE SQL 
+AS
+$$
+   INSERT INTO Dictionaries(CategoryId, Description, Value)
+	VALUES(CategoryId, Description, Value);
+   SELECT 0,'Done';
+$$;

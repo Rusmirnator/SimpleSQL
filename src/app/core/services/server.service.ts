@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ServerProvider } from 'base/enumerations';
+import { IConveyOperationResult } from 'base/interfaces/IConveyOperationResult';
 import { IResponseObject } from 'base/interfaces/IResponseObject';
 import { ResponseObject } from 'base/shared/ResponseObject';
 import { BehaviorSubject } from 'rxjs';
@@ -14,21 +15,10 @@ import { SQLClientService } from './sqlclient.service';
 })
 export class ServerService {
 
-  private provider?: ServerProvider = ServerProvider.PGSQL;
-
   constructor(private _sqlService: SQLClientService, private _ipc: IpcService) { }
 
   async getDatabasesAsync(): Promise<BehaviorSubject<ITreeViewElement[]>> {
-    let query: string;
-
-    switch (this.provider) {
-      case ServerProvider.PGSQL:
-        query = "SELECT datname AS header, ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS index FROM pg_database";
-        break;
-      case ServerProvider.MSSQL:
-        query = "SELECT name FROM sys.databases";
-        break;
-    }
+    let query = "SELECT datname AS header, ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS index FROM pg_database";
 
     let res = new ResponseObject(await this._sqlService.sqlQueryAsync(query!));
 
@@ -36,16 +26,7 @@ export class ServerService {
   }
 
   async getDatabaseNameAsync(): Promise<BehaviorSubject<string>> {
-    let query: string;
-
-    switch (this.provider) {
-      case ServerProvider.PGSQL:
-        query = "SELECT CURRENT_DATABASE() AS databaseName";
-        break;
-      case ServerProvider.MSSQL:
-        query = "SELECT DB_NAME() AS databaseName";
-        break;
-    }
+    let query = "SELECT CURRENT_DATABASE() AS databaseName";
 
     let res = new ResponseObject(await this._sqlService.sqlQueryAsync(query!));
 
@@ -84,11 +65,23 @@ export class ServerService {
   async saveScriptAsync(path: string, script: string): Promise<void> {
     return new Promise((resolve, reject) => {
       this._ipc.send('saveScript', [path, script]);
-      this._ipc.once('scriptSaved', (_event: any, err: string) => {
-        if (err) {
-          return reject(err);
+      this._ipc.once('scriptSaved', (res: IConveyOperationResult) => {
+        if (res.statusCode != 0) {
+          return reject(res.message);
         }
         resolve();
+      });
+    });
+  }
+
+  async selectDirectoryAsync(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      this._ipc.send('selectDirectory');
+      this._ipc.once('directorySelected', (res: IConveyOperationResult) => {
+        if (res.statusCode != 0) {
+          return reject(res.message);
+        }
+        resolve(res.result as string);
       });
     });
   }

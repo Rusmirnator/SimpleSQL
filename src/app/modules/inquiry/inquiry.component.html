@@ -9,6 +9,7 @@
             <p> - you <b style="color: green;">can</b> query using multiple statement in a batch under standard Postgres
                 syntax rules</p>
             <p> - you <b style="color: green;">can</b> execute procedures</p>
+            <p> - you <b style="color: green;">can</b> save scripts to files</p>
             <p> - you <b style="color: red;">cannot</b> execute create or replace scripts nor batches, in exception of
                 single script not containing ";" in body.</p>
         </div>
@@ -19,10 +20,10 @@
         </div>
     </sm-modal>
     <sm-modal [isVisible]="getDialog('selectPath')" title="Choose folder" (modalResult)="onModalResultResolved($event)">
-        <div class="content" style="display:flex; flex-direction:column;gap:3px;margin-top:5px">
-            <button (click)="browseDirectories()">Choose folder</button>
-            <input id="path" role="textbox" type="text" class="editable" [textContent]="selectedPath"
-                placeholder="Choose folder to save script to..." readonly/>
+        <div class="content" style="display:flex; flex-direction:row;gap:3px;margin-top:5px">
+            <input id="path" role="textbox" type="text" class="editable"
+                [value]="selectedPath ? selectedPath : ''" [toolTip]="'Choose folder to save script to...'"/>
+            <button style="width:fit-content;" (click)="browseDirectories()">Choose folder</button>
         </div>
     </sm-modal>
     <div class="ribbon-container">

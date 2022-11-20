@@ -8,6 +8,7 @@ import { WaitIndicatorComponent } from 'src/app/viewAPI/wait-indicator/wait-indi
 import { ModalComponent } from 'src/app/viewAPI/modal/modal.component';
 import GeneralPurposeRepository from 'base/generalPurposeRepository';
 import { TabbedGroupComponent } from 'src/app/viewAPI/tabbed-group/tabbed-group.component';
+import { ToolTipDirective } from 'src/app/core/directives/tool-tip.directive';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { TabbedGroupComponent } from 'src/app/viewAPI/tabbed-group/tabbed-group.
     RibbonComponent,
     WaitIndicatorComponent,
     ModalComponent,
-    TabbedGroupComponent
+    TabbedGroupComponent,
+    ToolTipDirective
   ],
   providers: [
     GeneralPurposeRepository

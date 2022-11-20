@@ -65,7 +65,7 @@ export class ServerService {
   async saveScriptAsync(path: string, script: string): Promise<void> {
     return new Promise((resolve, reject) => {
       this._ipc.send('saveScript', [path, script]);
-      this._ipc.once('scriptSaved', (res: IConveyOperationResult) => {
+      this._ipc.once('scriptSaved', (_: any, res: IConveyOperationResult) => {
         if (res.statusCode !== 0) {
           return reject(res.message);
         }

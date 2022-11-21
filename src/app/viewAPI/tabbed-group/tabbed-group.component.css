@@ -6,20 +6,32 @@
     flex-wrap: wrap;
 }
 
-.header {
+.header, 
+.caption {
     background: #FCCF47;
     font-weight: bolder;
-    padding: 3px;
-    border-radius: 3px 3px 0px 0px;
     width: fit-content;
 }
 
-.header:hover {
+.header {
+    padding: 3px;
+    border-radius: 3px 3px 0px 0px;
+    display: flex;
+    flex-direction: row;
+}
+
+.caption {
+    border-radius: 0px 3px 0px 0px;
+}
+
+.header:hover,
+.caption:hover,
+.add:hover {
     background: lightgray;
     cursor: pointer;
     user-select: none;
 }
 
 .selected {
-    color:white;
+    color: white;
 }

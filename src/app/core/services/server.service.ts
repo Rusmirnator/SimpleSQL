@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { ServerProvider } from 'base/enumerations';
 import { IConveyOperationResult } from 'base/interfaces/IConveyOperationResult';
 import { IResponseObject } from 'base/interfaces/IResponseObject';
 import { ResponseObject } from 'base/shared/ResponseObject';

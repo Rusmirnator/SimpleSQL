@@ -88,7 +88,7 @@ export class InquiryComponent extends ViewHandler implements OnInit {
     let tabs: string[] = [];
 
     this.resultSets.forEach((arr) => {
-      tabs.push(arr.length.toString());
+      tabs.push(["Rows affected:", arr.length.toString()].join(''));
     });
 
     this.tabs$ = new BehaviorSubject(tabs);

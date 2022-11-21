@@ -21,8 +21,8 @@
     </sm-modal>
     <sm-modal [isVisible]="getDialog('selectPath')" title="Choose folder" (modalResult)="onModalResultResolved($event)">
         <div class="content" style="display:flex; flex-direction:row;gap:3px;margin-top:5px">
-            <input id="path" role="textbox" type="text" class="editable"
-                [value]="selectedPath ? selectedPath : ''" [toolTip]="'Choose folder to save script to...'"/>
+            <input id="path" role="textbox" type="text" class="editable" [value]="selectedPath ? selectedPath : ''"
+                [toolTip]="'Choose folder to save script to...'" />
             <button style="width:fit-content;" (click)="browseDirectories()">Choose folder</button>
         </div>
     </sm-modal>
@@ -36,7 +36,8 @@
     </div>
     <div class="data-grid-container">
         <div>
-            <sm-tabbed-group [headersSource]="tabs$" (selectedIndex)="onTabItemSelected($event)"></sm-tabbed-group>
+            <sm-tabbed-group [headersSource]="tabs$" (selectedIndex)="onTabItemSelected($event)"
+                [allowTabAdding]="false"></sm-tabbed-group>
         </div>
         <sm-data-grid [itemsSource]="resultSet$">
         </sm-data-grid>

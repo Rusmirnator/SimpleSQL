@@ -10,6 +10,7 @@ import { ITreeViewElement } from './core/interfaces/itree-view-element';
 import { IpcService } from './core/services/ipc.service';
 import { LoggerService } from './core/services/logger.service';
 import { ServerService } from './core/services/server.service';
+import { WindowService } from './core/services/window.service';
 
 @Component({
   selector: 'app-root',
@@ -32,7 +33,8 @@ export class AppComponent extends ViewHandler implements OnInit {
   databaseName$: Observable<string> = new Observable<string>();
   databases$: Observable<ITreeViewElement[]> = new Observable<ITreeViewElement[]>();
 
-  constructor(private _ref: ChangeDetectorRef, private _logger: LoggerService, private _ipcService: IpcService, private _serverService: ServerService, private _router: Router) {
+  constructor(private _ref: ChangeDetectorRef, private _logger: LoggerService, private _ipcService: IpcService, private _serverService: ServerService,
+    private _router: Router, private _windowService: WindowService) {
     super();
     this.appSettings = new AppSettings();
   }
@@ -59,7 +61,7 @@ export class AppComponent extends ViewHandler implements OnInit {
     this.ssl = (event.target as HTMLSelectElement).options[this.selectedIndex ??= 0].value;
   }
 
-  onModalResultResolved(e: EventArgs<HTMLElement>) {
+  onModalResultResolved(e: EventArgs<HTMLElement>): void {
     if (e.handle) {
       this.consumeModalData(e.instance!);
       this.appSettings.loadedSettings = {
@@ -79,6 +81,13 @@ export class AppComponent extends ViewHandler implements OnInit {
     this.closeDialog();
 
     this.changeState();
+  }
+
+  onTitleBarButtonClick(e: Event): void {
+    let action = (e.target as HTMLButtonElement).getAttribute("action");
+    if (action) {
+      this._windowService.changeWindowState(action);
+    }
   }
 
   private consumeModalData(modalBody: HTMLElement): void {

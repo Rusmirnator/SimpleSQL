@@ -19,9 +19,11 @@ export class TabbedGroupComponent implements OnInit, OnChanges {
   @ViewChildren("header") headers?: QueryList<ElementRef>;
 
   @Input() headersSource: Observable<string[]> = new Observable<string[]>();
+  @Input() allowTabAdding?: boolean;
   @Output() selectedIndex: EventEmitter<number> = new EventEmitter<number>();
 
   constructor() { }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["headersSource"] && this.headers) {
       this.headers.forEach((header, i) => {
@@ -45,6 +47,18 @@ export class TabbedGroupComponent implements OnInit, OnChanges {
     if (this.unselectIndex(this.headers?.get(this._selectedIndex)!.nativeElement, this._selectedIndex)) {
       this.selectIndex(header, tabIndex);
     }
+  }
+
+  onTabAdding(_: Event): void {
+    this.headersSource.subscribe(val => {
+      val.push("NewTab");
+    });
+  }
+
+  onTabRemoving(_: Event, tabIndex: number): void {
+    this.headersSource.subscribe(val => {
+      val.splice(tabIndex, 1);
+    });
   }
 
   private selectIndex(header: HTMLElement, newIndex: number): void {

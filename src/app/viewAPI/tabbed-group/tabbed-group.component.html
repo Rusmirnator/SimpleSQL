@@ -1,5 +1,9 @@
 <div class="container">
-    <span class="header" *ngFor="let caption of headersSource | async; let i = index" tabIndex="{{i}}"
-        (click)="onHeaderClick($event, i)" [ngClass]="{selected: i === 0}" [toolTip]="'Data acquired:' + timeStamp?.toString()"
-        #header>Rows: {{caption}}</span>
+    <div class="header" *ngFor="let caption of headersSource | async; let i = index; let last = last;">
+        <span class="caption" tabIndex="{{i}}" (click)="onHeaderClick($event, i)" [ngClass]="{selected: i === 0}"
+            [toolTip]="'Data acquired:' + timeStamp?.toString()" #header>{{caption}}</span>
+        <span class="remove" (click)="onTabRemoving($event, i)"></span>
+        <span *ngIf="allowTabAdding && last" class="add" (click)="onTabAdding($event)"
+            [toolTip]="'Click here to add new tab...'"></span>
+    </div>
 </div>

@@ -212,6 +212,62 @@ export default class MainWindowRepository {
                 Logger.log(error as string, LogLevel.Error);
             }
         });
+
+        ipcMain.on('window.minimize', (event: IpcMainEvent, result: IConveyOperationResult) => {
+            let window = BrowserWindow.getFocusedWindow();
+            try {
+                if (window && window.isMinimizable()) {
+                    window.minimize();
+                    result = this.createSuccessful("Minimized successfuly.");
+                }
+            }
+            catch (error) {
+                result = this.createUnsuccessful(1, error as string);
+            }
+
+            event.reply("minimized", result);
+        });
+
+        ipcMain.on('window.resize', (event: IpcMainEvent, result: IConveyOperationResult) => {
+            let window = BrowserWindow.getFocusedWindow();
+            try {
+                if (window) {
+                    switch (!window.isMaximized()) {
+                        case true:
+
+                            window.maximize();
+                            result = this.createSuccessful("Maximized successfuly.")
+                            break;
+
+                        case false:
+
+                            window.unmaximize();
+                            result = this.createSuccessful("Minimized successfuly.")
+                            break;
+                    }
+                }
+            }
+            catch (error) {
+                result = this.createUnsuccessful(1, error as string);
+            }
+
+            event.reply("resized", result);
+        });
+
+        ipcMain.on('window.close', (event: IpcMainEvent, result: IConveyOperationResult) => {
+            let window = BrowserWindow.getFocusedWindow();
+            try {
+                if (window && window.isClosable()) {
+                    result = this.createSuccessful("Minimized successfuly.");
+                    window.close();
+                }
+            }
+            catch (error) {
+                result = this.createUnsuccessful(1, error as string);
+            }
+
+            event.reply("closed", result);
+        });
     }
 
     private createSuccessful(result: Object): IConveyOperationResult {

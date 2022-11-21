@@ -26,9 +26,9 @@
       SimpleSQL
     </div>
     <div class="buttons">
-      <button>Minimize</button>
-      <button>Resize</button>
-      <button class="closeBtn">Close</button>
+      <button action="minimize" (click)="onTitleBarButtonClick($event)">Minimize</button>
+      <button action="resize" (click)="onTitleBarButtonClick($event)">Resize</button>
+      <button action="close" class="closeBtn" (click)="onTitleBarButtonClick($event)">Close</button>
     </div>
   </div>
   <div class="main-content-container">

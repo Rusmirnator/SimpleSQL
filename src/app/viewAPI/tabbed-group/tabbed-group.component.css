@@ -6,7 +6,7 @@
     flex-wrap: wrap;
 }
 
-.header, 
+.header,
 .caption {
     background: #FCCF47;
     font-weight: bolder;
@@ -24,12 +24,37 @@
     border-radius: 0px 3px 0px 0px;
 }
 
-.header:hover,
-.caption:hover,
-.add:hover {
+.add {
+    color: green;
+    margin-top: 2px;
+    transform: translate(0%,-60%);
+}
+
+.remove {
+    color: red;
+    transform: rotate(45deg) translate(0%, -70%);
+}
+
+.add,
+.remove {
+    width: 0.5em;
+    height: 0.5em;
+}
+
+.add:hover,
+.remove:hover {
+    color: lightgray;
+}
+
+.caption:hover {
     background: lightgray;
     cursor: pointer;
     user-select: none;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
 }
 
 .selected {

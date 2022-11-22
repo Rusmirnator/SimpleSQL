@@ -37,7 +37,7 @@
     <div class="data-grid-container">
         <div>
             <sm-tabbed-group [headersSource]="tabs$" (selectedIndex)="onTabItemSelected($event)"
-                [allowTabAdding]="false"></sm-tabbed-group>
+                [allowTabAdding]="true"></sm-tabbed-group>
         </div>
         <sm-data-grid [itemsSource]="resultSet$">
         </sm-data-grid>

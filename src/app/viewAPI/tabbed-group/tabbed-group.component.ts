@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
+import { Component, ChangeDetectorRef, ElementRef, EventEmitter, Input, OnChanges, OnInit, Output, QueryList, SimpleChanges, ViewChildren } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Observable } from 'rxjs';
 import { ToolTipDirective } from 'src/app/core/directives/tool-tip.directive';
@@ -22,7 +22,7 @@ export class TabbedGroupComponent implements OnInit, OnChanges {
   @Input() allowTabAdding?: boolean;
   @Output() selectedIndex: EventEmitter<number> = new EventEmitter<number>();
 
-  constructor() { }
+  constructor(private _ref: ChangeDetectorRef) { }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes["headersSource"] && this.headers) {
@@ -52,12 +52,14 @@ export class TabbedGroupComponent implements OnInit, OnChanges {
   onTabAdding(_: Event): void {
     this.headersSource.subscribe(val => {
       val.push("NewTab");
+      this._ref.detectChanges();
     });
   }
 
   onTabRemoving(_: Event, tabIndex: number): void {
     this.headersSource.subscribe(val => {
       val.splice(tabIndex, 1);
+      this._ref.detectChanges();
     });
   }
 

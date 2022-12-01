@@ -31,13 +31,18 @@
         </sm-ribbon>
     </div>
     <div class="editor-container">
-        <sm-editor (editValue)="onEditValueChanged($event)">
+        <div>
+            <sm-tabbed-group [headersSource]="editorTabs$" (selectedIndex)="onEditorTabItemSelected($event)"
+                (tabAdded)="onEditorTabAdded($event)" (tabRemoved)="onEditorTabRemoved($event)" [allowTabAdding]="true">
+            </sm-tabbed-group>
+        </div>
+        <sm-editor (editValueChange)="onEditValueChanged($event)" [(editValue)]="script">
         </sm-editor>
     </div>
     <div class="data-grid-container">
         <div>
-            <sm-tabbed-group [headersSource]="tabs$" (selectedIndex)="onTabItemSelected($event)"
-                [allowTabAdding]="true"></sm-tabbed-group>
+            <sm-tabbed-group [headersSource]="dataGridTabs$" (selectedIndex)="onDataGridTabItemSelected($event)">
+            </sm-tabbed-group>
         </div>
         <sm-data-grid [itemsSource]="resultSet$">
         </sm-data-grid>

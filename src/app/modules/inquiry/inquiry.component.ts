@@ -17,7 +17,7 @@ import { ServerService } from 'src/app/core/services/server.service';
 export class InquiryComponent extends ViewHandler implements OnInit {
 
   error: string = "";
-  script: string | undefined;
+  script: string = "";
 
   private get resultSets(): IDataRow[][] {
     return this.getValue("resultSets");
@@ -25,6 +25,14 @@ export class InquiryComponent extends ViewHandler implements OnInit {
 
   private set resultSets(value: IDataRow[][]) {
     this.setValue("resultSets", value);
+  }
+
+  private get scripts(): Map<number, string> {
+    return this.getValue("scripts");
+  }
+
+  private set scripts(value: Map<number, string>) {
+    this.setValue("scripts", value);
   }
 
   public get selectedPath(): string {
@@ -36,7 +44,8 @@ export class InquiryComponent extends ViewHandler implements OnInit {
   }
 
   resultSet$: BehaviorSubject<IDataRow[]> = new BehaviorSubject<IDataRow[]>([]);
-  tabs$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  dataGridTabs$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
+  editorTabs$: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([]);
   commands$: Observable<Command[]> = new Observable<Command[]>();
 
   constructor(private _ref: ChangeDetectorRef, private _serverService: ServerService, private _logger: LoggerService) {
@@ -45,19 +54,35 @@ export class InquiryComponent extends ViewHandler implements OnInit {
   }
 
   ngOnInit(): void {
+    this.initializeProperties();
   }
 
   onEditValueChanged(editValue: string) {
     this.script = editValue;
   }
 
-  private initializeCommands(): void {
-    let commands: Command[] = [];
-    commands.push(new Command(() => this.showHelp(), () => this.canShowHelp(), 'F1', 'Help'));
-    commands.push(new AsyncCommand(() => this.executeQueryAsync(), () => this.canExecuteQuery(), "F5", "Execute"));
-    commands.push(new Command(() => this.selectPath(), () => this.canWriteScript(), "CmdOrCtrl+S", "Write to file"));
+  onEditorTabAdded(newLength: number) {
+    this.scripts.set(newLength, "");
+  }
 
-    this.commands$ = new BehaviorSubject<Command[]>(commands).asObservable();
+  onEditorTabRemoved(tabIndex: number) {
+    this.scripts.delete(tabIndex);
+  }
+
+  onDataGridTabItemSelected(selectedIndex: number): void {
+    this.changeState();
+
+    this.resultSet$.next(this.resultSets[selectedIndex]);
+
+    this.changeState();
+  }
+
+  onEditorTabItemSelected(selectedIndex: number): void {
+    this.changeState();
+    console.log(this.scripts.get(selectedIndex));
+    this.script = this.scripts.get(selectedIndex) ?? "";
+
+    this.changeState();
   }
 
   async onModalResultResolved(e: EventArgs<HTMLElement>): Promise<void> {
@@ -72,14 +97,6 @@ export class InquiryComponent extends ViewHandler implements OnInit {
     }
   }
 
-  onTabItemSelected(selectedIndex: number): void {
-    this.changeState();
-
-    this.resultSet$.next(this.resultSets[selectedIndex]);
-
-    this.changeState();
-  }
-
   async executeQueryAsync(): Promise<void> {
     this.changeState();
 
@@ -91,7 +108,7 @@ export class InquiryComponent extends ViewHandler implements OnInit {
       tabs.push(["Rows affected:", arr.length.toString()].join(''));
     });
 
-    this.tabs$ = new BehaviorSubject(tabs);
+    this.dataGridTabs$ = new BehaviorSubject(tabs);
     this.resultSet$.next(this.resultSets[0]);
 
     this.changeState();
@@ -127,6 +144,21 @@ export class InquiryComponent extends ViewHandler implements OnInit {
     }
 
     this.changeState();
+  }
+
+  private initializeCommands(): void {
+    let commands: Command[] = [];
+    commands.push(new Command(() => this.showHelp(), () => this.canShowHelp(), 'F1', 'Help'));
+    commands.push(new AsyncCommand(() => this.executeQueryAsync(), () => this.canExecuteQuery(), "F5", "Execute"));
+    commands.push(new Command(() => this.selectPath(), () => this.canWriteScript(), "CmdOrCtrl+S", "Write to file"));
+
+    this.commands$ = new BehaviorSubject<Command[]>(commands).asObservable();
+  }
+
+  private initializeProperties(): void {
+    this.scripts = new Map<number, string>();
+    this.scripts.set(0, this.script);
+    this.editorTabs$.next(["InitialTab"]);
   }
 
   canExecuteQuery(): boolean {

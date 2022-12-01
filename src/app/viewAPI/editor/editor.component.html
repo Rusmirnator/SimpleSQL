@@ -1,8 +1,8 @@
 <div class="container">
-    <div class="label">Query</div>
     <textarea class="editor" 
     (input)="onTextInput($event)" 
     (keydown)="onKeyDown($event)"
+    [value]="editValue"
     #editor>
     </textarea>
 </div>

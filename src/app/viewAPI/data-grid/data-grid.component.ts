@@ -29,7 +29,7 @@ export class DataGridComponent implements OnInit, OnChanges {
   virtualizedItemsSource: Observable<DataRow[]> = new Observable<DataRow[]>();
 
   @Output() selectedItems = new EventEmitter<any[]>();
-  @Input() columnsSource?: Observable<string[]> = new Observable<string[]>();;
+  @Input() columnsSource?: Observable<string[]> = new Observable<string[]>();
   @Input() itemsSource: BehaviorSubject<DataRow[]> = new BehaviorSubject<DataRow[]>([]);
   @Input() enableVirtualization: boolean = true;
   @Input() showTimeStamp?: boolean = false;

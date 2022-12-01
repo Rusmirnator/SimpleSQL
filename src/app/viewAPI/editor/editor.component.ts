@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'sm-editor',
@@ -11,7 +11,8 @@ import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, Vie
 export class EditorComponent implements OnInit, AfterViewInit {
 
   @ViewChild("editor") editor?: ElementRef;
-  @Output() editValue = new EventEmitter<string>();
+  @Output() editValueChange = new EventEmitter<string>();
+  @Input() editValue: string = "";
 
   constructor() { }
 
@@ -26,7 +27,8 @@ export class EditorComponent implements OnInit, AfterViewInit {
   }
 
   onTextInput(event: Event) {
-    this.editValue.emit((event.target as HTMLTextAreaElement).value);
+    this.editValue = (event.target as HTMLTextAreaElement).value;
+    this.editValueChange.emit(this.editValue);
   }
 
   onKeyDown(event: KeyboardEvent): void {

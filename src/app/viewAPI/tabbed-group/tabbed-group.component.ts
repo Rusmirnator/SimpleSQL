@@ -21,6 +21,8 @@ export class TabbedGroupComponent implements OnInit, OnChanges {
   @Input() headersSource: Observable<string[]> = new Observable<string[]>();
   @Input() allowTabAdding?: boolean;
   @Output() selectedIndex: EventEmitter<number> = new EventEmitter<number>();
+  @Output() tabAdded: EventEmitter<number> = new EventEmitter<number>();
+  @Output() tabRemoved: EventEmitter<number> = new EventEmitter<number>();
 
   constructor(private _ref: ChangeDetectorRef) { }
 
@@ -51,7 +53,10 @@ export class TabbedGroupComponent implements OnInit, OnChanges {
 
   onTabAdding(_: Event): void {
     this.headersSource.subscribe(val => {
-      val.push("NewTab");
+      val.push(`NewTab${val.length + 1}`);
+
+      this.tabAdded.emit(val.length);
+
       this._ref.detectChanges();
     });
   }
@@ -59,6 +64,9 @@ export class TabbedGroupComponent implements OnInit, OnChanges {
   onTabRemoving(_: Event, tabIndex: number): void {
     this.headersSource.subscribe(val => {
       val.splice(tabIndex, 1);
+
+      this.tabRemoved.emit(tabIndex);
+
       this._ref.detectChanges();
     });
   }

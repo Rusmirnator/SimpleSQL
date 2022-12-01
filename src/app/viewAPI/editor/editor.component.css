@@ -17,17 +17,3 @@
     caret-color: red;
     font-weight: bold;
 }
-
-.label {
-    background: #FCCF47;
-    font-weight: bolder;
-    padding: 3px;
-    width: fit-content;
-    border-radius: 3px 3px 0px 0px;
-}
-
-.label:hover {
-    background: lightgray;
-    cursor: pointer;
-    user-select: none;
-}
